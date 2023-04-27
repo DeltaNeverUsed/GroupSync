@@ -89,10 +89,12 @@ public class GroupObjectSync : UdonSharpBehaviour
     {
         if (groupManager.local_group == -1)
         {
-            _pickup.pickupable = false;
+            if (_hasPickup)
+                _pickup.pickupable = false;
             return;
         }
-        _pickup.pickupable = true;
+        if (_hasPickup)
+            _pickup.pickupable = true;
         
         if (_fakeSync != null && _fakeSync.objectId == -1)
             FakeSyncId = -1;
