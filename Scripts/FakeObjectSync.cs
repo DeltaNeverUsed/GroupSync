@@ -2,9 +2,11 @@
 
 using UdonSharp;
 using UnityEngine;
+using VRC.SDK3.Components;
 using VRC.SDKBase;
 using VRC.Udon;
 
+[RequireComponent(typeof(VRCObjectSync))]
 [UdonBehaviourSyncMode(BehaviourSyncMode.Continuous)]
 public class FakeObjectSync : UdonSharpBehaviour
 {
@@ -16,26 +18,9 @@ public class FakeObjectSync : UdonSharpBehaviour
     [UdonSynced] [HideInInspector] public bool pickedUp = false;
 
     [HideInInspector] public int id;
-    
-    private Vector3 _pos = Vector3.zero;
-    private Vector3 _rot = Vector3.zero;
-
-    [UdonSynced(UdonSyncMode.Smooth)] private Vector3 _posSynced = Vector3.zero;
-    [UdonSynced(UdonSyncMode.Smooth)] private Vector3 _rotSynced = Vector3.zero;
-    
-    private float[] _updateTimes = new float[12];
-    private int _UTIndex;
-
-    private void Start()
-    {
-        for (int i = 0; i < _updateTimes.Length; i++)
-        {
-            _updateTimes[i] = 0.1f;
-        }
-    }
 
     public float dieTimer;
-    private void Update()
+    private void FixedUpdate()
     {
         if (objectId == -1)
         {
@@ -54,15 +39,9 @@ public class FakeObjectSync : UdonSharpBehaviour
         var obj =  syncManager.syncedRealObjects[objectId];
 
         if (Networking.IsOwner(gameObject))
-        {
-            _posSynced = transform.position;
-            _rotSynced = transform.rotation * Vector3.forward; 
             pickedUp = obj.PickedUp;
-        }
         else
         {
-            transform.position = _posSynced;
-            transform.rotation = Quaternion.LookRotation(_rotSynced);
             obj.PickedUp = pickedUp;
             obj.FakeSyncId = id;
         }

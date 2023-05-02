@@ -3,6 +3,7 @@ using UnityEngine;
 using USPPNet;
 using VRC.SDKBase;
 
+[RequireComponent(typeof(Rigidbody))]
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 public class GroupObjectSync : UdonSharpBehaviour
 {
