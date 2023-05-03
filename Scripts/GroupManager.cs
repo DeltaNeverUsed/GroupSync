@@ -64,6 +64,23 @@ public class GroupManager : UdonSharpBehaviour
         return x * maxPlayersPerGroup + y;
     }
 
+    public bool IsPlayerInGroup(int playerId, int group)
+    {
+        if (group >= maxGroups)
+            return false;
+
+        for (int i = 0; i < maxPlayersPerGroup; i++)
+            if (groups[Pos2Index(group, i)] == playerId)
+                return true;
+
+        return false;
+    }
+
+    public bool IsPlayerInLocalGroup(int playerId)
+    {
+        return IsPlayerInGroup(playerId, local_group);
+    }
+
     private void CheckGroupsEmpty()
     {
         for (int x = 0; x < maxGroups; x++)
