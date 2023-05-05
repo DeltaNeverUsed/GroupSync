@@ -2,6 +2,7 @@
 using UdonSharp;
 using UnityEngine;
 using UnityEngine.Serialization;
+using VRC.SDK3.Data;
 using VRC.SDKBase;
 using VRC.Udon;
 
@@ -10,7 +11,7 @@ public class GroupObjectSyncManager : UdonSharpBehaviour
 {
     public FakeObjectSync[] syncedObjects = Array.Empty<FakeObjectSync>();
     
-    public GroupObjectSync[] syncedRealObjects = Array.Empty<GroupObjectSync>();
+    public DataDictionary syncedRealObjects = new DataDictionary();
 
     private void Start()
     {
@@ -41,15 +42,9 @@ public class GroupObjectSyncManager : UdonSharpBehaviour
         
     }
 
-    public int AddRealObject(GroupObjectSync obj)
+    public void AddRealObject(GroupObjectSync obj)
     {
-        var size = syncedRealObjects.Length;
-        var temp_arr = new GroupObjectSync[size + 1];
-        Array.Copy(syncedRealObjects, temp_arr, size);
-        temp_arr[size] = obj;
-        syncedRealObjects = temp_arr;
-
-        return size;
+        syncedRealObjects.Add(obj.networkId, obj);
     }
 
     public int GetFakeSync()
@@ -67,8 +62,11 @@ public class GroupObjectSyncManager : UdonSharpBehaviour
     // Call before changing group
     public void LocalDropAll()
     {
-        foreach (var obj in syncedRealObjects)
+        var values = syncedRealObjects.GetValues();
+        for (var index = 0; index < values.Count; index++)
         {
+            var value = values[index];
+            var obj = (GroupObjectSync)value.Reference;
             if (obj.FakeSyncId != -1)
                 obj.UnSync();
         }
@@ -76,8 +74,11 @@ public class GroupObjectSyncManager : UdonSharpBehaviour
 
     public void ResetRealFakeIds()
     {
-        foreach (var obj in syncedRealObjects)
+        var values = syncedRealObjects.GetValues();
+        for (var index = 0; index < values.Count; index++)
         {
+            var value = values[index];
+            var obj = (GroupObjectSync)value.Reference;
             obj.FakeSyncId = -1;
         }
     }

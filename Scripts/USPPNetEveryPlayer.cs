@@ -25,13 +25,16 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
     
     private void USPPNET_requst_unsync(int objectId, int caller)
     {
-        var obj = syncManager.syncedRealObjects[objectId];
+        if (!syncManager.syncedRealObjects.TryGetValue(objectId, out var dataOut))
+            return;
+        var obj = (GroupObjectSync)dataOut.Reference;
+        
         if (obj.FakeSyncId == -1)
             return;
         if (!Networking.IsOwner(syncManager.syncedObjects[obj.FakeSyncId].gameObject))
             return;
         
-        syncManager.syncedRealObjects[objectId].UnSync();
+        obj.UnSync();
         Debug.Log($"Unsynced: {objectId}");
 
         // Make sure we call this on the correct object
@@ -42,7 +45,10 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
         if (Networking.LocalPlayer.playerId != player)
             return;
         
-        syncManager.syncedRealObjects[objectId].FinishSync();
+        if (!syncManager.syncedRealObjects.TryGetValue(objectId, out var dataOut))
+            return;
+        
+        ((GroupObjectSync)dataOut.Reference).FinishSync();
         Debug.Log($"Finished Sync: {objectId}");
     }
     

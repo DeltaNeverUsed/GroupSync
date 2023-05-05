@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c333ccfdd0cbdbc4ca30cef2dd6e6b9b, type: 3}
   m_Name: FakeObjectSync
   m_EditorClassIdentifier: 
-  serializedUdonProgramAsset: {fileID: 11400000, guid: 744ac07429cb72149a20bd4190eb21ca,
+  serializedUdonProgramAsset: {fileID: 11400000, guid: 469238a4492ad9f4f97a3349000e049d,
     type: 2}
   udonAssembly: 
   assemblyError: 

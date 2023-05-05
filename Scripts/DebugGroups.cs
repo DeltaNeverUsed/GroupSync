@@ -67,10 +67,11 @@ public class DebugGroups : UdonSharpBehaviour
         fakeObjectInfo.text = t;
         
         t = ""; // real Objects
-        for (int x = 0; x < syncManager.syncedRealObjects.Length; x++)
+        var objs = syncManager.syncedRealObjects.GetValues();
+        for (int x = 0; x < syncManager.syncedRealObjects.Count; x++)
         {
-            var obj = syncManager.syncedRealObjects[x];
-            t += $"ObjectId: {obj.ObjectId}, FakeSyncId: {obj.FakeSyncId}, PickedUp: {format_bool(obj.PickedUp)}\n";
+            var obj = (GroupObjectSync)objs[x].Reference;
+            t += $"ObjectId: {obj.networkId}, FakeSyncId: {obj.FakeSyncId}, PickedUp: {format_bool(obj.PickedUp)}\n";
         }
 
         objectInfo.text = t;

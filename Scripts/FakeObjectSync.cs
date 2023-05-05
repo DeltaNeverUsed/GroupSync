@@ -36,7 +36,9 @@ public class FakeObjectSync : UdonSharpBehaviour
         if(groupManager.local_group != group)
             return;
 
-        var obj =  syncManager.syncedRealObjects[objectId];
+        if (!syncManager.syncedRealObjects.TryGetValue(objectId, out var dataOut))
+            return;
+        var obj = (GroupObjectSync)dataOut.Reference;
 
         if (Networking.IsOwner(gameObject))
             pickedUp = obj.PickedUp;

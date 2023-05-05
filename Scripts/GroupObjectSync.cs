@@ -1,24 +1,49 @@
 ﻿using UdonSharp;
 using UnityEngine;
+using UnityEngine.Serialization;
 using USPPNet;
 using VRC.SDKBase;
+
+#if !COMPILER_UDONSHARP && UNITY_EDITOR
+using UnityEditor;
+
+[CustomEditor(typeof(GroupObjectSync), true)]
+public class GroupObjectSyncEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        var prop = serializedObject.FindProperty("networkId");
+        if (prop.intValue == -1)
+        {
+            prop.intValue = Random.Range(int.MinValue, int.MaxValue);
+            serializedObject.ApplyModifiedProperties();
+        }
+
+        DrawDefaultInspector();
+    }
+}
+
+#endif
+
 
 [RequireComponent(typeof(Rigidbody))]
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 public class GroupObjectSync : UdonSharpBehaviour
 {
+    public int networkId = -1;
+    
+    [Space]
+    
     public USPPNetEveryPlayerManager playerManager;
     public GroupObjectSyncManager syncManager;
     public GroupManager groupManager;
     [HideInInspector] public int FakeSyncId = -1;
-    [HideInInspector] public int ObjectId = -1;
     [HideInInspector] public bool PickedUp = false;
 
     private FakeObjectSync _fakeSync;
     private bool _hasPickup;
     private VRC_Pickup _pickup;
-
-
+    
     public override void OnPickup()
     {
         playerManager.local_object.close_group_joinings(groupManager.local_group);
@@ -47,7 +72,7 @@ public class GroupObjectSync : UdonSharpBehaviour
         _fakeSync = syncManager.syncedObjects[FakeSyncId];
 
         if (_fakeSync.group != -1 && !Networking.IsOwner(_fakeSync.gameObject))
-            playerManager.local_object.request_unsync(ObjectId, Networking.LocalPlayer.playerId);
+            playerManager.local_object.request_unsync(networkId, Networking.LocalPlayer.playerId);
         else
             FinishSync();
     }
@@ -56,7 +81,7 @@ public class GroupObjectSync : UdonSharpBehaviour
     {
         Networking.SetOwner(Networking.LocalPlayer, _fakeSync.gameObject);
         _fakeSync.group = groupManager.local_group;
-        _fakeSync.objectId = ObjectId;
+        _fakeSync.objectId = networkId;
     }
 
     public void UnSync(bool drop = true)
@@ -78,7 +103,8 @@ public class GroupObjectSync : UdonSharpBehaviour
 
     private void Start()
     {
-        ObjectId = syncManager.AddRealObject(this);
+        Debug.Log(gameObject.name);
+        syncManager.AddRealObject(this);
         _pickup = GetComponent<VRC_Pickup>();
 
         _hasPickup = _pickup != null;
