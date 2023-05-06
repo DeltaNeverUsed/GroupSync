@@ -1,12 +1,18 @@
-﻿
-#define USPPNet_string
+﻿#define USPPNet_string
 #define USPPNet_int
+#define USPPNet_bool
+#define USPPNet_float
+#define USPPNet_Vector2
+#define USPPNet_Vector3
+#define USPPNet_Vector4
+#define USPPNet_Quaternion
 
 using USPPNet;
 using System;
 
 using UdonSharp;
 using UnityEngine;
+using VRC.SDK3.Data;
 using VRC.SDKBase;
 using VRC.Udon;
 
@@ -62,7 +68,101 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
         
         Debug.Log($"zone: {zone}, player: {playerId}");
     }
+
+    private void GenericSet(string varName, int netId, object var)
+    {
+        if (netId != groupManager.local_group)
+            return;
+        if (!syncManager.syncedCustomObjects.TryGetValue(netId, out var data))
+            return;
+        var obj = (GroupCustomSync)data.Reference;
+
+        obj.SetProgramVariable(name, var);
+    }
     
+    private void USPPNET_CustomSet_int(string varName, int netId, int var)
+    {
+        GenericSet(varName, netId, var);
+    }
+    private void USPPNET_CustomSet_string(string varName, int netId, string var)
+    {
+        GenericSet(varName, netId, var);
+    }
+    private void USPPNET_CustomSet_bool(string varName, int netId, bool var)
+    {
+        GenericSet(varName, netId, var);
+    }
+    private void USPPNET_CustomSet_float(string varName, int netId, float var)
+    {
+        GenericSet(varName, netId, var);
+    }
+    private void USPPNET_CustomSet_Vector2(string varName, int netId, Vector2 var)
+    {
+        GenericSet(varName, netId, var);
+    }
+    private void USPPNET_CustomSet_Vector3(string varName, int netId, Vector3 var)
+    {
+        GenericSet(varName, netId, var);
+    }
+    private void USPPNET_CustomSet_Vector4(string varName, int netId, Vector4 var)
+    {
+        GenericSet(varName, netId, var);
+    }
+    private void USPPNET_CustomSet_Quaternion(string varName, int netId, Quaternion var)
+    {
+        GenericSet(varName, netId, var);
+    }
+
+    private void USPPNET_CustomRPC(string eventName, int netId)
+    {
+        if (netId != groupManager.local_group)
+            return;
+        if (!syncManager.syncedCustomObjects.TryGetValue(netId, out var data))
+            return;
+        var obj = (GroupCustomSync)data.Reference;
+
+        obj.SendCustomEvent(eventName);
+    }
+
+
+    public void SetRemoteVar(string varName, int netId, object var, bool setLocally = true)
+    {
+        var argType = var.GetType();
+        
+        if (argType == typeof(int))
+            USPPNET_CustomSet_int(varName, netId, (int)var);
+        if (argType == typeof(string))
+            USPPNET_CustomSet_string(varName, netId, (string)var);
+        if (argType == typeof(bool))
+            USPPNET_CustomSet_bool(varName, netId, (bool)var);
+        if (argType == typeof(float))
+            USPPNET_CustomSet_float(varName, netId, (float)var);
+        if (argType == typeof(Vector2))
+            USPPNET_CustomSet_Vector2(varName, netId, (Vector2)var);
+        if (argType == typeof(Vector3))
+            USPPNET_CustomSet_Vector3(varName, netId, (Vector3)var);
+        if (argType == typeof(Vector4))
+            USPPNET_CustomSet_Vector4(varName, netId, (Vector4)var);
+        if (argType == typeof(Quaternion))
+            USPPNET_CustomSet_Quaternion(varName, netId, (Quaternion)var);
+        
+        if (setLocally)
+            GenericSet(varName, netId, var);
+    }
+
+    public void RemoteFunctionCall(string eventName, int netId, bool callLocally = true)
+    {
+        USPPNET_CustomRPC(eventName, netId);
+        
+        if (!callLocally) return;
+        if (!syncManager.syncedCustomObjects.TryGetValue(netId, out var data))
+            return;
+        
+        var obj = (GroupCustomSync)data.Reference;
+
+        obj.SendCustomEvent(eventName);
+    }
+
     // Master 
     private void USPPNET_close_group_joins(int group)
     {
@@ -117,37 +217,11 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
         Debug.Log("Request unsync sent");
     }
 
-    private void temp_color()
-    {
-        var r = GetComponent<Renderer>();
-        if (r == null)
-            return;
-
-        if (Networking.IsOwner(gameObject))
-        {
-            r.material.color = Networking.IsMaster ? Color.red : Color.green;
-        }
-        else
-        {
-            r.material.color = Color.black;
-        }
-
-    }
-
     private void Start()
     {
         _usppNetEveryPlayerManager = transform.parent.GetComponent<USPPNetEveryPlayerManager>();
     }
 
-    public int t = 0;
-
-    private void FixedUpdate()
-    {
-        t++;
-        if(t%60 == 0)
-            temp_color();
-    }
-    
     public override void OnPlayerLeft(VRCPlayerApi player)
     {
         if (!Networking.IsMaster)

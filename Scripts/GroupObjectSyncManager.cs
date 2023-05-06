@@ -12,6 +12,7 @@ public class GroupObjectSyncManager : UdonSharpBehaviour
     public FakeObjectSync[] syncedObjects = Array.Empty<FakeObjectSync>();
     
     public DataDictionary syncedRealObjects = new DataDictionary();
+    public DataDictionary syncedCustomObjects = new DataDictionary();
 
     private void Start()
     {
@@ -45,6 +46,10 @@ public class GroupObjectSyncManager : UdonSharpBehaviour
     public void AddRealObject(GroupObjectSync obj)
     {
         syncedRealObjects.Add(obj.networkId, obj);
+    }
+    public void AddCustomObject(GroupCustomSync obj)
+    {
+        syncedCustomObjects.Add(obj.networkId, obj);
     }
 
     public int GetFakeSync()

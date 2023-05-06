@@ -103,7 +103,6 @@ public class GroupObjectSync : UdonSharpBehaviour
 
     private void Start()
     {
-        Debug.Log(gameObject.name);
         syncManager.AddRealObject(this);
         _pickup = GetComponent<VRC_Pickup>();
 
