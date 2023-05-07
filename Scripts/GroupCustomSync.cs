@@ -24,6 +24,7 @@ public class GroupCustomSyncEditor : Editor
 
 #endif
 
+[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 public class GroupCustomSync : UdonSharpBehaviour
 {
     [Header("Network stuff")]
