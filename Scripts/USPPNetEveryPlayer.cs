@@ -77,7 +77,7 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
             return;
         var obj = (GroupCustomSync)data.Reference;
 
-        obj.SetProgramVariable(name, var);
+        obj.SetProgramVariable(varName, var);
     }
     
     private void USPPNET_CustomSet_int(int group, string varName, int netId, int var)
