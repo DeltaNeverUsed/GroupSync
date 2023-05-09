@@ -1,10 +1,33 @@
 ﻿using System;
 using UdonSharp;
 using UnityEngine;
-using UnityEngine.Serialization;
 using VRC.SDK3.Data;
 using VRC.SDKBase;
-using VRC.Udon;
+
+#if !COMPILER_UDONSHARP && UNITY_EDITOR
+using UnityEditor;
+
+[CustomEditor(typeof(GroupObjectSyncManager), true)]
+public class GroupObjectSyncManagerEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        if (GUILayout.Button("Assign new IDs"))
+        {
+            var gos = Resources.FindObjectsOfTypeAll<GroupObjectSync>();
+            foreach (var obj in gos)
+                obj.networkId = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
+
+            var gcs = Resources.FindObjectsOfTypeAll<GroupCustomSync>();
+            foreach (var obj in gcs)
+                obj.networkId = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
+        }
+        
+        DrawDefaultInspector();
+    }
+}
+
+#endif
 
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 public class GroupObjectSyncManager : UdonSharpBehaviour

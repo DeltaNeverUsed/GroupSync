@@ -4,28 +4,6 @@ using UnityEngine.Serialization;
 using USPPNet;
 using VRC.SDKBase;
 
-#if !COMPILER_UDONSHARP && UNITY_EDITOR
-using UnityEditor;
-
-[CustomEditor(typeof(GroupObjectSync), true)]
-public class GroupObjectSyncEditor : Editor
-{
-    public override void OnInspectorGUI()
-    {
-        var prop = serializedObject.FindProperty("networkId");
-        if (prop.intValue == -1)
-        {
-            prop.intValue = Random.Range(int.MinValue, int.MaxValue);
-            serializedObject.ApplyModifiedProperties();
-        }
-
-        DrawDefaultInspector();
-    }
-}
-
-#endif
-
-
 [RequireComponent(typeof(Rigidbody))]
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 public class GroupObjectSync : UdonSharpBehaviour

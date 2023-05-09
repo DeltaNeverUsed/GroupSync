@@ -3,27 +3,6 @@ using System.Collections.Generic;
 using UdonSharp;
 using UnityEngine;
 
-#if !COMPILER_UDONSHARP && UNITY_EDITOR
-using UnityEditor;
-
-[CustomEditor(typeof(GroupCustomSync), true)]
-public class GroupCustomSyncEditor : Editor
-{
-    public override void OnInspectorGUI()
-    {
-        var prop = serializedObject.FindProperty("networkId");
-        if (prop.intValue == -1)
-        {
-            prop.intValue = Random.Range(int.MinValue, int.MaxValue);
-            serializedObject.ApplyModifiedProperties();
-        }
-
-        DrawDefaultInspector();
-    }
-}
-
-#endif
-
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 public class GroupCustomSync : UdonSharpBehaviour
 {
