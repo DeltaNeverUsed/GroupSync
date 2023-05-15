@@ -10,8 +10,6 @@ public class GroupCustomSync : UdonSharpBehaviour
     public int networkId = -1;
     public GroupObjectSyncManager gosm;
     public USPPNetEveryPlayerManager psm;
-    
-    [Space(10)]
 
     private bool _startedNet;
 
@@ -21,7 +19,6 @@ public class GroupCustomSync : UdonSharpBehaviour
             return;
         _startedNet = true;
         
-        Debug.Log("Okayy, that did done did the thing i was hoping");
         if (networkId == -1)
             Debug.LogError("networkId is -1 on " + gameObject.name + "Please select to object to generate a new networkId, or create select one manually");
         if (gosm == null)

@@ -6,6 +6,7 @@ using USPPNet;
 using System;
 using UdonSharp;
 using UnityEngine;
+using VRC.SDK3.Data;
 using VRC.SDKBase;
 using VRC.Udon;
 
@@ -19,6 +20,8 @@ public class GroupManager : UdonSharpBehaviour
     
     public string[] joinable = Array.Empty<string>();
     [UdonSynced] public int[] groups = Array.Empty<int>();
+
+    public DataList leaveGroupCallbacks = new DataList();
 
     public int local_group = -1;
 
@@ -104,6 +107,13 @@ public class GroupManager : UdonSharpBehaviour
             if (groups[i] == playerId)
                 groups[i] = -1;
         }
+
+        for (var index = 0; index < leaveGroupCallbacks.Count; index++)
+        {
+            var caller = leaveGroupCallbacks[index];
+            ((UdonSharpBehaviour)caller.Reference).SendCustomEvent("LeaveCallback");
+        }
+
         RequestSerialization();
     }
 
@@ -146,6 +156,17 @@ public class GroupManager : UdonSharpBehaviour
         joinable[secondChoice] = zone;
         return secondChoice;
        
+    }
+
+    public void SubLeaveGroupCallback(UdonSharpBehaviour caller)
+    {
+        if (leaveGroupCallbacks.Contains(caller))
+        {
+            Debug.LogError("Call back already registered");
+            return;
+        }
+        
+        leaveGroupCallbacks.Add(caller);
     }
     
     // Only call from host
