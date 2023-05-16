@@ -68,11 +68,17 @@ public class GroupObjectSyncManager : UdonSharpBehaviour
 
     public void AddRealObject(GroupObjectSync obj)
     {
-        syncedRealObjects.Add(obj.networkId, obj);
+        if (!syncedRealObjects.ContainsKey(obj.networkId))
+            syncedRealObjects.Add(obj.networkId, obj);
+        else
+            Debug.LogError($"Duplicate ID on real object: {obj.name}");
     }
     public void AddCustomObject(GroupCustomSync obj)
     {
-        syncedCustomObjects.Add(obj.networkId, obj);
+        if (!syncedCustomObjects.ContainsKey(obj.networkId))
+            syncedCustomObjects.Add(obj.networkId, obj);
+        else
+            Debug.LogError($"Duplicate ID on custom object: {obj.name}");
     }
 
     public int GetFakeSync()
