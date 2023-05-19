@@ -18,7 +18,7 @@ public class GroupObjectSync : UdonSharpBehaviour
     [HideInInspector] public int FakeSyncId = -1;
     [HideInInspector] public bool PickedUp = false;
 
-    private FakeObjectSync _fakeSync;
+    public FakeObjectSync fakeSync;
     private bool _hasPickup;
     private VRC_Pickup _pickup;
     
@@ -38,37 +38,36 @@ public class GroupObjectSync : UdonSharpBehaviour
         if (groupManager.local_group == -1)
             return;
 
-        if (FakeSyncId == -1)
-        {
-            var tempId = syncManager.GetFakeSync();
-            Debug.Log($"Got: {tempId}");
-            if (tempId == -1)
-                return;
-            FakeSyncId = tempId;
-        }
-
-        _fakeSync = syncManager.syncedObjects[FakeSyncId];
-
-        if (_fakeSync.group != -1 && !Networking.IsOwner(_fakeSync.gameObject))
-            playerManager.local_object.request_unsync(networkId, Networking.LocalPlayer.playerId);
-        else
-            FinishSync();
+        playerManager.local_object.request_start_sync(networkId, Networking.LocalPlayer.playerId);
     }
 
-    public void FinishSync()
+    public void FinishSync(int newSyncId)
     {
-        Networking.SetOwner(Networking.LocalPlayer, _fakeSync.gameObject);
-        _fakeSync.group = groupManager.local_group;
-        _fakeSync.objectId = networkId;
+        if (newSyncId == -1)
+        {
+            Debug.LogError("Got Fake id -1 for some reason");
+            return;
+        }
+        
+        FakeSyncId = newSyncId;
+        fakeSync = syncManager.syncedObjects[FakeSyncId];
+        
+        if (!Networking.IsOwner(fakeSync.gameObject))
+        {
+            Networking.SetOwner(Networking.LocalPlayer, fakeSync.gameObject);
+            Debug.Log("Not owner yet >:(");
+        }
+        fakeSync.group = groupManager.local_group;
+        fakeSync.objectId = networkId;
     }
 
     public void UnSync(bool drop = true)
     {
-        if (_fakeSync != null)
+        if (fakeSync != null)
         {
-            _fakeSync.group = -1;
-            _fakeSync.objectId = -1;
-            _fakeSync.pickedUp = false;
+            fakeSync.group = -1;
+            fakeSync.objectId = -1;
+            fakeSync.pickedUp = false;
         }
 
         FakeSyncId = -1;
@@ -100,14 +99,14 @@ public class GroupObjectSync : UdonSharpBehaviour
         if (_hasPickup)
             _pickup.pickupable = true;
         
-        if (_fakeSync != null && _fakeSync.objectId == -1)
+        if (fakeSync != null && fakeSync.objectId == -1)
             FakeSyncId = -1;
         if (FakeSyncId == -1)
             return;
-        _fakeSync = syncManager.syncedObjects[FakeSyncId];
+        fakeSync = syncManager.syncedObjects[FakeSyncId];
 
-        var fakeSyncTransform = _fakeSync.transform;
-        if (Networking.IsOwner(_fakeSync.gameObject))
+        var fakeSyncTransform = fakeSync.transform;
+        if (Networking.IsOwner(fakeSync.gameObject))
         {
             fakeSyncTransform.position = transform.position;
             fakeSyncTransform.rotation = transform.rotation;
@@ -119,7 +118,7 @@ public class GroupObjectSync : UdonSharpBehaviour
             transform.position = fakeSyncTransform.position;
             transform.rotation = fakeSyncTransform.rotation;
             if (_hasPickup)
-                _pickup.pickupable = !_fakeSync.pickedUp || !_pickup.DisallowTheft;
+                _pickup.pickupable = !fakeSync.pickedUp || !_pickup.DisallowTheft;
         }
     }
 }

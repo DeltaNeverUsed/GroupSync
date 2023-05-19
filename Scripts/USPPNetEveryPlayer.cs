@@ -28,6 +28,28 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
     public bool owned = false;
 
     private string _currZone = "";
+
+    private void USPPNET_request_sync(int objectId, int caller)
+    {
+        if (!Networking.IsMaster)
+            return;
+        if (!syncManager.syncedRealObjects.TryGetValue(objectId, out var dataOut))
+            return;
+        
+        var obj = (GroupObjectSync)dataOut.Reference;
+        
+        var newSyncId = syncManager.GetFakeSync();
+        if (newSyncId == -1)
+            return;
+        
+        var fakeSyncObject = syncManager.syncedObjects[newSyncId].gameObject;
+        
+        var playerCaller = VRCPlayerApi.GetPlayerById(caller);
+        if (playerCaller.IsValid())
+            Networking.SetOwner(playerCaller, fakeSyncObject);
+        
+        playerManager.local_object.finish_sync(objectId, caller, newSyncId);
+    }
     
     private void USPPNET_requst_unsync(int objectId, int caller)
     {
@@ -37,24 +59,29 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
         
         if (obj.FakeSyncId == -1)
             return;
-        if (!Networking.IsOwner(syncManager.syncedObjects[obj.FakeSyncId].gameObject))
+        var fakeSyncObject = syncManager.syncedObjects[obj.FakeSyncId].gameObject;
+        if (!Networking.IsOwner(fakeSyncObject))
             return;
         
         obj.UnSync();
         Debug.Log($"Unsynced: {objectId}");
 
+        // Set the new owner faster 
+        var playerCaller = VRCPlayerApi.GetPlayerById(caller);
+        if (playerCaller.IsValid())
+            Networking.SetOwner(playerCaller, fakeSyncObject);
+
         // Make sure we call this on the correct object
-        playerManager.local_object.finish_sync(objectId, caller);
+        playerManager.local_object.finish_sync(objectId, caller, obj.FakeSyncId);
     }
-    private void USPPNET_finish_sync(int objectId, int player)
+    private void USPPNET_finish_sync(int objectId, int player, int newSyncId)
     {
         if (Networking.LocalPlayer.playerId != player)
             return;
-        
         if (!syncManager.syncedRealObjects.TryGetValue(objectId, out var dataOut))
             return;
-        
-        ((GroupObjectSync)dataOut.Reference).FinishSync();
+
+        ((GroupObjectSync)dataOut.Reference).FinishSync(newSyncId);
         Debug.Log($"Finished Sync: {objectId}");
     }
     
@@ -186,9 +213,9 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
             groupManager.DisableJoinGroup(group);
     }
 
-    public void finish_sync(int objectId, int player)
+    public void finish_sync(int objectId, int player, int newSyncId)
     {
-        USPPNET_finish_sync(objectId, player);
+        USPPNET_finish_sync(objectId, player, newSyncId);
         RequestSerialization();
     }
     
@@ -216,7 +243,25 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
         RequestSerialization();
         Debug.Log("Request unsync sent");
     }
+    
+    public void request_start_sync(int objectId, int caller)
+    {
+        if (!syncManager.syncedRealObjects.TryGetValue(objectId, out var dataOut))
+            return;
+        var obj = (GroupObjectSync)dataOut.Reference;
+        
+        if (obj.fakeSync.group != -1 && !Networking.IsOwner(obj.fakeSync.gameObject))
+            request_unsync(obj.networkId, Networking.LocalPlayer.playerId);
+        else
+        {
+            USPPNET_request_sync(obj.networkId, Networking.LocalPlayer.playerId);
+            RequestSerialization();
+        }
+        Debug.Log("Requested sync started");
+    }
 
+    
+    
     private void Start()
     {
         _usppNetEveryPlayerManager = transform.parent.GetComponent<USPPNetEveryPlayerManager>();

@@ -81,6 +81,7 @@ public class GroupObjectSyncManager : UdonSharpBehaviour
             Debug.LogError($"Duplicate ID on custom object: {obj.name}");
     }
 
+    // Only the master should call this to avoid FakeID collisions
     public int GetFakeSync()
     {
         for (int i = 0; i < syncedObjects.Length; i++)
