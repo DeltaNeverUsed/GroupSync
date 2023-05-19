@@ -18,7 +18,7 @@ public class GroupObjectSync : UdonSharpBehaviour
     [HideInInspector] public int FakeSyncId = -1;
     [HideInInspector] public bool PickedUp = false;
 
-    public FakeObjectSync fakeSync;
+    [HideInInspector] public FakeObjectSync fakeSync;
     private bool _hasPickup;
     private VRC_Pickup _pickup;
     
@@ -37,8 +37,8 @@ public class GroupObjectSync : UdonSharpBehaviour
     {
         if (groupManager.local_group == -1)
             return;
-
-        playerManager.local_object.request_start_sync(networkId, Networking.LocalPlayer.playerId);
+        if (FakeSyncId == -1 || fakeSync.group == -1 || !Networking.IsOwner(fakeSync.gameObject))
+            playerManager.local_object.request_start_sync(networkId, Networking.LocalPlayer.playerId);
     }
 
     public void FinishSync(int newSyncId)

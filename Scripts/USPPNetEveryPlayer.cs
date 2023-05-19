@@ -250,7 +250,7 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
             return;
         var obj = (GroupObjectSync)dataOut.Reference;
         
-        if (obj.fakeSync.group != -1 && !Networking.IsOwner(obj.fakeSync.gameObject))
+        if (obj.FakeSyncId != -1 && obj.fakeSync.group != -1 && !Networking.IsOwner(obj.fakeSync.gameObject))
             request_unsync(obj.networkId, Networking.LocalPlayer.playerId);
         else
         {
