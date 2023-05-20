@@ -69,6 +69,8 @@ public class GroupManager : UdonSharpBehaviour
 
     public bool IsPlayerInGroup(int playerId, int group)
     {
+        if (groups.Length != maxGroups * maxPlayersPerGroup)
+            return false;
         if (group >= maxGroups || groups.Length < maxPlayersPerGroup * maxGroups)
             return false;
 
