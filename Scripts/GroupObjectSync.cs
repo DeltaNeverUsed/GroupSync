@@ -6,25 +6,17 @@ using VRC.SDKBase;
 
 [RequireComponent(typeof(Rigidbody))]
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-public class GroupObjectSync : UdonSharpBehaviour
+public class GroupObjectSync : GroupCustomSync
 {
-    public int networkId = -1;
-    
-    [Space]
-    
-    public USPPNetEveryPlayerManager playerManager;
-    public GroupObjectSyncManager syncManager;
-    public GroupManager groupManager;
-    [HideInInspector] public int FakeSyncId = -1;
-    [HideInInspector] public bool PickedUp = false;
+    [Space(20)]
+    [HideInInspector] public int fakeSyncId = -1;
 
     [HideInInspector] public FakeObjectSync fakeSync;
-    private bool _hasPickup;
-    private VRC_Pickup _pickup;
+    [HideInInspector] public bool hasPickup; 
+    [HideInInspector] public VRC_Pickup pickup;
     
     public override void OnPickup()
     {
-        playerManager.local_object.close_group_joinings(groupManager.local_group);
         StartSync();
     }
 
@@ -35,10 +27,12 @@ public class GroupObjectSync : UdonSharpBehaviour
 
     public void StartSync()
     {
-        if (groupManager.local_group == -1)
+        if (psm.groupManager.local_group == -1)
             return;
-        if (FakeSyncId == -1 || fakeSync.group == -1 || !Networking.IsOwner(fakeSync.gameObject))
-            playerManager.local_object.request_start_sync(networkId, Networking.LocalPlayer.playerId);
+        
+        if (fakeSyncId != -1 && fakeSync.used && Networking.IsOwner(fakeSync.gameObject)) return;
+        psm.local_object.close_group_joinings(psm.groupManager.local_group);
+        psm.local_object.request_start_sync(networkId, Networking.LocalPlayer.playerId);
     }
 
     public void FinishSync(int newSyncId)
@@ -49,76 +43,96 @@ public class GroupObjectSync : UdonSharpBehaviour
             return;
         }
         
-        FakeSyncId = newSyncId;
-        fakeSync = syncManager.syncedObjects[FakeSyncId];
-        
+        SetVariableInLocalGroup("fakeSyncId", newSyncId, true, false);
+        CallFunctionInLocalGroup("enableFakeSync", true, true);
+
         if (!Networking.IsOwner(fakeSync.gameObject))
         {
             Networking.SetOwner(Networking.LocalPlayer, fakeSync.gameObject);
             Debug.Log("Not owner yet >:(");
         }
-        fakeSync.group = groupManager.local_group;
-        fakeSync.objectId = networkId;
     }
 
-    public void UnSync(bool drop = true)
+    public void enableFakeSync()
     {
-        if (fakeSync != null)
-        {
-            fakeSync.group = -1;
-            fakeSync.objectId = -1;
-            fakeSync.pickedUp = false;
-        }
+        fakeSync = gosm.syncedObjects[fakeSyncId];
+        fakeSync.used = true;
+        fakeSync.gameObject.SetActive(true);
+    }
+    
+    public void LeaveCallback()
+    {
+        UnSync();
+    }
 
-        FakeSyncId = -1;
-        PickedUp = false;
+    public void UnSync(bool d = true, int target = -1)
+    {
+        drop = d;
+        SetVariableInLocalGroup("usTar", target == -1 ? fakeSyncId : target, true, false);
+        CallFunctionInLocalGroup("NetUnSync", true, true);
+    }
 
-        if (drop && _hasPickup)
-            _pickup.Drop();
+    public int usTar = -1;
+    public bool drop = true;
+    public void NetUnSync()
+    {
+        if (usTar != -1)
+            gosm.syncedObjects[usTar].UnSync();
+
+        fakeSyncId = -1;
+
+        if (drop && hasPickup)
+            pickup.Drop();
+        drop = false;
+        usTar = -1;
     }
 
 
     private void Start()
     {
-        syncManager.AddRealObject(this);
-        _pickup = GetComponent<VRC_Pickup>();
+        StartNet();
+        SubLeaveGroupCallback();
+        
+        gosm.AddRealObject(this);
+        pickup = GetComponent<VRC_Pickup>();
 
-        _hasPickup = _pickup != null;
-        Debug.Log(_hasPickup);
+        hasPickup = pickup != null;
+        Debug.Log(hasPickup);
     }
 
 
     private void Update()
     {
-        if (groupManager.local_group == -1)
+        if (psm.groupManager.local_group == -1)
         {
-            if (_hasPickup)
-                _pickup.pickupable = false;
+            if (hasPickup)
+                pickup.pickupable = false;
             return;
         }
-        if (_hasPickup)
-            _pickup.pickupable = true;
+        if (hasPickup)
+            pickup.pickupable = true;
         
-        if (fakeSync != null && fakeSync.objectId == -1)
-            FakeSyncId = -1;
-        if (FakeSyncId == -1)
+        if (fakeSync != null && !fakeSync.used)
+            fakeSyncId = -1;
+        
+        if (fakeSyncId == -1)
             return;
-        fakeSync = syncManager.syncedObjects[FakeSyncId];
+        fakeSync = gosm.syncedObjects[fakeSyncId];
 
         var fakeSyncTransform = fakeSync.transform;
         if (Networking.IsOwner(fakeSync.gameObject))
         {
             fakeSyncTransform.position = transform.position;
             fakeSyncTransform.rotation = transform.rotation;
-            if (_hasPickup)
-                PickedUp = _pickup.IsHeld;
+            if (hasPickup)
+                fakeSync.pickedUp = pickup.IsHeld;
         }
         else
         {
             transform.position = fakeSyncTransform.position;
             transform.rotation = fakeSyncTransform.rotation;
-            if (_hasPickup)
-                _pickup.pickupable = !fakeSync.pickedUp || !_pickup.DisallowTheft;
+            if (hasPickup)
+                pickup.pickupable = !fakeSync.pickedUp || !pickup.DisallowTheft;
         }
     }
 }

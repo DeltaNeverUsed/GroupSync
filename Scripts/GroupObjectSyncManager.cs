@@ -86,7 +86,7 @@ public class GroupObjectSyncManager : UdonSharpBehaviour
     {
         for (int i = 0; i < syncedObjects.Length; i++)
         {
-            if (syncedObjects[i].group != -1)
+            if (syncedObjects[i].used)
                 continue;
             syncedObjects[i].gameObject.SetActive(true);
             return i;
@@ -102,7 +102,7 @@ public class GroupObjectSyncManager : UdonSharpBehaviour
         {
             var value = values[index];
             var obj = (GroupObjectSync)value.Reference;
-            if (obj.FakeSyncId != -1)
+            if (obj.fakeSyncId != -1)
                 obj.UnSync();
         }
     }
@@ -114,7 +114,7 @@ public class GroupObjectSyncManager : UdonSharpBehaviour
         {
             var value = values[index];
             var obj = (GroupObjectSync)value.Reference;
-            obj.FakeSyncId = -1;
+            obj.fakeSyncId = -1;
         }
     }
 }

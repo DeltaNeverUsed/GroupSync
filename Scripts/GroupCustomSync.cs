@@ -50,5 +50,10 @@ public class GroupCustomSync : UdonSharpBehaviour
         if (autoSerialize)
             psm.local_object.RequestSerialization();
     }
+
+    public void SubLeaveGroupCallback()
+    {
+        psm.groupManager.SubLeaveGroupCallback(this);
+    }
     
 }
