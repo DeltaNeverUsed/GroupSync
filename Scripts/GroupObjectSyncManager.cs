@@ -50,22 +50,6 @@ public class GroupObjectSyncManager : UdonSharpBehaviour
         
     }
 
-    private int _updateActive;
-    private void FixedUpdate()
-    {
-        _updateActive++;
-        if (_updateActive%8 != 0)
-            return;
-
-        foreach (var syncObj in syncedObjects)
-        {
-            if (Networking.IsOwner(syncObj.gameObject))
-                continue;
-            syncObj.gameObject.SetActive(true);
-        }
-        
-    }
-
     public void AddRealObject(GroupObjectSync obj)
     {
         if (!syncedRealObjects.ContainsKey(obj.networkId))
@@ -86,9 +70,8 @@ public class GroupObjectSyncManager : UdonSharpBehaviour
     {
         for (int i = 0; i < syncedObjects.Length; i++)
         {
-            if (syncedObjects[i].used)
+            if (syncedObjects[i].group != -1)
                 continue;
-            syncedObjects[i].gameObject.SetActive(true);
             return i;
         }
         return -1;

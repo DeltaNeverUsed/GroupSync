@@ -30,63 +30,32 @@ public class GroupObjectSync : GroupCustomSync
         if (psm.groupManager.local_group == -1)
             return;
         
-        if (fakeSyncId != -1 && fakeSync.used && Networking.IsOwner(fakeSync.gameObject)) return;
+        if (fakeSyncId != -1 && fakeSync.target == networkId && Networking.IsOwner(fakeSync.gameObject)) return;
         psm.local_object.close_group_joinings(psm.groupManager.local_group);
         psm.local_object.request_start_sync(networkId, Networking.LocalPlayer.playerId);
     }
 
-    public void FinishSync(int newSyncId)
-    {
-        if (newSyncId == -1)
-        {
-            Debug.LogError("Got Fake id -1 for some reason");
-            return;
-        }
-        
-        SetVariableInLocalGroup("fakeSyncId", newSyncId, true, false);
-        CallFunctionInLocalGroup("enableFakeSync", true, true);
-
-        if (!Networking.IsOwner(fakeSync.gameObject))
-        {
-            Networking.SetOwner(Networking.LocalPlayer, fakeSync.gameObject);
-            Debug.Log("Not owner yet >:(");
-        }
-    }
-
-    public void enableFakeSync()
-    {
-        fakeSync = gosm.syncedObjects[fakeSyncId];
-        fakeSync.used = true;
-        fakeSync.gameObject.SetActive(true);
-    }
-    
     public void LeaveCallback()
     {
         UnSync();
     }
-
-    public void UnSync(bool d = true, int target = -1)
+    
+    public override void OnPlayerLeft(VRCPlayerApi player)
     {
-        drop = d;
-        SetVariableInLocalGroup("usTar", target == -1 ? fakeSyncId : target, true, false);
-        CallFunctionInLocalGroup("NetUnSync", true, true);
+        if (player != null && player.IsValid())
+            if (player.IsOwner(gameObject))
+                UnSync();
     }
 
-    public int usTar = -1;
-    public bool drop = true;
-    public void NetUnSync()
+    public void UnSync()
     {
-        if (usTar != -1)
-            gosm.syncedObjects[usTar].UnSync();
-
+        if (fakeSyncId != -1)
+            fakeSync.UnSync();
+        
         fakeSyncId = -1;
-
-        if (drop && hasPickup)
+        if (hasPickup)
             pickup.Drop();
-        drop = false;
-        usTar = -1;
     }
-
 
     private void Start()
     {
@@ -112,7 +81,7 @@ public class GroupObjectSync : GroupCustomSync
         if (hasPickup)
             pickup.pickupable = true;
         
-        if (fakeSync != null && !fakeSync.used)
+        if (fakeSync != null && fakeSync.target != networkId)
             fakeSyncId = -1;
         
         if (fakeSyncId == -1)

@@ -56,7 +56,7 @@ public class DebugGroups : UdonSharpBehaviour
             if (guy == null)
                 continue;
             
-            t += $"fakeId: {obj.id}, Enabled: {format_bool(obj.gameObject.activeSelf)}, used: {obj.used}, Owner: ({guy.displayName}, {guy.playerId}), PickedUp: {format_bool(obj.pickedUp)}\n";
+            t += $"fakeId: {obj.id}, Enabled: {format_bool(obj.gameObject.activeSelf)}, group: {obj.group}, target: {obj.target}, Owner: ({guy.displayName}, {guy.playerId}), PickedUp: {format_bool(obj.pickedUp)}\n";
         }
 
         fakeObjectInfo.text = t;
