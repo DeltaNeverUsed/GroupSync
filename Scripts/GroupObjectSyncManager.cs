@@ -73,7 +73,7 @@ public class GroupObjectSyncManager : UdonSharpBehaviour
         if (!syncedCustomObjects.ContainsKey(obj.networkId))
             syncedCustomObjects.Add(obj.networkId, obj);
         else
-            Debug.LogError($"Duplicate ID on custom object: {obj.name}");
+            Debug.LogError($"Duplicate ID on custom object: {obj.name}, ID is: {obj.networkId}");
     }
 
     // Only the master should call this to avoid FakeID collisions
