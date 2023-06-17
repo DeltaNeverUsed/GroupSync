@@ -19,7 +19,7 @@ public class GroupManager : UdonSharpBehaviour
     public int maxPlayersPerGroup = 10;
     
     public string[] joinable = Array.Empty<string>();
-    [UdonSynced] public int[] groups = Array.Empty<int>();
+    [UdonSynced] public short[] groups = Array.Empty<short>();
 
     public DataList leaveGroupCallbacks = new DataList();
 
@@ -45,7 +45,7 @@ public class GroupManager : UdonSharpBehaviour
 
     private void Start()
     {
-        groups = new int[maxGroups * maxPlayersPerGroup];
+        groups = new short[maxGroups * maxPlayersPerGroup];
         joinable = new string[maxGroups];
         for (int i = 0; i < groups.Length; i++)
             groups[i] = -1;
@@ -142,7 +142,7 @@ public class GroupManager : UdonSharpBehaviour
             if(groups[Pos2Index(group, i)] != -1)
                 continue;
 
-            groups[Pos2Index(group, i)] = playerId;
+            groups[Pos2Index(group, i)] = (short)playerId;
             added = true;
             
             break;
