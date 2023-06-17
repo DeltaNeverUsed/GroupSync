@@ -37,6 +37,20 @@ public class GroupCustomSync : UdonSharpBehaviour
         gosm.AddCustomObject(this);
         
     }
+    
+    public void SetVariableInAllGroups(string name, object value, bool setLocally = true, bool autoSerialize = true)
+    {
+        psm.local_object.SetRemoteVar(name, networkId, value, setLocally);
+        if (autoSerialize)
+            psm.local_object.RequestSerialization();
+    }
+    
+    public void CallFunctionInAllGroups(string name, bool callLocally = true, bool autoSerialize = true)
+    {
+        psm.local_object.RemoteFunctionCall(name, networkId, callLocally);
+        if (autoSerialize)
+            psm.local_object.RequestSerialization();
+    }
 
     public void SetVariableInLocalGroup(string name, object value, bool setLocally = true, bool autoSerialize = true)
     {

@@ -16,6 +16,16 @@ public class FakeObjectSync : UdonSharpBehaviour
 
     [HideInInspector] public int id;
 
+    public void Start()
+    {
+        if (gm == null)
+        {
+            gm = GameObject.Find("GroupNetworkingStuff").GetComponent<GroupManager>();
+            if (gm == null)
+                Debug.LogError("Couldn't find GroupNetworkingStuff");
+        }
+    }
+
     public void UnSync()
     {
         target = -1;

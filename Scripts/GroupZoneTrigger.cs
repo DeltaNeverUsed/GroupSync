@@ -14,8 +14,11 @@ public class GroupZoneTrigger : UdonSharpBehaviour
     void Start()
     {
         if (playerNetworkManager == null)
-            Debug.LogError($"playerNetworkManager is not set on: {gameObject.name}");
-        
+        {
+            playerNetworkManager = GameObject.Find("EachPlayerUSPPNet").GetComponent<USPPNetEveryPlayerManager>();
+            if (playerNetworkManager == null)
+                Debug.LogError($"playerNetworkManager is not set on: {gameObject.name}");
+        }
     }
 
     public override void OnPlayerTriggerEnter(VRCPlayerApi player)

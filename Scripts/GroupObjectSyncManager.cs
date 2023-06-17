@@ -81,7 +81,7 @@ public class GroupObjectSyncManager : UdonSharpBehaviour
     {
         for (int i = 0; i < syncedObjects.Length; i++)
         {
-            if (syncedObjects[i].group != -1)
+            if (syncedObjects[i] == null || syncedObjects[i].group != -1)
                 continue;
             return i;
         }
@@ -96,7 +96,7 @@ public class GroupObjectSyncManager : UdonSharpBehaviour
         {
             var value = values[index];
             var obj = (GroupObjectSync)value.Reference;
-            if (obj.fakeSyncId != -1)
+            if (obj != null && obj.fakeSyncId != -1)
                 obj.UnSync();
         }
     }

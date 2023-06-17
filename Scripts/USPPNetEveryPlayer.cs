@@ -118,7 +118,7 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
 
     private void USPPNET_CustomRPC(int group, string eventName, int netId)
     {
-        if (group != groupManager.local_group)
+        if (group != -1 && group != groupManager.local_group)
             return;
         if (!syncManager.syncedCustomObjects.TryGetValue(netId, out var data))
             return;
@@ -253,7 +253,8 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
         for (var index = 0; index < _usppNetEveryPlayerManager.groupManager.leaveGroupCallbacks.Count; index++)
         {
             var caller = _usppNetEveryPlayerManager.groupManager.leaveGroupCallbacks[index];
-            ((UdonSharpBehaviour)caller.Reference).SendCustomEvent("LeaveCallback");
+            if ((UdonSharpBehaviour)caller.Reference != null)
+                ((UdonSharpBehaviour)caller.Reference).SendCustomEvent("LeaveCallback");
         }
         
         if (Networking.IsMaster)

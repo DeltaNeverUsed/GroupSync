@@ -131,7 +131,9 @@ public class GroupManager : UdonSharpBehaviour
 
     public void AddPlayerToGroup(int playerId, int group)
     {
-        if (group < 0)
+        if (group < 0 || group >= maxGroups)
+            return;
+        if (GetPlayerGroup(playerId) != -1)
             return;
 
         var added = false;
@@ -195,6 +197,24 @@ public class GroupManager : UdonSharpBehaviour
         if (group == -1)
             return;
         joinable[group] = "_UnJoinable";
+    }
+
+    public override void OnPlayerLeft(VRCPlayerApi player)
+    {
+        if (!Networking.IsMaster)
+            return;
+
+        var updated = false;
+        for (int i = 0; i < groups.Length; i++)
+        {
+            if (groups[i] == -1) continue;
+            var plr = VRCPlayerApi.GetPlayerById(groups[i]);
+            if (plr != null && plr.IsValid()) continue;
+            groups[i] = -1;
+            updated = true;
+        }
+        if (updated)
+            RequestSerialization();
     }
 
     public override void OnDeserialization()
