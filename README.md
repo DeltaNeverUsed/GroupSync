@@ -15,7 +15,8 @@ Delta's Experimental Grouped Networking for Udon
 
 # Custom Scripts
 To make custom stuff sync in groups you can inherit any script from "GroupCustomSync",
-GroupCustomSync provides five functions to help sync stuff
+GroupCustomSync provides five functions to help sync stuff.
+But before you use any of those, you need to run the StartNet() function, to initialize the networking
 
 ### Global
 1. SetVariableInAllGroups(string name, object value, bool setLocally = true, bool autoSerialize = true)
