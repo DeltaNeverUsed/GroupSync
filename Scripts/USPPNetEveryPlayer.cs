@@ -36,24 +36,20 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
         playerManager.local_object.request_sync_master(objectId, caller);
     }
     
-    private void USPPNET_requst_transfer_owner(int objectId, int caller)
+    private void USPPNET_requst_transfer_owner(int fakeObjectID, int caller)
     {
-        requst_transfer_owner_all(objectId, caller);
+        requst_transfer_owner_all(fakeObjectID, caller);
     }
 
-    private void requst_transfer_owner_all(int objectId, int caller)
+    private void requst_transfer_owner_all(int fakeObjectID, int caller)
     {
-        if (!syncManager.syncedRealObjects.TryGetValue(objectId, out var dataOut))
+        if (fakeObjectID < 0 || fakeObjectID >= syncManager.syncedObjects.Length)
             return;
-        var obj = (GroupObjectSync)dataOut.Reference;
-        
-        if (obj.fakeSyncId == -1)
-            return;
-        var fakeSyncObject = syncManager.syncedObjects[obj.fakeSyncId].gameObject;
+        var fakeSyncObject = syncManager.syncedObjects[fakeObjectID].gameObject;
         if (!Networking.IsOwner(fakeSyncObject))
             return;
         
-        Debug.Log($"transferred ownership: {objectId}");
+        Debug.Log($"transferred ownership on fakeobject: {fakeObjectID}");
 
         // Set the new owner faster 
         var playerCaller = VRCPlayerApi.GetPlayerById(caller);
@@ -200,16 +196,17 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
 
     private void request_sync_master(int objectId, int caller)
     {
-        if (!syncManager.syncedRealObjects.TryGetValue(objectId, out var dataOut))
-            return;
-        var obj = (GroupObjectSync)dataOut.Reference;
-        
-        if (obj.fakeSyncId != -1 && obj.fakeSync.target == obj.networkId && !Networking.IsOwner(VRCPlayerApi.GetPlayerById(caller), obj.fakeSync.gameObject))
+        var fakeSyncID = syncManager.GetFakeSyncFromObjectInGroup(objectId, groupManager.GetPlayerGroup(caller));
+
+        if (fakeSyncID != -1)
         {
-            requst_transfer_owner(obj.networkId, caller);
+            var fakeSyncObj = syncManager.syncedObjects[fakeSyncID];
+            if (Networking.IsOwner(VRCPlayerApi.GetPlayerById(caller), fakeSyncObj.gameObject))
+                return;
+            requst_transfer_owner(fakeSyncID, caller);
             return;
         }
-        
+
         var newSyncId = syncManager.GetFakeSync();
         if (newSyncId == -1)
             return;
@@ -269,10 +266,10 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
         RequestSerialization();
     }
     
-    public void requst_transfer_owner(int objectId, int caller)
+    public void requst_transfer_owner(int fakeObjectID, int caller)
     {
-        USPPNET_requst_transfer_owner(objectId, caller);
-        requst_transfer_owner_all(objectId, caller);
+        USPPNET_requst_transfer_owner(fakeObjectID, caller);
+        requst_transfer_owner_all(fakeObjectID, caller);
         RequestSerialization();
         Debug.Log("Request unsync sent");
     }

@@ -194,7 +194,7 @@ public class GroupManager : UdonSharpBehaviour
     // Only call from host
     public void DisableJoinGroup(int group)
     {
-        if (group == -1)
+        if (group < 0 || group <= joinable.Length)
             return;
         joinable[group] = "_UnJoinable";
     }
@@ -209,10 +209,12 @@ public class GroupManager : UdonSharpBehaviour
         {
             if (groups[i] == -1) continue;
             var plr = VRCPlayerApi.GetPlayerById(groups[i]);
-            if (plr != null && plr.IsValid()) continue;
+            if (plr != null && plr.IsValid()) continue; // Check if player is valid
+            
             groups[i] = -1;
             updated = true;
         }
+        
         if (updated)
             RequestSerialization();
     }

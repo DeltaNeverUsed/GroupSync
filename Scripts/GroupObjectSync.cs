@@ -15,6 +15,8 @@ public class GroupObjectSync : GroupCustomSync
     [HideInInspector] public bool hasPickup; 
     [HideInInspector] public VRC_Pickup pickup;
     
+    private bool _startingSync;
+
     public override void OnPickup()
     {
         StartSync();
@@ -31,6 +33,7 @@ public class GroupObjectSync : GroupCustomSync
             return;
         
         if (fakeSyncId != -1 && fakeSync.target == networkId && Networking.IsOwner(fakeSync.gameObject)) return;
+        _startingSync = true;
         psm.local_object.close_group_joinings(psm.groupManager.local_group);
         psm.local_object.request_start_sync(networkId, Networking.LocalPlayer.playerId);
     }
@@ -91,6 +94,7 @@ public class GroupObjectSync : GroupCustomSync
         var fakeSyncTransform = fakeSync.transform;
         if (Networking.IsOwner(fakeSync.gameObject))
         {
+            _startingSync = false;
             fakeSyncTransform.position = transform.position;
             fakeSyncTransform.rotation = transform.rotation;
             if (hasPickup)
@@ -98,8 +102,11 @@ public class GroupObjectSync : GroupCustomSync
         }
         else
         {
-            transform.position = fakeSyncTransform.position;
-            transform.rotation = fakeSyncTransform.rotation;
+            if (!_startingSync)
+            {
+                transform.position = fakeSyncTransform.position;
+                transform.rotation = fakeSyncTransform.rotation;
+            }
             if (hasPickup)
                 pickup.pickupable = !fakeSync.pickedUp || !pickup.DisallowTheft;
         }

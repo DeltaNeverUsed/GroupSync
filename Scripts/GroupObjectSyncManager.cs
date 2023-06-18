@@ -88,6 +88,17 @@ public class GroupObjectSyncManager : UdonSharpBehaviour
         return -1;
     }
 
+    public int GetFakeSyncFromObjectInGroup(int objectId, int group)
+    {
+        for (int i = 0; i < syncedObjects.Length; i++)
+        {
+            if (syncedObjects[i] == null || syncedObjects[i].group != group || syncedObjects[i].target != objectId)
+                continue;
+            return i;
+        }
+        return -1;
+    }
+
     // Call before changing group
     public void LocalDropAll()
     {
