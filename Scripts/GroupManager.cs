@@ -32,15 +32,15 @@ public class GroupManager : UdonSharpBehaviour
         if (Networking.LocalPlayer.playerId != player)
             return;
         syncManager.ResetRealFakeIds();
-        ResetFakeObjects();
         local_group = group;
         Debug.Log($"local_group updated: {local_group}");
     }
 
-    public void ResetFakeObjects()
+    public void ResetFakeObjects(VRCPlayerApi player)
     {
         foreach (Transform child in syncManager.transform)
-            child.GetComponent<FakeObjectSync>().UnSync();
+            if (player.IsOwner(child.gameObject))
+                child.GetComponent<FakeObjectSync>().UnSync();
     }
 
     private void Start()
@@ -51,8 +51,6 @@ public class GroupManager : UdonSharpBehaviour
             groups[i] = -1;
         for (int i = 0; i < maxGroups; i++)
             joinable[i] = "";
-
-        ResetFakeObjects();
     }
 
     private int _cleanupCheck;
@@ -150,12 +148,12 @@ public class GroupManager : UdonSharpBehaviour
 
         if (added)
         {
+            ResetFakeObjects(VRCPlayerApi.GetPlayerById(playerId));
             if (!VRCPlayerApi.GetPlayerById(playerId).IsOwner(gameObject))
                 USPPNET_tell_client_group(playerId, group);
             else
             {
                 syncManager.ResetRealFakeIds();
-                ResetFakeObjects();
                 local_group = group;
             }
         }
@@ -194,7 +192,7 @@ public class GroupManager : UdonSharpBehaviour
     // Only call from host
     public void DisableJoinGroup(int group)
     {
-        if (group < 0 || group <= joinable.Length)
+        if (group < 0 || group >= joinable.Length)
             return;
         joinable[group] = "_UnJoinable";
     }

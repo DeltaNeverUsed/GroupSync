@@ -50,7 +50,6 @@ public class USPPNetEveryPlayerManager : UdonSharpBehaviour
                 continue;
             
             Objects[i].owned = true;
-            Objects[i].RequestSerialization();
             Networking.SetOwner(player, Objects[i].gameObject);
             if (player == Networking.LocalPlayer) // if joined player is instance master don't network
                 local_object = Objects[i];

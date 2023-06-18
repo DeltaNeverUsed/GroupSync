@@ -9,7 +9,7 @@ using VRC.SDKBase;
 public class FakeObjectSync : UdonSharpBehaviour
 {
     [SerializeField] private GroupManager gm;
-    
+
     [UdonSynced] [HideInInspector] public int target = -1;
     [UdonSynced] [HideInInspector] public int group = -1;
     [UdonSynced] [HideInInspector] public bool pickedUp;
@@ -23,18 +23,19 @@ public class FakeObjectSync : UdonSharpBehaviour
             gm = GameObject.Find("GroupNetworkingStuff").GetComponent<GroupManager>();
             if (gm == null)
                 Debug.LogError("Couldn't find GroupNetworkingStuff");
-        }
-    }
+        } }
 
     public void UnSync()
     {
         target = -1;
         group = -1;
         pickedUp = false;
+        RequestSerialization();
     }
 
     private int _lastTarget = -1;
     private int ownerCheck = 0;
+
     public void FixedUpdate()
     {
         ownerCheck--;
@@ -43,7 +44,7 @@ public class FakeObjectSync : UdonSharpBehaviour
             Networking.SetOwner(Networking.LocalPlayer, gameObject);
             ownerCheck = 120;
         }
-        
+
         if (_lastTarget != target && group == gm.local_group)
         {
             if (!gm.syncManager.syncedRealObjects.TryGetValue(target, out var data)) return;
@@ -52,9 +53,10 @@ public class FakeObjectSync : UdonSharpBehaviour
             obj.fakeSyncId = id;
             obj.fakeSync = this;
         }
+
         _lastTarget = target;
     }
-    
+
     public override void OnPlayerLeft(VRCPlayerApi player)
     {
         if (player != null && player.IsValid())
