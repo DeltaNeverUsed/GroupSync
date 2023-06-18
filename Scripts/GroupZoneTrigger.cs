@@ -23,7 +23,7 @@ public class GroupZoneTrigger : UdonSharpBehaviour
 
     public override void OnPlayerTriggerEnter(VRCPlayerApi player)
     {
-        if (player != Networking.LocalPlayer && player.IsValid())
+        if (player != Networking.LocalPlayer)
             return;
         
         Debug.Log($"Entered: {zoneName}!");

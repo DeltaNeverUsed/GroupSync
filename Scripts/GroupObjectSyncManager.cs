@@ -119,7 +119,7 @@ public class GroupObjectSyncManager : UdonSharpBehaviour
         {
             var value = values[index];
             var obj = (GroupObjectSync)value.Reference;
-            obj.fakeSyncId = -1;
+            obj.UnSync();
         }
     }
 }
