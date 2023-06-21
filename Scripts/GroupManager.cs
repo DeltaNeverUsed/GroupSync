@@ -164,18 +164,22 @@ public class GroupManager : UdonSharpBehaviour
 
     public int GetJoinableGroup(string zone)
     {
+        var firstChoice = -1;
         var secondChoice = -1;
-        for (int i = 0; i < maxGroups; i++)
+        
+        for (var i = 0; i < maxGroups; i++)
         {
             if (joinable[i] == zone)
-                return i;
+                firstChoice = i;
             if (joinable[i] == "" && secondChoice == -1)
                 secondChoice = i;
         }
 
+        if (firstChoice != -1) return firstChoice;
+        
         joinable[secondChoice] = zone;
         return secondChoice;
-       
+
     }
 
     public void SubLeaveGroupCallback(UdonSharpBehaviour caller)
