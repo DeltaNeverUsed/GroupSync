@@ -1,7 +1,6 @@
 ﻿using UdonSharp;
 using UnityEngine;
 using UnityEngine.Serialization;
-using USPPNet;
 using VRC.SDKBase;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -14,8 +13,12 @@ public class GroupObjectSync : GroupCustomSync
     [HideInInspector] public FakeObjectSync fakeSync;
     [HideInInspector] public bool hasPickup; 
     [HideInInspector] public VRC_Pickup pickup;
+
+    public float respawnHeight = -70;
     
     private bool _startingSync;
+    private Vector3 _startingPosition;
+    private Quaternion _startingRotation;
 
     public override void OnPickup()
     {
@@ -62,6 +65,8 @@ public class GroupObjectSync : GroupCustomSync
 
     private void Start()
     {
+        _startingPosition = transform.position;
+        _startingRotation = transform.rotation;
         StartNet();
         SubLeaveGroupCallback();
         
@@ -75,6 +80,11 @@ public class GroupObjectSync : GroupCustomSync
 
     private void Update()
     {
+        if (transform.position.y < respawnHeight)
+        {
+            transform.position = _startingPosition;
+            transform.rotation = _startingRotation;
+        }
         if (psm.groupManager.local_group == -1)
         {
             if (hasPickup)
