@@ -61,7 +61,7 @@ public class GroupManager : UdonSharpBehaviour
             return;
         
         _cleanupCheck++;
-        if (_cleanupCheck % 60 == 0)
+        if (_cleanupCheck % 240 == 0)
             CheckGroupsEmpty();
     }
 
