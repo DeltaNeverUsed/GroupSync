@@ -54,10 +54,18 @@ public class GroupObjectSyncManager : UdonSharpBehaviour
     public void FixedUpdate()
     {
         var obj = syncedObjects[_activeIndex];
-        if (Networking.IsOwner(obj.gameObject) && obj.group == -1)
-            obj.gameObject.SetActive(false);
-        else 
-            obj.gameObject.SetActive(true);
+        var gameobject = obj.gameObject;
+        var active = gameobject.activeSelf;
+        if (obj.group == -1 && Networking.IsOwner(gameobject))
+        {
+            if (active)
+                gameobject.SetActive(false);
+        }
+        else
+        {
+            if (!active)
+                gameobject.SetActive(true);
+        }
         _activeIndex++;
         if (_activeIndex >= syncedObjects.Length)
             _activeIndex = 0;

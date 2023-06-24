@@ -56,8 +56,7 @@ public class GroupManager : UdonSharpBehaviour
     private int _cleanupCheck;
     private void FixedUpdate()
     {
-
-        if (!Networking.IsOwner(gameObject))
+        if (!Networking.IsMaster)
             return;
         
         _cleanupCheck++;
