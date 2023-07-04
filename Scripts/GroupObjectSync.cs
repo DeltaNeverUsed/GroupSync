@@ -55,9 +55,6 @@ public class GroupObjectSync : GroupCustomSync
 
     public void UnSync()
     {
-        if (fakeSyncId != -1)
-            fakeSync.UnSync();
-        
         fakeSyncId = -1;
         if (hasPickup)
             pickup.Drop();
@@ -99,7 +96,7 @@ public class GroupObjectSync : GroupCustomSync
         
         if (fakeSyncId == -1)
             return;
-        fakeSync = gosm.syncedObjects[fakeSyncId];
+        fakeSync = gosm.fakeObjects[fakeSyncId];
 
         var fakeSyncTransform = fakeSync.transform;
         if (Networking.IsOwner(fakeSync.gameObject))

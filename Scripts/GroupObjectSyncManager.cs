@@ -32,19 +32,19 @@ public class GroupObjectSyncManagerEditor : Editor
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 public class GroupObjectSyncManager : UdonSharpBehaviour
 {
-    public FakeObjectSync[] syncedObjects = Array.Empty<FakeObjectSync>();
+    [HideInInspector] public FakeObjectSync[] fakeObjects = Array.Empty<FakeObjectSync>();
     
-    public DataDictionary syncedRealObjects = new DataDictionary();
-    public DataDictionary syncedCustomObjects = new DataDictionary();
+    [HideInInspector] public DataDictionary syncedRealObjects = new DataDictionary();
+    [HideInInspector] public DataDictionary syncedCustomObjects = new DataDictionary();
 
     private void Start()
     {
-        syncedObjects = new FakeObjectSync[transform.childCount];
+        fakeObjects = new FakeObjectSync[transform.childCount];
         var i = 0;
         foreach (Transform child in transform)
         {
-            syncedObjects[i] = child.GetComponent<FakeObjectSync>();
-            syncedObjects[i].id = i;
+            fakeObjects[i] = child.GetComponent<FakeObjectSync>();
+            fakeObjects[i].id = i;
             i++;
         }
         
@@ -53,7 +53,7 @@ public class GroupObjectSyncManager : UdonSharpBehaviour
     private int _activeIndex = 0;
     public void FixedUpdate()
     {
-        var obj = syncedObjects[_activeIndex];
+        var obj = fakeObjects[_activeIndex];
         var gameobject = obj.gameObject;
         var active = gameobject.activeSelf;
         if (obj.group == -1 && Networking.IsOwner(gameobject))
@@ -67,7 +67,7 @@ public class GroupObjectSyncManager : UdonSharpBehaviour
                 gameobject.SetActive(true);
         }
         _activeIndex++;
-        if (_activeIndex >= syncedObjects.Length)
+        if (_activeIndex >= fakeObjects.Length)
             _activeIndex = 0;
     }
 
@@ -89,9 +89,9 @@ public class GroupObjectSyncManager : UdonSharpBehaviour
     // Only the master should call this to avoid FakeID collisions
     public int GetFakeSync()
     {
-        for (int i = 0; i < syncedObjects.Length; i++)
+        for (int i = 0; i < fakeObjects.Length; i++)
         {
-            if (syncedObjects[i] == null || syncedObjects[i].group != -1)
+            if (fakeObjects[i] == null || fakeObjects[i].group != -1)
                 continue;
             return i;
         }
@@ -100,9 +100,9 @@ public class GroupObjectSyncManager : UdonSharpBehaviour
 
     public int GetFakeSyncFromObjectInGroup(int objectId, int group)
     {
-        for (int i = 0; i < syncedObjects.Length; i++)
+        for (int i = 0; i < fakeObjects.Length; i++)
         {
-            if (syncedObjects[i] == null || syncedObjects[i].group != group || syncedObjects[i].target != objectId)
+            if (fakeObjects[i] == null || fakeObjects[i].group != group || fakeObjects[i].target != objectId)
                 continue;
             return i;
         }

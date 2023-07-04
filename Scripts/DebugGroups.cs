@@ -49,9 +49,9 @@ public class DebugGroups : UdonSharpBehaviour
         groupinfo.text = t;
 
         t = ""; // Fake Objects
-        for (int x = 0; x < Mathf.Min(syncManager.syncedObjects.Length, 10); x++)
+        for (int x = 0; x < Mathf.Min(syncManager.fakeObjects.Length, 10); x++)
         {
-            var obj = syncManager.syncedObjects[x];
+            var obj = syncManager.fakeObjects[x];
             var guy = Networking.GetOwner(obj.gameObject);
             if (guy == null)
                 continue;

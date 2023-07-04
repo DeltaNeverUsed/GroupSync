@@ -43,9 +43,9 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
 
     private void requst_transfer_owner_all(int fakeObjectID, int caller)
     {
-        if (fakeObjectID < 0 || fakeObjectID >= syncManager.syncedObjects.Length)
+        if (fakeObjectID < 0 || fakeObjectID >= syncManager.fakeObjects.Length)
             return;
-        var fakeSyncObject = syncManager.syncedObjects[fakeObjectID].gameObject;
+        var fakeSyncObject = syncManager.fakeObjects[fakeObjectID].gameObject;
         if (!Networking.IsOwner(fakeSyncObject))
             return;
         
@@ -61,6 +61,8 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
     {
         if (!Networking.IsMaster)
             return;
+        
+        unsync_player_fake_ids_master(playerId);
         _usppNetEveryPlayerManager.groupManager.RemovePlayerFromGroups(playerId);
         var group = _usppNetEveryPlayerManager.groupManager.GetJoinableGroup(zone);
         _usppNetEveryPlayerManager.groupManager.AddPlayerToGroup(playerId, group);
@@ -170,7 +172,6 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
     // Master 
     private void USPPNET_close_group_joins(int group)
     {
-        Debug.Log($"Is Master: {Networking.IsMaster}");
         if (!Networking.IsMaster)
             return;
 
@@ -182,8 +183,10 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
     {
         if (Networking.LocalPlayer.playerId != caller)
             return;
+
+        var fakeSync = syncManager.fakeObjects[fakeSyncId];
+        fakeSync.gameObject.SetActive(true);
         
-        var fakeSync = syncManager.syncedObjects[fakeSyncId];
         if (!Networking.IsOwner(fakeSync.gameObject))
         {
             Debug.Log("Not owner of object?");
@@ -194,24 +197,48 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
         fakeSync.target = objectId;
     }
 
+    private void unsync_player_fake_ids_master(int playerId)
+    {
+        var player = VRCPlayerApi.GetPlayerById(playerId);
+        if (!player.IsValid())
+            return;
+        
+        foreach (var fakeSync in syncManager.fakeObjects)
+        {
+            if (Networking.IsOwner(player, fakeSync.gameObject))
+            {
+                Networking.SetOwner(Networking.LocalPlayer, fakeSync.gameObject);
+                fakeSync.UnSync();
+            }
+        }
+    }
+
     private void request_sync_master(int objectId, int caller)
     {
+        //Debug.Log("Sync request");
         var fakeSyncID = syncManager.GetFakeSyncFromObjectInGroup(objectId, groupManager.GetPlayerGroup(caller));
 
         if (fakeSyncID != -1)
         {
-            var fakeSyncObj = syncManager.syncedObjects[fakeSyncID];
+            //Debug.Log("Changing Ownership instead");
+            var fakeSyncObj = syncManager.fakeObjects[fakeSyncID];
             if (Networking.IsOwner(VRCPlayerApi.GetPlayerById(caller), fakeSyncObj.gameObject))
+            {
+                //Debug.Log("Requested user was already owner");
                 return;
+            }
             requst_transfer_owner(fakeSyncID, caller);
             return;
         }
 
         var newSyncId = syncManager.GetFakeSync();
         if (newSyncId == -1)
+        {
+            //Debug.Log("Couldn't get fake sync");
             return;
+        }
         
-        var fakeSync = syncManager.syncedObjects[newSyncId];
+        var fakeSync = syncManager.fakeObjects[newSyncId];
 
         var playerCaller = VRCPlayerApi.GetPlayerById(caller);
         if (playerCaller.IsValid())
@@ -243,7 +270,7 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
         if (_currZone == zone)
             return;
         _currZone = zone;
-        syncManager.LocalDropAll();
+        syncManager.LocalDropAll(); // this should probably, be removed?
         
         // This needs to be called locally, and this doesn't actually get called on group leave,
         // Just on requesting a new one, which might as well be the same thing.
@@ -256,6 +283,7 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
         
         if (Networking.IsMaster)
         {
+            unsync_player_fake_ids_master(playerId);
             _usppNetEveryPlayerManager.groupManager.RemovePlayerFromGroups(playerId);
             var group = _usppNetEveryPlayerManager.groupManager.GetJoinableGroup(zone);
             _usppNetEveryPlayerManager.groupManager.AddPlayerToGroup(playerId, group);

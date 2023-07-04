@@ -34,17 +34,9 @@ public class FakeObjectSync : UdonSharpBehaviour
     }
 
     private int _lastTarget = -1;
-    private int ownerCheck = 0;
 
     public void FixedUpdate()
     {
-        ownerCheck--;
-        if (ownerCheck < 0 && group == -1 && Networking.IsMaster && !Networking.IsOwner(gameObject))
-        {
-            Networking.SetOwner(Networking.LocalPlayer, gameObject);
-            ownerCheck = 120;
-        }
-
         if (_lastTarget != target && group == gm.local_group)
         {
             if (!gm.syncManager.syncedRealObjects.TryGetValue(target, out var data)) return;
