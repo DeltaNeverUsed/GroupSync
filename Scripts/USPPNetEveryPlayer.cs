@@ -72,7 +72,7 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
 
     private void GenericSet(int group, string varName, int netId, object var)
     {
-        if (group != groupManager.local_group)
+        if ((group == -1 || group != groupManager.local_group) && group != -2)
             return;
         if (!syncManager.syncedCustomObjects.TryGetValue(netId, out var data))
             return;
@@ -116,7 +116,7 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
 
     private void USPPNET_CustomRPC(int group, string eventName, int netId)
     {
-        if (group != -1 && group != groupManager.local_group)
+        if ((group == -1 || group != groupManager.local_group) && group != -2 )
             return;
         if (!syncManager.syncedCustomObjects.TryGetValue(netId, out var data))
             return;
@@ -126,34 +126,34 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
     }
 
 
-    public void SetRemoteVar(string varName, int netId, object var, bool setLocally = true)
+    public void SetRemoteVar(int group, string varName, int netId, object var, bool setLocally = true)
     {
         var argType = var.GetType();
         
         if (argType == typeof(int))
-            USPPNET_CustomSet_int(groupManager.local_group, varName, netId, (int)var);
+            USPPNET_CustomSet_int(group, varName, netId, (int)var);
         if (argType == typeof(string))
-            USPPNET_CustomSet_string(groupManager.local_group, varName, netId, (string)var);
+            USPPNET_CustomSet_string(group, varName, netId, (string)var);
         if (argType == typeof(bool))
-            USPPNET_CustomSet_bool(groupManager.local_group, varName, netId, (bool)var);
+            USPPNET_CustomSet_bool(group, varName, netId, (bool)var);
         if (argType == typeof(float))
-            USPPNET_CustomSet_float(groupManager.local_group, varName, netId, (float)var);
+            USPPNET_CustomSet_float(group, varName, netId, (float)var);
         if (argType == typeof(Vector2))
-            USPPNET_CustomSet_Vector2(groupManager.local_group, varName, netId, (Vector2)var);
+            USPPNET_CustomSet_Vector2(group, varName, netId, (Vector2)var);
         if (argType == typeof(Vector3))
-            USPPNET_CustomSet_Vector3(groupManager.local_group, varName, netId, (Vector3)var);
+            USPPNET_CustomSet_Vector3(group, varName, netId, (Vector3)var);
         if (argType == typeof(Vector4))
-            USPPNET_CustomSet_Vector4(groupManager.local_group, varName, netId, (Vector4)var);
+            USPPNET_CustomSet_Vector4(group, varName, netId, (Vector4)var);
         if (argType == typeof(Quaternion))
-            USPPNET_CustomSet_Quaternion(groupManager.local_group, varName, netId, (Quaternion)var);
+            USPPNET_CustomSet_Quaternion(group, varName, netId, (Quaternion)var);
         
         if (setLocally)
-            GenericSet(groupManager.local_group, varName, netId, var);
+            GenericSet(group, varName, netId, var);
     }
 
-    public void RemoteFunctionCall(string eventName, int netId, bool callLocally = true)
+    public void RemoteFunctionCall(int group, string eventName, int netId, bool callLocally = true)
     {
-        USPPNET_CustomRPC(groupManager.local_group, eventName, netId);
+        USPPNET_CustomRPC(group, eventName, netId);
         
         if (!callLocally) return;
         if (!syncManager.syncedCustomObjects.TryGetValue(netId, out var data))

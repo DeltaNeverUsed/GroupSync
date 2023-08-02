@@ -52,39 +52,38 @@ public class GroupCustomSync : UdonSharpBehaviour
     
     public void SetVariableInAllGroups(string name, object value, bool setLocally = true, bool autoSerialize = true)
     {
-        if (CheckLocalObject())
-            return;
-        
-        psm.local_object.SetRemoteVar(name, networkId, value, setLocally);
-        if (autoSerialize)
-            psm.local_object.RequestSerialization();
+        SetVariable(-2, name, value, setLocally, autoSerialize);
     }
-    
     public void CallFunctionInAllGroups(string name, bool callLocally = true, bool autoSerialize = true)
     {
-        if (CheckLocalObject())
-            return;
-        
-        psm.local_object.RemoteFunctionCall(name, networkId, callLocally);
-        if (autoSerialize)
-            psm.local_object.RequestSerialization();
+        CallFunction(-2, name, callLocally, autoSerialize);
     }
 
     public void SetVariableInLocalGroup(string name, object value, bool setLocally = true, bool autoSerialize = true)
     {
-        if (CheckLocalObject())
-            return;
-        
-        psm.local_object.SetRemoteVar(name, networkId, value, setLocally);
-        if (autoSerialize)
-            psm.local_object.RequestSerialization();
+        SetVariable(psm.groupManager.local_group, name, value, setLocally, autoSerialize);
     }
     public void CallFunctionInLocalGroup(string name, bool callLocally = true, bool autoSerialize = true)
+    {
+        CallFunction(psm.groupManager.local_group, name, callLocally, autoSerialize);
+    }
+
+    private void CallFunction(int group, string name, bool callLocally = true, bool autoSerialize = true)
     {
         if (CheckLocalObject())
             return;
         
-        psm.local_object.RemoteFunctionCall(name, networkId, callLocally);
+        psm.local_object.RemoteFunctionCall(group, name, networkId, callLocally);
+        if (autoSerialize)
+            psm.local_object.RequestSerialization();
+    }
+
+    private void SetVariable(int group, string name, object value, bool setLocally = true, bool autoSerialize = true)
+    {
+        if (CheckLocalObject())
+            return;
+        
+        psm.local_object.SetRemoteVar(group, name, networkId, value, setLocally);
         if (autoSerialize)
             psm.local_object.RequestSerialization();
     }
