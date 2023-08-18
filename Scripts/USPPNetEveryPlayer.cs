@@ -29,40 +29,11 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
 
     private string _currZone = "";
 
-    private void USPPNET_request_sync(int objectId, int caller)
-    {
-        if (!Networking.IsMaster)
-            return;
-        playerManager.local_object.request_sync_master(objectId, caller);
-    }
-    
-    private void USPPNET_requst_transfer_owner(int fakeObjectID, int caller)
-    {
-        requst_transfer_owner_all(fakeObjectID, caller);
-    }
-
-    private void requst_transfer_owner_all(int fakeObjectID, int caller)
-    {
-        if (fakeObjectID < 0 || fakeObjectID >= syncManager.fakeObjects.Length)
-            return;
-        var fakeSyncObject = syncManager.fakeObjects[fakeObjectID].gameObject;
-        if (!Networking.IsOwner(fakeSyncObject))
-            return;
-        
-        Debug.Log($"transferred ownership on fakeobject: {fakeObjectID}");
-
-        // Set the new owner faster 
-        var playerCaller = VRCPlayerApi.GetPlayerById(caller);
-        if (playerCaller.IsValid())
-            Networking.SetOwner(playerCaller, fakeSyncObject);
-    }
-
     private void USPPNET_request_new_group(string zone, int playerId)
     {
         if (!Networking.IsMaster)
             return;
         
-        unsync_player_fake_ids_master(playerId);
         _usppNetEveryPlayerManager.groupManager.RemovePlayerFromGroups(playerId);
         var group = _usppNetEveryPlayerManager.groupManager.GetJoinableGroup(zone);
         _usppNetEveryPlayerManager.groupManager.AddPlayerToGroup(playerId, group);
@@ -164,11 +135,6 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
         obj.SendCustomEvent(eventName);
     }
 
-    private void USPPNET_set_fake_sync(int caller, int fakeSyncId, int objectId)
-    {
-        set_fake_sync_target(caller, fakeSyncId, objectId);
-    }
-
     // Master 
     private void USPPNET_close_group_joins(int group)
     {
@@ -177,80 +143,6 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
 
         groupManager.DisableJoinGroup(group);
         Debug.Log($"Group: {group} joins closed.");
-    }
-
-    private void set_fake_sync_target(int caller, int fakeSyncId, int objectId)
-    {
-        if (Networking.LocalPlayer.playerId != caller)
-            return;
-
-        var fakeSync = syncManager.fakeObjects[fakeSyncId];
-        fakeSync.gameObject.SetActive(true);
-        
-        if (!Networking.IsOwner(fakeSync.gameObject))
-        {
-            Debug.Log("Not owner of object?");
-            Networking.SetOwner(Networking.LocalPlayer, fakeSync.gameObject);
-        }
-
-        fakeSync.group = groupManager.local_group;
-        fakeSync.target = objectId;
-    }
-
-    private void unsync_player_fake_ids_master(int playerId)
-    {
-        var player = VRCPlayerApi.GetPlayerById(playerId);
-        if (!player.IsValid())
-            return;
-        
-        foreach (var fakeSync in syncManager.fakeObjects)
-        {
-            if (Networking.IsOwner(player, fakeSync.gameObject))
-            {
-                Networking.SetOwner(Networking.LocalPlayer, fakeSync.gameObject);
-                fakeSync.UnSync();
-            }
-        }
-    }
-
-    private void request_sync_master(int objectId, int caller)
-    {
-        //Debug.Log("Sync request");
-        var fakeSyncID = syncManager.GetFakeSyncFromObjectInGroup(objectId, groupManager.GetPlayerGroup(caller));
-
-        if (fakeSyncID != -1)
-        {
-            //Debug.Log("Changing Ownership instead");
-            var fakeSyncObj = syncManager.fakeObjects[fakeSyncID];
-            if (Networking.IsOwner(VRCPlayerApi.GetPlayerById(caller), fakeSyncObj.gameObject))
-            {
-                //Debug.Log("Requested user was already owner");
-                return;
-            }
-            requst_transfer_owner(fakeSyncID, caller);
-            return;
-        }
-
-        var newSyncId = syncManager.GetFakeSync();
-        if (newSyncId == -1)
-        {
-            //Debug.Log("Couldn't get fake sync");
-            return;
-        }
-        
-        var fakeSync = syncManager.fakeObjects[newSyncId];
-
-        var playerCaller = VRCPlayerApi.GetPlayerById(caller);
-        if (playerCaller.IsValid())
-            Networking.SetOwner(playerCaller, fakeSync.gameObject);
-
-        if (caller == Networking.LocalPlayer.playerId)
-            set_fake_sync_target(caller, newSyncId, objectId);
-        else
-        {
-            USPPNET_set_fake_sync(caller, newSyncId, objectId);
-            RequestSerialization();
-        }        
     }
 
     // Client
@@ -270,7 +162,6 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
         if (_currZone == zone)
             return;
         _currZone = zone;
-        syncManager.LocalDropAll(); // this should probably, be removed?
         
         // This needs to be called locally, and this doesn't actually get called on group leave,
         // Just on requesting a new one, which might as well be the same thing.
@@ -283,7 +174,6 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
         
         if (Networking.IsMaster)
         {
-            unsync_player_fake_ids_master(playerId);
             _usppNetEveryPlayerManager.groupManager.RemovePlayerFromGroups(playerId);
             var group = _usppNetEveryPlayerManager.groupManager.GetJoinableGroup(zone);
             _usppNetEveryPlayerManager.groupManager.AddPlayerToGroup(playerId, group);
@@ -293,31 +183,6 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
         USPPNET_request_new_group(zone, playerId);
         RequestSerialization();
     }
-    
-    public void requst_transfer_owner(int fakeObjectID, int caller)
-    {
-        USPPNET_requst_transfer_owner(fakeObjectID, caller);
-        requst_transfer_owner_all(fakeObjectID, caller);
-        RequestSerialization();
-        Debug.Log("Request unsync sent");
-    }
-    
-    public void request_start_sync(int objectId, int caller)
-    {
-        if (!syncManager.syncedRealObjects.TryGetValue(objectId, out var dataOut))
-            return;
-        
-        if (Networking.IsMaster)
-            request_sync_master(objectId, caller);
-        else
-        {
-            USPPNET_request_sync(objectId, caller);
-            RequestSerialization();
-        }        
-        Debug.Log("Requested sync started");
-    }
-
-    
     
     private void Start()
     {

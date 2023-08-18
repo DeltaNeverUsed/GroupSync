@@ -33,7 +33,6 @@ public class GroupCustomSync : UdonSharpBehaviour
         }
         
         gosm.AddCustomObject(this);
-        
     }
 
     private bool _dontExists = true;
@@ -88,9 +87,20 @@ public class GroupCustomSync : UdonSharpBehaviour
             psm.local_object.RequestSerialization();
     }
 
+    /// <summary>
+    /// The call back gets called whenever the group changed is request, and before the group is changed!
+    /// </summary>
     public void SubLeaveGroupCallback()
     {
         psm.groupManager.SubLeaveGroupCallback(this);
+    }
+
+    /// <summary>
+    /// Locks the group so that new people can't join it.
+    /// </summary>
+    public void CloseCurrentGroup()
+    {
+        psm.local_object.close_group_joinings(psm.groupManager.local_group);
     }
     
 }

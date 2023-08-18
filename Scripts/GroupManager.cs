@@ -13,8 +13,6 @@ using VRC.Udon;
 [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
 public class GroupManager : UdonSharpBehaviour
 {
-    public GroupObjectSyncManager syncManager;
-    
     public int maxGroups = 12;
     public int maxPlayersPerGroup = 10;
     
@@ -31,16 +29,8 @@ public class GroupManager : UdonSharpBehaviour
         //Debug.Log($"Player: ({guy.displayName}, {guy.playerId}, Local: {Networking.LocalPlayer.playerId}), Group: {group}");
         if (Networking.LocalPlayer.playerId != player)
             return;
-        syncManager.ResetRealFakeIds();
         local_group = group;
         Debug.Log($"local_group updated: {local_group}");
-    }
-
-    public void ResetFakeObjects(VRCPlayerApi player)
-    {
-        foreach (Transform child in syncManager.transform)
-            if (player.IsOwner(child.gameObject))
-                child.GetComponent<FakeObjectSync>().UnSync();
     }
 
     private void Start()
@@ -147,24 +137,19 @@ public class GroupManager : UdonSharpBehaviour
 
         if (added)
         {
-            ResetFakeObjects(VRCPlayerApi.GetPlayerById(playerId));
             if (!VRCPlayerApi.GetPlayerById(playerId).IsOwner(gameObject))
                 USPPNET_tell_client_group(playerId, group);
             else
-            {
-                syncManager.ResetRealFakeIds();
                 local_group = group;
-            }
         }
-            
         
         RequestSerialization();
     }
 
     public int GetJoinableGroup(string zone)
     {
-        var firstChoice = -1;
-        var secondChoice = -1;
+        var firstChoice = -1; // First choice is a group with the same zone name as the one requested.
+        var secondChoice = -1; // Second choice is an empty zone.
         
         for (var i = 0; i < maxGroups; i++)
         {
@@ -192,7 +177,11 @@ public class GroupManager : UdonSharpBehaviour
         leaveGroupCallbacks.Add(caller);
     }
     
-    // Only call from host
+    /// <summary>
+    /// Disables joining for specified Group
+    /// DON'T CALL UNLESS YOU ARE HOST
+    /// </summary>
+    /// <param name="group"></param>
     public void DisableJoinGroup(int group)
     {
         if (group < 0 || group >= joinable.Length)

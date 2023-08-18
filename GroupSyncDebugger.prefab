@@ -252,7 +252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -262,10 +262,7 @@ MonoBehaviour:
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2080704790789151444}
   groupManager: {fileID: 0}
-  syncManager: {fileID: 0}
   groupinfo: {fileID: 2080704791290931729}
-  fakeObjectInfo: {fileID: 2080704789994014964}
-  objectInfo: {fileID: 2080704791757191930}
 --- !u!114 &2080704790789151444
 MonoBehaviour:
   m_ObjectHideFlags: 0
