@@ -10,7 +10,9 @@ public class DebugGroups : UdonSharpBehaviour
 {
 
     public GroupManager groupManager;
+    public USPPNetEveryPlayerManager playerManager;
     
+    public TextMeshProUGUI netinfo;
     public TextMeshProUGUI groupinfo;
 
     public void FixedUpdate()
@@ -20,6 +22,9 @@ public class DebugGroups : UdonSharpBehaviour
 
     private void DebugDisplayGroup()
     {
+        var bytesSent = (int)playerManager.local_object.GetProgramVariable("bytesSent");
+        netinfo.text = $"Local player last sent: {bytesSent} Bytes";
+        
         if (groupManager.groups.Length < groupManager.maxGroups * groupManager.maxPlayersPerGroup)
             return;
 

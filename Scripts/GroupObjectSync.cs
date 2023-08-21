@@ -43,9 +43,15 @@ public class GroupObjectSync : GroupCustomSync
     /// </summary>
     public void SimulateDrop()
     {
+        _delayedHandSync = false;
         SetVariableInLocalGroup(nameof(handSync), 0);
         SyncObjectChanges(true);
+        CallFunctionInLocalGroup(nameof(FB), false);
     }
+
+    private bool _syncHand;
+    private bool _delayedHandSync;
+    private float _timeUntilHandSync;
 
     /// <summary>
     /// Simulates the object being picked up.
@@ -66,10 +72,13 @@ public class GroupObjectSync : GroupCustomSync
         
         BecomeOwner();
         CallFunctionInLocalGroup(nameof(ST), false);
-        SetVariableInLocalGroup(nameof(handSync), true, true, false);
         SetVariableInLocalGroup(nameof(tp), localPos, true, false);
         SetVariableInLocalGroup(nameof(tr), localRot, true, false);
-        SetVariableInLocalGroup(nameof(handSync), lHand ? 1 : 2, true, false);
+        CallFunctionInLocalGroup(nameof(FB), false);
+
+        _delayedHandSync = true;
+        _timeUntilHandSync = 1f;
+        _syncHand = lHand;
     }
 
     public void LeaveCallback()
@@ -133,8 +142,14 @@ public class GroupObjectSync : GroupCustomSync
     private int cu = -1; // C.U. Current Updater or the Owner of the Object
 
     // These are used as local offsets (relative to the grabber) if handSync is enabled.
-    private Vector3 tp = Vector3.zero; // T.P. Target Position
-    private Quaternion tr = Quaternion.identity; // T.R. Target Rotation
+    private Vector3 tp = Vector3.zero; // T.P. Target Position // This acts as a buffer
+    private Quaternion tr = Quaternion.identity; // T.R. Target Rotation // This acts as a buffer
+    
+    private Vector3 _tp_buffer2 = Vector3.zero;
+    private Quaternion _tr_buffer2 = Quaternion.identity;
+    
+    private Vector3 _target_tp = Vector3.zero;
+    private Quaternion _target_tr = Quaternion.identity;
     
     private Vector3 _last_tp = Vector3.zero;
     private Quaternion _last_tr = Quaternion.identity;
@@ -150,7 +165,8 @@ public class GroupObjectSync : GroupCustomSync
         if (handSync != 0) // If we're hand syncing, we don't want to update this crap
             return;
         
-        CallFunctionInLocalGroup(nameof(ST), false);
+        if (force || _positionChanged || _rotationChanged)
+            CallFunctionInLocalGroup(nameof(ST), false);
         if (force || _positionChanged) // Update Position
             SetVariableInLocalGroup(nameof(tp), transform.position, false, false);
         if (force || _rotationChanged) // Update Rotation
@@ -188,14 +204,34 @@ public class GroupObjectSync : GroupCustomSync
         SetVariableInLocalGroup(nameof(cu), _localPlayer);
     }
 
+    private int _timesChanged;
+
     public void ST() // S.T. SyncTimer, Syncs the timer to provide smooth interpolation.
+    {
+        _estimatedVelocity = (transform.position - _lastFramePos) / Time.deltaTime * updateSeconds;
+
+        if (_timesChanged == 0)
+        {
+            _tp_buffer2 = tp;
+            _tr_buffer2 = tr;
+        } else if (_timesChanged == 3)
+        {
+            FB();
+        }
+        
+        _timesChanged = 0;
+    }
+
+    public void FB() // F.B. forces the buffers to be rolled all the way down.
     {
         _last_tp = tp;
         _last_tr = tr;
-        _lastPos = transform.position;
-        _lastRot = transform.rotation;
-        _timer = 0;
-        _timerHand = 0;
+        
+        _target_tp = tp;
+        _target_tr = tr;
+        
+        _tp_buffer2 = tp;
+        _tr_buffer2 = tr;
     }
 
     private float _timer;
@@ -203,11 +239,43 @@ public class GroupObjectSync : GroupCustomSync
 
     private Vector3 _lastPos = Vector3.zero;
     private Quaternion _lastRot = Quaternion.identity;
+    
+    private Vector3 _lastFramePos = Vector3.zero;
+    
+    private Vector3 _estimatedVelocity = Vector3.zero;
+
+    private void TimerReset()
+    {
+        _timer = 0;
+        _timerHand = 0;
+
+        _last_tp = _target_tp;
+        _last_tr = _target_tr;
+        
+        _target_tp = _tp_buffer2;
+        _target_tr = _tr_buffer2;
+        
+        _tp_buffer2 = tp;
+        _tr_buffer2 = tr;
+
+        _timesChanged++;
+    }
 
     private void Update()
     {
         _timer += Time.deltaTime;
         _timerHand += Time.deltaTime;
+        if (_delayedHandSync)
+        {
+            _timeUntilHandSync -= Time.deltaTime;
+            if (_timeUntilHandSync <= 0)
+            {
+                _delayedHandSync = false;
+                SetVariableInLocalGroup(nameof(handSync), _syncHand ? 1 : 2, true, false);
+                SyncObjectChangesHand();
+                CallFunctionInLocalGroup(nameof(FB), false);
+            }
+        }
         
         if (transform.position.y < respawnHeight)
             ObjectReset();
@@ -251,6 +319,8 @@ public class GroupObjectSync : GroupCustomSync
         {
             if (handSync != 0)
             {
+                if (_timer > handUpdateSeconds)
+                    TimerReset();
                 var holder = VRCPlayerApi.GetPlayerById(cu);
                 _emptyTrans.position = holder.GetBonePosition(pickup.currentHand == VRC_Pickup.PickupHand.Left
                     ? HumanBodyBones.LeftHand
@@ -261,18 +331,24 @@ public class GroupObjectSync : GroupCustomSync
                 
                 var progress = Mathf.Clamp01(_timerHand / handUpdateSeconds);
                 
-                var targetPos = Vector3.Lerp(_last_tp, tp, progress);
-                var targetRot = Quaternion.Lerp(_last_tr, tr, progress);
+                var targetPos = Vector3.Lerp(_last_tp, _target_tp, progress);
+                var targetRot = Quaternion.Lerp(_last_tr, _target_tr, progress);
 
                 transform.position = _emptyTrans.TransformPoint(targetPos);
                 transform.rotation = _emptyTrans.rotation * targetRot;
             }
             else
             {
+                if (_timer > updateSeconds)
+                    TimerReset();
+                
                 var progress = Mathf.Clamp01(_timer / updateSeconds);
-                transform.position = Vector3.Lerp(_lastPos, tp, progress);
-                transform.rotation = Quaternion.Lerp(_lastRot, tr, progress);
+                
+                transform.position = Vector3.Lerp(_last_tp, _target_tp, progress);
+                transform.rotation = Quaternion.Lerp(_last_tr, _target_tr, progress);
             }
         }
+
+        _lastFramePos = transform.position;
     }
 }

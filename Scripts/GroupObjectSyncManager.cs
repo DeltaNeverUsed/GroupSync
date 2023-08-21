@@ -1,8 +1,6 @@
-﻿using System;
-using UdonSharp;
+﻿using UdonSharp;
 using UnityEngine;
 using VRC.SDK3.Data;
-using VRC.SDKBase;
 
 #if !COMPILER_UDONSHARP && UNITY_EDITOR
 using UnityEditor;
@@ -16,7 +14,7 @@ public class GroupObjectSyncManagerEditor : Editor
         {
             var gcs = Resources.FindObjectsOfTypeAll<GroupCustomSync>();
             foreach (var obj in gcs)
-                obj.networkId = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
+                obj.networkId = Random.Range(int.MinValue, int.MaxValue);
         }
         
         DrawDefaultInspector();
