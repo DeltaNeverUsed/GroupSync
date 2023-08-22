@@ -1,10 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using UdonSharp;
-using UnityEditor;
+﻿using UdonSharp;
 using UnityEngine;
-using UnityEngine.Serialization;
 using VRC.SDKBase;
-using VRC.Udon;
 
 [RequireComponent(typeof(Rigidbody))]
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
@@ -24,9 +20,13 @@ public class GroupObjectSync : GroupCustomSync
     private int _localPlayer = -1;
     private Transform _emptyTrans;
 
+    private bool _useGrav;
+    private Rigidbody _rb;
     
     [Range(0.1f, 2f)] public float updateSeconds = 0.16f;
     [Range(0.1f, 2f)] public float handUpdateSeconds = 0.33f;
+
+    public bool closeGroupOnOwnerChange = true;
 
     public override void OnPickup()
     {
@@ -74,7 +74,6 @@ public class GroupObjectSync : GroupCustomSync
         CallFunctionInLocalGroup(nameof(ST), false);
         SetVariableInLocalGroup(nameof(tp), localPos, true, false);
         SetVariableInLocalGroup(nameof(tr), localRot, true, false);
-        CallFunctionInLocalGroup(nameof(FB), false);
 
         _delayedHandSync = true;
         _timeUntilHandSync = 1f;
@@ -103,6 +102,9 @@ public class GroupObjectSync : GroupCustomSync
 
     private void Start()
     {
+        _rb = GetComponent<Rigidbody>();
+        _useGrav = _rb.useGravity;
+        
         var etObject = GameObject.Find("GroupTransformProxy");
         if (etObject == null)
         {
@@ -122,6 +124,9 @@ public class GroupObjectSync : GroupCustomSync
         hasPickup = pickup != null;
 
         _localPlayer = Networking.LocalPlayer.playerId;
+        
+        _lastPos = transform.position;
+        _lastRot = transform.rotation;
     }
 
     // ReSharper disable once MemberCanBePrivate.Global
@@ -195,21 +200,34 @@ public class GroupObjectSync : GroupCustomSync
         SetVariableInLocalGroup(nameof(tr), localRot, false, false);
     }
 
+    public void BecomeOwnerAndSync()
+    {
+        BecomeOwner();
+        SyncObjectChanges(true);
+        CallFunctionInLocalGroup(nameof(FB), false);
+    }
+
     /// <summary>
     /// Gets OwnerShip of the object
     /// </summary>
     public void BecomeOwner()
     {
-        CloseCurrentGroup();
+        if (closeGroupOnOwnerChange)
+            CloseCurrentGroup();
         SetVariableInLocalGroup(nameof(cu), _localPlayer);
+        
+        _rb.useGravity = cu == _localPlayer && _useGrav;
     }
 
     private int _timesChanged;
 
+    private float _secSinceLastSt;
     public void ST() // S.T. SyncTimer, Syncs the timer to provide smooth interpolation.
     {
         _estimatedVelocity = (transform.position - _lastFramePos) / Time.deltaTime * updateSeconds;
 
+        _secSinceLastSt = 0;
+        
         if (_timesChanged == 0)
         {
             _tp_buffer2 = tp;
@@ -220,10 +238,15 @@ public class GroupObjectSync : GroupCustomSync
         }
         
         _timesChanged = 0;
+        
+        _rb.useGravity = cu == _localPlayer && _useGrav;
     }
 
     public void FB() // F.B. forces the buffers to be rolled all the way down.
     {
+        _lastPos = transform.position;
+        _lastRot = transform.rotation;
+        
         _last_tp = tp;
         _last_tr = tr;
         
@@ -265,17 +288,7 @@ public class GroupObjectSync : GroupCustomSync
     {
         _timer += Time.deltaTime;
         _timerHand += Time.deltaTime;
-        if (_delayedHandSync)
-        {
-            _timeUntilHandSync -= Time.deltaTime;
-            if (_timeUntilHandSync <= 0)
-            {
-                _delayedHandSync = false;
-                SetVariableInLocalGroup(nameof(handSync), _syncHand ? 1 : 2, true, false);
-                SyncObjectChangesHand();
-                CallFunctionInLocalGroup(nameof(FB), false);
-            }
-        }
+        _secSinceLastSt += Time.deltaTime;
         
         if (transform.position.y < respawnHeight)
             ObjectReset();
@@ -290,13 +303,22 @@ public class GroupObjectSync : GroupCustomSync
         
         var transform1 = transform;
         
-        
-        
         if (cu == -1)
             return;
 
         if (cu == _localPlayer)
         {
+            if (_delayedHandSync)
+            {
+                _timeUntilHandSync -= Time.deltaTime;
+                if (_timeUntilHandSync <= 0)
+                {
+                    _delayedHandSync = false;
+                    SetVariableInLocalGroup(nameof(handSync), _syncHand ? 1 : 2, true, false);
+                    SyncObjectChangesHand();
+                    CallFunctionInLocalGroup(nameof(FB), false);
+                }
+            }
             if (_timer >= updateSeconds)
             {
                 var position = transform1.position;
@@ -315,7 +337,7 @@ public class GroupObjectSync : GroupCustomSync
             }
             
         }
-        else
+        else if(_secSinceLastSt < 2)
         {
             if (handSync != 0)
             {
@@ -347,6 +369,10 @@ public class GroupObjectSync : GroupCustomSync
                 transform.position = Vector3.Lerp(_last_tp, _target_tp, progress);
                 transform.rotation = Quaternion.Lerp(_last_tr, _target_tr, progress);
             }
+        }
+        else
+        {
+            _rb.Sleep();
         }
 
         _lastFramePos = transform.position;
