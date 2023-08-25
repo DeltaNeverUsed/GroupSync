@@ -116,8 +116,8 @@ public class GroupObjectSync : GroupCustomSync
         
         _startingPosition = transform.position;
         _startingRotation = transform.rotation;
-        StartNet();
-        SubLeaveGroupCallback();
+        if (StartNet())
+            SubLeaveGroupCallback();
         
         pickup = GetComponent<VRC_Pickup>();
 

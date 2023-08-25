@@ -1,43 +1,65 @@
-﻿using UdonSharp;
+﻿using System;
+using UdonSharp;
 using UnityEngine;
 
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
 public class GroupCustomSync : UdonSharpBehaviour
 {
-    [Header("Network stuff")]
     public int networkId = -1;
-    public GroupObjectSyncManager gosm;
-    public USPPNetEveryPlayerManager psm;
+    public bool forceGlobalSync;
+    [NonSerialized] public GroupObjectSyncManager gosm;
+    [NonSerialized] public USPPNetEveryPlayerManager psm;
 
     private bool _startedNet;
 
-    protected void StartNet()
+    public bool StartNet()
     {
         if (_startedNet)
-            return;
-        _startedNet = true;
+            return true;
         
         if (networkId == -1)
-            Debug.LogError("networkId is -1 on " + gameObject.name + "Please select to object to generate a new networkId, or create select one manually");
+        {
+            Debug.LogError("networkId is -1 on " + gameObject.name +
+                           "Please select to object to generate a new networkId, or create select one manually");
+            return false;
+        }        
         if (gosm == null)
         {
             gosm = GameObject.Find("GroupObjectSyncManager").GetComponent<GroupObjectSyncManager>();
             if (gosm == null)
+            {
                 Debug.LogError("Couldn't find GroupObjectSyncManager");
+                return false;
+            }
         }
         if (psm == null)
         {
             psm = GameObject.Find("EachPlayerUSPPNet").GetComponent<USPPNetEveryPlayerManager>();
             if (psm == null)
+            {
                 Debug.LogError("Couldn't find USPPNetEveryPlayer");
+                return false;
+            }
         }
         
         gosm.AddCustomObject(this);
+        
+        _startedNet = true;
+
+        return true;
+    }
+
+    public void OnDestroy()
+    {
+        if (_startedNet)
+            gosm.RemoveCustomObject(this);
     }
 
     private bool _dontExists = true;
     private bool CheckLocalObject()
     {
+        if (!_startedNet)
+            return true;
         if (_dontExists)
         {
             if (psm.local_object == null)
@@ -59,12 +81,12 @@ public class GroupCustomSync : UdonSharpBehaviour
     }
 
     public void SetVariableInLocalGroup(string name, object value, bool setLocally = true, bool autoSerialize = true)
-    {
-        SetVariable(psm.groupManager.local_group, name, value, setLocally, autoSerialize);
+    {         
+        SetVariable(forceGlobalSync ? -2 : psm.groupManager.local_group, name, value, setLocally, autoSerialize);
     }
     public void CallFunctionInLocalGroup(string name, bool callLocally = true, bool autoSerialize = true)
     {
-        CallFunction(psm.groupManager.local_group, name, callLocally, autoSerialize);
+        CallFunction(forceGlobalSync ? -2 : psm.groupManager.local_group, name, callLocally, autoSerialize);
     }
 
     private void CallFunction(int group, string name, bool callLocally = true, bool autoSerialize = true)

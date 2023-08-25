@@ -35,4 +35,11 @@ public class GroupObjectSyncManager : UdonSharpBehaviour
         else
             Debug.LogError($"Duplicate ID on custom object: {obj.name}, ID is: {obj.networkId}");
     }
+    public void RemoveCustomObject(GroupCustomSync obj)
+    {
+        if (syncedCustomObjects.ContainsKey(obj.networkId))
+            syncedCustomObjects.Remove(obj.networkId);
+        else
+            Debug.LogError($"Couldn't find custom object: {obj.name}, ID is: {obj.networkId}");
+    }
 }
