@@ -292,7 +292,7 @@ public class GroupObjectSync : GroupCustomSync
         
         if (transform.position.y < respawnHeight)
             ObjectReset();
-        if (psm.groupManager.local_group == -1)
+        if (psm.groupManager.local_group == -1 && !forceGlobalSync)
         {
             if (hasPickup)
                 pickup.pickupable = false;
