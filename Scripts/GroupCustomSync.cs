@@ -3,7 +3,7 @@ using UdonSharp;
 using UnityEngine;
 
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-public class GroupCustomSync : UdonSharpBehaviour
+public abstract class GroupCustomSync : UdonSharpBehaviour
 {
     public int networkId = -1;
     public bool forceGlobalSync;

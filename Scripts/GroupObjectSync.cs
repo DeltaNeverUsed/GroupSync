@@ -134,6 +134,8 @@ public class GroupObjectSync : GroupCustomSync
     {
         transform.position = _startingPosition;
         transform.rotation = _startingRotation;
+        _rb.velocity = Vector3.zero;
+        _rb.angularVelocity = Vector3.zero;
     }
     
     // Controls Syncing
