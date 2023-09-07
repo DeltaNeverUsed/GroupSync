@@ -173,7 +173,10 @@ public class GroupObjectSync : GroupCustomSync
             return;
         
         if (force || _positionChanged || _rotationChanged)
+        {
+            UpdateBecomeOwner();
             CallFunctionInLocalGroup(nameof(ST), false);
+        }
         if (force || _positionChanged) // Update Position
             SetVariableInLocalGroup(nameof(tp), transform.position, false, false);
         if (force || _rotationChanged) // Update Rotation
@@ -197,6 +200,7 @@ public class GroupObjectSync : GroupCustomSync
         var localPos = _emptyTrans.InverseTransformPoint(transform.position);
         var localRot = Quaternion.Inverse(_emptyTrans.rotation) * transform.rotation;
         
+        UpdateBecomeOwner();
         CallFunctionInLocalGroup(nameof(ST), false);
         SetVariableInLocalGroup(nameof(tp), localPos, false, false);
         SetVariableInLocalGroup(nameof(tr), localRot, false, false);
@@ -216,8 +220,12 @@ public class GroupObjectSync : GroupCustomSync
     {
         if (closeGroupOnOwnerChange)
             CloseCurrentGroup();
+        UpdateBecomeOwner();
+    }
+
+    private void UpdateBecomeOwner()
+    {
         SetVariableInLocalGroup(nameof(cu), _localPlayer);
-        
         _rb.useGravity = cu == _localPlayer && _useGrav;
     }
 
@@ -226,8 +234,6 @@ public class GroupObjectSync : GroupCustomSync
     private float _secSinceLastSt;
     public void ST() // S.T. SyncTimer, Syncs the timer to provide smooth interpolation.
     {
-        _estimatedVelocity = (transform.position - _lastFramePos) / Time.deltaTime * updateSeconds;
-
         _secSinceLastSt = 0;
         
         if (_timesChanged == 0)
@@ -264,10 +270,6 @@ public class GroupObjectSync : GroupCustomSync
 
     private Vector3 _lastPos = Vector3.zero;
     private Quaternion _lastRot = Quaternion.identity;
-    
-    private Vector3 _lastFramePos = Vector3.zero;
-    
-    private Vector3 _estimatedVelocity = Vector3.zero;
 
     private void TimerReset()
     {
@@ -376,7 +378,5 @@ public class GroupObjectSync : GroupCustomSync
         {
             _rb.Sleep();
         }
-
-        _lastFramePos = transform.position;
     }
 }
