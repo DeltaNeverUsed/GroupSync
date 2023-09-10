@@ -1,4 +1,5 @@
-﻿using UdonSharp;
+﻿using JetBrains.Annotations;
+using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
 
@@ -28,6 +29,8 @@ public class GroupObjectSync : GroupCustomSync
 
     public bool closeGroupOnOwnerChange = true;
 
+    public bool allowTheft;
+
     public override void OnPickup()
     {
         SimulatePickup(pickup.currentHand == VRC_Pickup.PickupHand.Left);
@@ -41,12 +44,14 @@ public class GroupObjectSync : GroupCustomSync
     /// <summary>
     /// Simulates the player dropping the object, but doesn't actually drop it.
     /// </summary>
+    [PublicAPI]
     public void SimulateDrop()
     {
         _delayedHandSync = false;
         SetVariableInLocalGroup(nameof(handSync), 0);
         SyncObjectChanges(true);
         CallFunctionInLocalGroup(nameof(FB), false);
+        UpdateGrabbed(false);
     }
 
     private bool _syncHand;
@@ -58,6 +63,7 @@ public class GroupObjectSync : GroupCustomSync
     /// If you don't want the grabber option, then call BecomeOwner instead.
     /// </summary>
     /// <param name="lHand">Left or right hand grabbing</param>
+    [PublicAPI]
     public void SimulatePickup(bool lHand)
     {
         var data = Networking.LocalPlayer.GetTrackingData(lHand
@@ -80,24 +86,57 @@ public class GroupObjectSync : GroupCustomSync
         _syncHand = lHand;
     }
 
+    [PublicAPI]
+    public void UpdateGrabbed(bool state)
+    {
+        SetVariableInLocalGroup(nameof(ih), state);
+    }
+
+    [PublicAPI]
+    public bool IsGrabbed()
+    {
+        return ih;
+    }
+
+    [PublicAPI]
+    public bool IsOwner()
+    {
+        return cu == _localPlayer;
+    }
+    [PublicAPI]
+    public bool HasOwner()
+    {
+        return cu != -1;
+    }
+
+    [PublicAPI]
+    public VRCPlayerApi GetOwner()
+    {
+        return VRCPlayerApi.GetPlayerById(cu);
+    }
+
+    [PublicAPI]
     public void LeaveCallback()
     {
-        UnSync();
+        if (!forceGlobalSync)
+            UnSync();
     }
     
     public override void OnPlayerLeft(VRCPlayerApi player)
     {
         if (player == null || !player.IsValid()) return;
-        if (player.IsOwner(gameObject))
+        if (player.playerId == cu)
             UnSync();
     }
 
+    [PublicAPI]
     public void UnSync()
     {
         if (hasPickup)
             pickup.Drop();
         SetVariableInLocalGroup(nameof(cu), -1, autoSerialize: false);
-        SetVariableInLocalGroup(nameof(handSync), 0);
+        SetVariableInLocalGroup(nameof(handSync), 0, false);
+        UpdateGrabbed(false);
     }
 
     private void Start()
@@ -129,7 +168,7 @@ public class GroupObjectSync : GroupCustomSync
         _lastRot = transform.rotation;
     }
 
-    // ReSharper disable once MemberCanBePrivate.Global
+    [PublicAPI]
     public void ObjectReset()
     {
         transform.position = _startingPosition;
@@ -151,6 +190,8 @@ public class GroupObjectSync : GroupCustomSync
     // These are used as local offsets (relative to the grabber) if handSync is enabled.
     private Vector3 tp = Vector3.zero; // T.P. Target Position // This acts as a buffer
     private Quaternion tr = Quaternion.identity; // T.R. Target Rotation // This acts as a buffer
+
+    private bool ih = false; // I.H. Is Held
     
     private Vector3 _tp_buffer2 = Vector3.zero;
     private Quaternion _tr_buffer2 = Quaternion.identity;
@@ -167,16 +208,15 @@ public class GroupObjectSync : GroupCustomSync
     /// Updates Object for remote players
     /// </summary>
     /// <param name="force">Skips checks and forces an update.</param>
+    [PublicAPI]
     public void SyncObjectChanges(bool force)
     {
         if (handSync != 0) // If we're hand syncing, we don't want to update this crap
             return;
         
         if (force || _positionChanged || _rotationChanged)
-        {
-            UpdateBecomeOwner();
             CallFunctionInLocalGroup(nameof(ST), false);
-        }
+        
         if (force || _positionChanged) // Update Position
             SetVariableInLocalGroup(nameof(tp), transform.position, false, false);
         if (force || _rotationChanged) // Update Rotation
@@ -185,6 +225,7 @@ public class GroupObjectSync : GroupCustomSync
     /// <summary>
     /// Updates Object for remote players
     /// </summary>
+    [PublicAPI]
     public void SyncObjectChangesHand()
     {
         if (handSync == 0) // If we aren't hand syncing, we don't want to update this crap
@@ -200,12 +241,12 @@ public class GroupObjectSync : GroupCustomSync
         var localPos = _emptyTrans.InverseTransformPoint(transform.position);
         var localRot = Quaternion.Inverse(_emptyTrans.rotation) * transform.rotation;
         
-        UpdateBecomeOwner();
         CallFunctionInLocalGroup(nameof(ST), false);
         SetVariableInLocalGroup(nameof(tp), localPos, false, false);
         SetVariableInLocalGroup(nameof(tr), localRot, false, false);
     }
 
+    [PublicAPI]
     public void BecomeOwnerAndSync()
     {
         BecomeOwner();
@@ -216,6 +257,7 @@ public class GroupObjectSync : GroupCustomSync
     /// <summary>
     /// Gets OwnerShip of the object
     /// </summary>
+    [PublicAPI]
     public void BecomeOwner()
     {
         if (closeGroupOnOwnerChange)
@@ -225,6 +267,9 @@ public class GroupObjectSync : GroupCustomSync
 
     private void UpdateBecomeOwner()
     {
+        if (!allowTheft && ih)
+            return;
+        
         SetVariableInLocalGroup(nameof(cu), _localPlayer);
         _rb.useGravity = cu == _localPlayer && _useGrav;
     }
@@ -303,7 +348,7 @@ public class GroupObjectSync : GroupCustomSync
             return;
         }
         if (hasPickup)
-            pickup.pickupable = true;
+            pickup.pickupable = !ih;
         
         var transform1 = transform;
         
@@ -321,6 +366,7 @@ public class GroupObjectSync : GroupCustomSync
                     SetVariableInLocalGroup(nameof(handSync), _syncHand ? 1 : 2, true, false);
                     SyncObjectChangesHand();
                     CallFunctionInLocalGroup(nameof(FB), false);
+                    UpdateGrabbed(true);
                 }
             }
             if (_timer >= updateSeconds)
@@ -348,10 +394,10 @@ public class GroupObjectSync : GroupCustomSync
                 if (_timer > handUpdateSeconds)
                     TimerReset();
                 var holder = VRCPlayerApi.GetPlayerById(cu);
-                _emptyTrans.position = holder.GetBonePosition(pickup.currentHand == VRC_Pickup.PickupHand.Left
+                _emptyTrans.position = holder.GetBonePosition(handSync == 1
                     ? HumanBodyBones.LeftHand
                     : HumanBodyBones.RightHand);
-                _emptyTrans.rotation = holder.GetBoneRotation(pickup.currentHand == VRC_Pickup.PickupHand.Left
+                _emptyTrans.rotation = holder.GetBoneRotation(handSync == 1
                     ? HumanBodyBones.LeftHand
                     : HumanBodyBones.RightHand);
                 
