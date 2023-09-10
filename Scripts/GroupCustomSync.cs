@@ -73,27 +73,32 @@ public abstract class GroupCustomSync : UdonSharpBehaviour
     
     public void SetVariableInAllGroups(string name, object value, bool setLocally = true, bool autoSerialize = true)
     {
+        if (CheckLocalObject())
+            return;
         SetVariable(-2, name, value, setLocally, autoSerialize);
     }
     public void CallFunctionInAllGroups(string name, bool callLocally = true, bool autoSerialize = true)
     {
+        if (CheckLocalObject())
+            return;
         CallFunction(-2, name, callLocally, autoSerialize);
     }
 
     public void SetVariableInLocalGroup(string name, object value, bool setLocally = true, bool autoSerialize = true)
-    {         
+    {
+        if (CheckLocalObject())
+            return;
         SetVariable(forceGlobalSync ? -2 : psm.groupManager.local_group, name, value, setLocally, autoSerialize);
     }
     public void CallFunctionInLocalGroup(string name, bool callLocally = true, bool autoSerialize = true)
     {
+        if (CheckLocalObject())
+            return;
         CallFunction(forceGlobalSync ? -2 : psm.groupManager.local_group, name, callLocally, autoSerialize);
     }
 
     private void CallFunction(int group, string name, bool callLocally = true, bool autoSerialize = true)
     {
-        if (CheckLocalObject())
-            return;
-        
         psm.local_object.RemoteFunctionCall(group, name, networkId, callLocally);
         if (autoSerialize)
             psm.local_object.RequestSerialization();
@@ -101,9 +106,6 @@ public abstract class GroupCustomSync : UdonSharpBehaviour
 
     private void SetVariable(int group, string name, object value, bool setLocally = true, bool autoSerialize = true)
     {
-        if (CheckLocalObject())
-            return;
-        
         psm.local_object.SetRemoteVar(group, name, networkId, value, setLocally);
         if (autoSerialize)
             psm.local_object.RequestSerialization();
