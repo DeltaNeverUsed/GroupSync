@@ -10,15 +10,15 @@ public class GroupZoneTrigger : UdonSharpBehaviour
 {
     public USPPNetEveryPlayerManager playerNetworkManager;
     public string zoneName = "ChangeMe";
-    
-    void Start()
+
+    private void Start()
     {
-        if (playerNetworkManager == null)
-        {
-            playerNetworkManager = GameObject.Find("EachPlayerUSPPNet").GetComponent<USPPNetEveryPlayerManager>();
-            if (playerNetworkManager == null)
-                Debug.LogError($"playerNetworkManager is not set on: {gameObject.name}");
-        }
+        if (playerNetworkManager != null) return;
+        playerNetworkManager = GameObject.Find("EachPlayerUSPPNet").GetComponent<USPPNetEveryPlayerManager>();
+
+        if (playerNetworkManager != null) return;
+        Debug.LogError($"playerNetworkManager is not set on: {gameObject.name}");
+        gameObject.SetActive(false);
     }
 
     public override void OnPlayerTriggerEnter(VRCPlayerApi player)
@@ -29,14 +29,5 @@ public class GroupZoneTrigger : UdonSharpBehaviour
         Debug.Log($"Entered: {zoneName}!");
         
         playerNetworkManager.local_object.request_new_group(zoneName, player.playerId);
-    }
-    
-    public override void OnPlayerTriggerExit(VRCPlayerApi player)
-    {
-        if (player != Networking.LocalPlayer)
-            return;
-        
-        //playerNetworkManager.local_object.request_new_group("", player.playerId);
-
     }
 }

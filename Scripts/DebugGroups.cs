@@ -35,10 +35,10 @@ public class DebugGroups : UdonSharpBehaviour
             var players = "";
             for (int y = 0; y < groupManager.maxPlayersPerGroup; y++)
             {
-                if (groupManager.groups[groupManager.Pos2Index(x, y)] == -1) continue;
-                var guy = VRCPlayerApi.GetPlayerById(groupManager.groups[groupManager.Pos2Index(x, y)]);
+                if (groupManager.groups[groupManager.GroupAndPlayer2Index(x, y)] == -1) continue;
+                var guy = VRCPlayerApi.GetPlayerById(groupManager.groups[groupManager.GroupAndPlayer2Index(x, y)]);
                 var displayName = guy != null ? guy.displayName : "N/A";
-                players += $"({displayName}, {groupManager.groups[groupManager.Pos2Index(x, y)]})";
+                players += $"({displayName}, {groupManager.groups[groupManager.GroupAndPlayer2Index(x, y)]})";
             }
             t += $"Group: {x}, name: {groupName}, contains: {players}\n";
         }

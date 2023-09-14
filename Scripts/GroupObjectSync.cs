@@ -66,23 +66,10 @@ public class GroupObjectSync : GroupCustomSync
     [PublicAPI]
     public void SimulatePickup(bool lHand)
     {
-        var data = Networking.LocalPlayer.GetTrackingData(lHand
-            ? VRCPlayerApi.TrackingDataType.LeftHand
-            : VRCPlayerApi.TrackingDataType.RightHand);
-
-        _emptyTrans.position = data.position;
-        _emptyTrans.rotation = data.rotation;
-
-        var localPos = _emptyTrans.InverseTransformPoint(transform.position);
-        var localRot = Quaternion.Inverse(_emptyTrans.rotation) * transform.rotation;
-        
-        BecomeOwner();
-        CallFunctionInLocalGroup(nameof(ST), false);
-        SetVariableInLocalGroup(nameof(tp), localPos, true, false);
-        SetVariableInLocalGroup(nameof(tr), localRot, true, false);
+        BecomeOwnerAndSync();
 
         _delayedHandSync = true;
-        _timeUntilHandSync = 1f;
+        _timeUntilHandSync = 0.5f;
         _syncHand = lHand;
     }
 
@@ -132,6 +119,8 @@ public class GroupObjectSync : GroupCustomSync
     [PublicAPI]
     public void UnSync()
     {
+        if (!IsOwner())
+            return;
         if (hasPickup)
             pickup.Drop();
         SetVariableInLocalGroup(nameof(cu), -1, autoSerialize: false);

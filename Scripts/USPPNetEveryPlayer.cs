@@ -97,26 +97,29 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
     }
 
 
+    // ReSharper disable Unity.PerformanceAnalysis
     public void SetRemoteVar(int group, string varName, int netId, object var, bool setLocally = true)
     {
         var argType = var.GetType();
         
         if (argType == typeof(int))
             USPPNET_CustomSet_int(group, varName, netId, (int)var);
-        if (argType == typeof(string))
+        else if (argType == typeof(string))
             USPPNET_CustomSet_string(group, varName, netId, (string)var);
-        if (argType == typeof(bool))
+        else if (argType == typeof(bool))
             USPPNET_CustomSet_bool(group, varName, netId, (bool)var);
-        if (argType == typeof(float))
+        else if (argType == typeof(float))
             USPPNET_CustomSet_float(group, varName, netId, (float)var);
-        if (argType == typeof(Vector2))
+        else if (argType == typeof(Vector2))
             USPPNET_CustomSet_Vector2(group, varName, netId, (Vector2)var);
-        if (argType == typeof(Vector3))
+        else if (argType == typeof(Vector3))
             USPPNET_CustomSet_Vector3(group, varName, netId, (Vector3)var);
-        if (argType == typeof(Vector4))
+        else if (argType == typeof(Vector4))
             USPPNET_CustomSet_Vector4(group, varName, netId, (Vector4)var);
-        if (argType == typeof(Quaternion))
+        else if (argType == typeof(Quaternion))
             USPPNET_CustomSet_Quaternion(group, varName, netId, (Quaternion)var);
+        else
+            Debug.LogError($"Variable type {argType} Not supported in SetRemoteVar");
         
         if (setLocally)
             GenericSet(group, varName, netId, var);
