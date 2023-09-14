@@ -69,7 +69,7 @@ public class GroupObjectSync : GroupCustomSync
         BecomeOwnerAndSync();
 
         _delayedHandSync = true;
-        _timeUntilHandSync = 0.5f;
+        _timeUntilHandSync = 1.0f;
         _syncHand = lHand;
     }
 
@@ -270,7 +270,7 @@ public class GroupObjectSync : GroupCustomSync
     {
         _secSinceLastSt = 0;
         
-        if (_timesChanged == 0)
+        if (_timesChanged == 0) // I should probably make the buffering stuff configurable instead of this hard coded crap.
         {
             _tp_buffer2 = tp;
             _tr_buffer2 = tr;
