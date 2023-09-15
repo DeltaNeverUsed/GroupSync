@@ -126,6 +126,9 @@ public class GroupObjectSync : GroupCustomSync
         SetVariableInLocalGroup(nameof(cu), -1, autoSerialize: false);
         SetVariableInLocalGroup(nameof(handSync), 0, false);
         UpdateGrabbed(false);
+        CallFunctionInLocalGroup(nameof(UB), false);
+        
+        _rb.useGravity = cu == _localPlayer && _useGrav;
     }
 
     private void Start()
@@ -204,7 +207,7 @@ public class GroupObjectSync : GroupCustomSync
             return;
         
         if (force || _positionChanged || _rotationChanged)
-            CallFunctionInLocalGroup(nameof(ST), false);
+            CallFunctionInLocalGroup(nameof(UB), false);
         
         if (force || _positionChanged) // Update Position
             SetVariableInLocalGroup(nameof(tp), transform.position, false, false);
@@ -230,7 +233,7 @@ public class GroupObjectSync : GroupCustomSync
         var localPos = _emptyTrans.InverseTransformPoint(transform.position);
         var localRot = Quaternion.Inverse(_emptyTrans.rotation) * transform.rotation;
         
-        CallFunctionInLocalGroup(nameof(ST), false);
+        CallFunctionInLocalGroup(nameof(UB), false);
         SetVariableInLocalGroup(nameof(tp), localPos, false, false);
         SetVariableInLocalGroup(nameof(tr), localRot, false, false);
     }
@@ -266,7 +269,7 @@ public class GroupObjectSync : GroupCustomSync
     private int _timesChanged;
 
     private float _secSinceLastSt;
-    public void ST() // S.T. SyncTimer, Syncs the timer to provide smooth interpolation.
+    public void UB() // U.B. Update Buffers
     {
         _secSinceLastSt = 0;
         
