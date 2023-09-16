@@ -31,6 +31,8 @@ public class GroupObjectSync : GroupCustomSync
 
     public bool allowTheft;
 
+    private bool _syncAnyways;
+
     public override void OnPickup()
     {
         SimulatePickup(pickup.currentHand == VRC_Pickup.PickupHand.Left);
@@ -107,6 +109,14 @@ public class GroupObjectSync : GroupCustomSync
     {
         if (!forceGlobalSync)
             UnSync();
+    }
+    
+    public override void OnPlayerJoined(VRCPlayerApi player)
+    {
+        if (!forceGlobalSync || cu != _localPlayer || cu == -1)
+            return;
+        
+        _syncAnyways = true;
     }
     
     public override void OnPlayerLeft(VRCPlayerApi player)
@@ -205,6 +215,13 @@ public class GroupObjectSync : GroupCustomSync
     {
         if (handSync != 0) // If we're hand syncing, we don't want to update this crap
             return;
+
+        if (_syncAnyways)
+        {
+            BecomeOwner();
+            _syncAnyways = false;
+            force = true;
+        }
         
         if (force || _positionChanged || _rotationChanged)
             CallFunctionInLocalGroup(nameof(UB), false);
@@ -263,7 +280,7 @@ public class GroupObjectSync : GroupCustomSync
             return;
         
         SetVariableInLocalGroup(nameof(cu), _localPlayer);
-        _rb.useGravity = cu == _localPlayer && _useGrav;
+        _rb.useGravity = (cu == _localPlayer || cu == -1) && _useGrav;
     }
 
     private int _timesChanged;
@@ -284,7 +301,7 @@ public class GroupObjectSync : GroupCustomSync
         
         _timesChanged = 0;
         
-        _rb.useGravity = cu == _localPlayer && _useGrav;
+        _rb.useGravity = (cu == _localPlayer || cu == -1) && _useGrav;
     }
 
     public void FB() // F.B. forces the buffers to be rolled all the way down.
