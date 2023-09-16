@@ -10,11 +10,11 @@ public abstract class GroupCustomSync : UdonSharpBehaviour
     [NonSerialized] public GroupObjectSyncManager gosm;
     [NonSerialized] public USPPNetEveryPlayerManager psm;
 
-    private bool _startedNet;
+    internal bool StartedNet;
 
     public bool StartNet()
     {
-        if (_startedNet)
+        if (StartedNet)
             return true;
         
         if (networkId == -1)
@@ -44,21 +44,21 @@ public abstract class GroupCustomSync : UdonSharpBehaviour
         
         gosm.AddCustomObject(this);
         
-        _startedNet = true;
+        StartedNet = true;
 
         return true;
     }
 
     public void OnDestroy()
     {
-        if (_startedNet)
+        if (StartedNet)
             gosm.RemoveCustomObject(this);
     }
 
     private bool _dontExists = true;
     private bool CheckLocalObject()
     {
-        if (!_startedNet)
+        if (!StartedNet)
             return true;
         if (_dontExists)
         {

@@ -129,7 +129,7 @@ public class GroupObjectSync : GroupCustomSync
     [PublicAPI]
     public void UnSync()
     {
-        if (!IsOwner())
+        if (!IsOwner() || !StartedNet)
             return;
         if (hasPickup)
             pickup.Drop();
