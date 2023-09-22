@@ -344,31 +344,26 @@ public class GroupObjectSync : GroupCustomSync
 
     private void Update()
     {
-        _timer += Time.deltaTime;
-        _timerHand += Time.deltaTime;
-        _secSinceLastSt += Time.deltaTime;
+        if (cu == -1)
+            return;
+
+        var delta = Time.deltaTime;
+        _timer += delta;
+        _timerHand += delta;
+        _secSinceLastSt += delta;
         
         if (transform.position.y < respawnHeight)
             ObjectReset();
-        if (psm.groupManager.local_group == -1 && !forceGlobalSync)
-        {
-            if (hasPickup)
-                pickup.pickupable = false;
-            return;
-        }
         if (hasPickup)
             pickup.pickupable = !ih;
         
         var transform1 = transform;
-        
-        if (cu == -1)
-            return;
 
         if (cu == _localPlayer)
         {
             if (_delayedHandSync)
             {
-                _timeUntilHandSync -= Time.deltaTime;
+                _timeUntilHandSync -= delta;
                 if (_timeUntilHandSync <= 0)
                 {
                     _delayedHandSync = false;
