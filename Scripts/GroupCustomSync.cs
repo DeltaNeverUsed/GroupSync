@@ -9,6 +9,7 @@ public abstract class GroupCustomSync : UdonSharpBehaviour
     public bool forceGlobalSync;
     [NonSerialized] public GroupObjectSyncManager gosm;
     [NonSerialized] public USPPNetEveryPlayerManager psm;
+    [NonSerialized] public USPPNetEveryPlayer lpm;
 
     internal bool StartedNet;
 
@@ -41,6 +42,8 @@ public abstract class GroupCustomSync : UdonSharpBehaviour
                 return false;
             }
         }
+
+        lpm = psm.local_object;
         
         gosm.AddCustomObject(this);
         
@@ -67,6 +70,7 @@ public abstract class GroupCustomSync : UdonSharpBehaviour
         }
         else
             return false;
+        lpm = psm.local_object;
         _dontExists = false;
         return false;
     }
@@ -101,12 +105,12 @@ public abstract class GroupCustomSync : UdonSharpBehaviour
     {
         psm.local_object.RemoteFunctionCall(group, name, networkId, callLocally);
         if (autoSerialize)
-            psm.local_object.RequestSerialization();
+            lpm.RequestSerialization();
     }
 
     private void SetVariable(int group, string name, object value, bool setLocally = true, bool autoSerialize = true)
     {
-        psm.local_object.SetRemoteVar(group, name, networkId, value, setLocally);
+        lpm.SetRemoteVar(group, name, networkId, value, setLocally);
         if (autoSerialize)
             psm.local_object.RequestSerialization();
     }
@@ -124,7 +128,7 @@ public abstract class GroupCustomSync : UdonSharpBehaviour
     /// </summary>
     protected void CloseCurrentGroup()
     {
-        psm.local_object.close_group_joinings(psm.groupManager.local_group);
+        lpm.close_group_joinings(psm.groupManager.local_group);
     }
     
 }

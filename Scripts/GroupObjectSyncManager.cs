@@ -27,6 +27,32 @@ public class GroupObjectSyncManagerEditor : Editor
 public class GroupObjectSyncManager : UdonSharpBehaviour
 {
     [HideInInspector] public DataDictionary syncedCustomObjects = new DataDictionary();
+
+    public int GetUnusedId()
+    {
+        var newId = Random.Range(int.MinValue, int.MaxValue);
+        while (syncedCustomObjects.ContainsKey(newId) || newId == -1)
+            newId = Random.Range(int.MinValue, int.MaxValue);
+        return newId;
+    }
+
+    public int GetUnusedIdRange(int range)
+    {
+        var newId = 0;
+        var contains = true;
+        while (contains)
+        {
+            newId = Random.Range(int.MinValue, int.MaxValue);
+            contains = false;
+            for (var i = 0; i < range; i++)
+            {
+                if (!syncedCustomObjects.ContainsKey(newId + i) && newId + i != -1) continue;
+                contains = true;
+                break;
+            }
+        }
+        return newId;
+    }
     
     public void AddCustomObject(GroupCustomSync obj)
     {

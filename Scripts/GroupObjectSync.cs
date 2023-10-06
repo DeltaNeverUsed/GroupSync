@@ -18,11 +18,14 @@ public class GroupObjectSync : GroupCustomSync
     private Vector3 _startingPosition;
     private Quaternion _startingRotation;
     
-    private int _localPlayer = -1;
+    private int _localPlayer = -99;
     private Transform _emptyTrans;
 
     private bool _useGrav;
     private Rigidbody _rb;
+
+    private bool _hasBehaviourEnabler;
+    private LocalBehaviourEnabler _behaviourEnabler;
     
     [Range(0.1f, 2f)] public float updateSeconds = 0.16f;
     [Range(0.1f, 2f)] public float handUpdateSeconds = 0.33f;
@@ -145,6 +148,9 @@ public class GroupObjectSync : GroupCustomSync
     {
         _rb = GetComponent<Rigidbody>();
         _useGrav = _rb.useGravity;
+
+        _behaviourEnabler = GetComponent<LocalBehaviourEnabler>();
+        _hasBehaviourEnabler = _behaviourEnabler != null;
         
         var etObject = GameObject.Find("GroupTransformProxy");
         if (etObject == null)
@@ -168,6 +174,12 @@ public class GroupObjectSync : GroupCustomSync
         
         _lastPos = transform.position;
         _lastRot = transform.rotation;
+
+        if (IsOwner()) // Force update the position, if the owner is already set
+        {
+            SyncObjectChanges(true);
+            CallFunctionInAllGroups(nameof(FB));
+        }
     }
 
     [PublicAPI]
@@ -342,6 +354,8 @@ public class GroupObjectSync : GroupCustomSync
         _timesChanged++;
     }
 
+    private bool _isLocalOwner;
+
     private void Update()
     {
         if (cu == -1)
@@ -361,6 +375,12 @@ public class GroupObjectSync : GroupCustomSync
 
         if (cu == _localPlayer)
         {
+            if (!_isLocalOwner)
+            {
+                _isLocalOwner = true;
+                if (_hasBehaviourEnabler)
+                    _behaviourEnabler.EnableComps();
+            }
             if (_delayedHandSync)
             {
                 _timeUntilHandSync -= delta;
@@ -391,8 +411,21 @@ public class GroupObjectSync : GroupCustomSync
             }
             
         }
-        else if(_secSinceLastSt < 2)
+        else
         {
+            if (_isLocalOwner)
+            {
+                _isLocalOwner = false;
+                if (_hasBehaviourEnabler)
+                    _behaviourEnabler.DisableComps();
+            }
+
+            if (_secSinceLastSt > 2)
+            {
+                _rb.Sleep();
+                return;
+            }
+            
             if (handSync != 0)
             {
                 if (_timer > handUpdateSeconds)
@@ -423,10 +456,6 @@ public class GroupObjectSync : GroupCustomSync
                 transform.position = Vector3.Lerp(_last_tp, _target_tp, progress);
                 transform.rotation = Quaternion.Lerp(_last_tr, _target_tr, progress);
             }
-        }
-        else
-        {
-            _rb.Sleep();
         }
     }
 }
