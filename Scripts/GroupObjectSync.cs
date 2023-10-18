@@ -5,6 +5,7 @@ using VRC.SDKBase;
 
 [RequireComponent(typeof(Rigidbody))]
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
+[DefaultExecutionOrder(100)]
 public class GroupObjectSync : GroupCustomSync
 {
     [Space(20)]
@@ -21,7 +22,7 @@ public class GroupObjectSync : GroupCustomSync
     private int _localPlayer = -99;
     private Transform _emptyTrans;
 
-    private bool _useGrav;
+    private bool _isKinematic;
     private Rigidbody _rb;
 
     private bool _hasBehaviourEnabler;
@@ -140,14 +141,17 @@ public class GroupObjectSync : GroupCustomSync
         SetVariableInLocalGroup(nameof(handSync), 0, false);
         UpdateGrabbed(false);
         CallFunctionInLocalGroup(nameof(UB), false);
-        
-        _rb.useGravity = cu == _localPlayer && _useGrav;
+
+        SetRbState();
     }
 
-    private void Start()
+    public void Start()
     {
+        if (StartedNet)
+            return;
+        
         _rb = GetComponent<Rigidbody>();
-        _useGrav = _rb.useGravity;
+        _isKinematic = _rb.isKinematic;
 
         _behaviourEnabler = GetComponent<LocalBehaviourEnabler>();
         _hasBehaviourEnabler = _behaviourEnabler != null;
@@ -174,12 +178,6 @@ public class GroupObjectSync : GroupCustomSync
         
         _lastPos = transform.position;
         _lastRot = transform.rotation;
-
-        if (IsOwner()) // Force update the position, if the owner is already set
-        {
-            SyncObjectChanges(true);
-            CallFunctionInAllGroups(nameof(FB));
-        }
     }
 
     [PublicAPI]
@@ -231,7 +229,7 @@ public class GroupObjectSync : GroupCustomSync
         if (_syncAnyways)
         {
             BecomeOwner();
-            _syncAnyways = false;
+            
             force = true;
         }
         
@@ -239,9 +237,15 @@ public class GroupObjectSync : GroupCustomSync
             CallFunctionInLocalGroup(nameof(UB), false);
         
         if (force || _positionChanged) // Update Position
-            SetVariableInLocalGroup(nameof(tp), transform.position, false, false);
+            SetVariableInLocalGroup(nameof(tp), transform.position, false);
         if (force || _rotationChanged) // Update Rotation
-            SetVariableInLocalGroup(nameof(tr), transform.rotation, false, false);
+            SetVariableInLocalGroup(nameof(tr), transform.rotation, false);
+        
+        if (_syncAnyways)
+        {
+            CallFunctionInLocalGroup(nameof(TP), false);
+            _syncAnyways = false;
+        }    
     }
     /// <summary>
     /// Updates Object for remote players
@@ -252,10 +256,12 @@ public class GroupObjectSync : GroupCustomSync
         if (handSync == 0) // If we aren't hand syncing, we don't want to update this crap
             return;
 
-        _emptyTrans.position = Networking.LocalPlayer.GetBonePosition(pickup.currentHand == VRC_Pickup.PickupHand.Left
+        var isLHand = pickup.currentHand == VRC_Pickup.PickupHand.Left;
+
+        _emptyTrans.position = Networking.LocalPlayer.GetBonePosition(isLHand
             ? HumanBodyBones.LeftHand
             : HumanBodyBones.RightHand);
-        _emptyTrans.rotation = Networking.LocalPlayer.GetBoneRotation(pickup.currentHand == VRC_Pickup.PickupHand.Left
+        _emptyTrans.rotation = Networking.LocalPlayer.GetBoneRotation(isLHand
             ? HumanBodyBones.LeftHand
             : HumanBodyBones.RightHand);
         
@@ -263,8 +269,14 @@ public class GroupObjectSync : GroupCustomSync
         var localRot = Quaternion.Inverse(_emptyTrans.rotation) * transform.rotation;
         
         CallFunctionInLocalGroup(nameof(UB), false);
-        SetVariableInLocalGroup(nameof(tp), localPos, false, false);
-        SetVariableInLocalGroup(nameof(tr), localRot, false, false);
+        SetVariableInLocalGroup(nameof(tp), localPos, false);
+        SetVariableInLocalGroup(nameof(tr), localRot, false);
+    }
+
+    [PublicAPI]
+    public void ForceSyncUpdateNextUpdate()
+    {
+        _syncAnyways = true;
     }
 
     [PublicAPI]
@@ -292,7 +304,15 @@ public class GroupObjectSync : GroupCustomSync
             return;
         
         SetVariableInLocalGroup(nameof(cu), _localPlayer);
-        _rb.useGravity = (cu == _localPlayer || cu == -1) && _useGrav;
+        SetRbState();
+    }
+
+    private void SetRbState()
+    {
+        var isOwner = (cu == _localPlayer || cu == -1);
+        _rb.detectCollisions = isOwner;
+        _rb.isKinematic = !isOwner || _isKinematic;
+        _rb.useGravity = isOwner;
     }
 
     private int _timesChanged;
@@ -312,8 +332,8 @@ public class GroupObjectSync : GroupCustomSync
         }
         
         _timesChanged = 0;
-        
-        _rb.useGravity = (cu == _localPlayer || cu == -1) && _useGrav;
+
+        SetRbState();
     }
 
     public void FB() // F.B. forces the buffers to be rolled all the way down.
@@ -329,6 +349,17 @@ public class GroupObjectSync : GroupCustomSync
         
         _tp_buffer2 = tp;
         _tr_buffer2 = tr;
+    }
+
+    public void TP()
+    {
+        FB();
+        
+        _lastPos = tp;
+        _lastRot = tr;
+
+        transform.position = tp;
+        transform.rotation = tr;
     }
 
     private float _timer;
@@ -356,7 +387,7 @@ public class GroupObjectSync : GroupCustomSync
 
     private bool _isLocalOwner;
 
-    private void Update()
+    private void LateUpdate()
     {
         if (cu == -1)
             return;
@@ -393,7 +424,7 @@ public class GroupObjectSync : GroupCustomSync
                     UpdateGrabbed(true);
                 }
             }
-            if (_timer >= updateSeconds)
+            if (_timer >= updateSeconds || _syncAnyways)
             {
                 var position = transform1.position;
                 _positionChanged = _lastPos != position;
@@ -421,20 +452,19 @@ public class GroupObjectSync : GroupCustomSync
             }
 
             if (_secSinceLastSt > 2)
-            {
-                _rb.Sleep();
                 return;
-            }
-            
+
             if (handSync != 0)
             {
                 if (_timer > handUpdateSeconds)
                     TimerReset();
                 var holder = VRCPlayerApi.GetPlayerById(cu);
-                _emptyTrans.position = holder.GetBonePosition(handSync == 1
+                var isLHand = handSync == 1;
+                
+                _emptyTrans.position = holder.GetBonePosition(isLHand
                     ? HumanBodyBones.LeftHand
                     : HumanBodyBones.RightHand);
-                _emptyTrans.rotation = holder.GetBoneRotation(handSync == 1
+                _emptyTrans.rotation = holder.GetBoneRotation(isLHand
                     ? HumanBodyBones.LeftHand
                     : HumanBodyBones.RightHand);
                 

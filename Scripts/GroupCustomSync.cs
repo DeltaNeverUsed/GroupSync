@@ -128,6 +128,8 @@ public abstract class GroupCustomSync : UdonSharpBehaviour
     /// </summary>
     protected void CloseCurrentGroup()
     {
+        if (CheckLocalObject())
+            return;
         lpm.close_group_joinings(psm.groupManager.local_group);
     }
     

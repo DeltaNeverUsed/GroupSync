@@ -186,10 +186,30 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
         USPPNET_request_new_group(zone, playerId);
         RequestSerialization();
     }
+
+    private float _serializationTimer;
+    private bool _requestedSerialization;
+    public new void RequestSerialization()
+    {
+        _requestedSerialization = true;
+    }
     
     private void Start()
     {
         _usppNetEveryPlayerManager = transform.parent.GetComponent<USPPNetEveryPlayerManager>();
+    }
+
+    public void FixedUpdate()
+    {
+        if (!Networking.IsOwner(gameObject))
+            return;
+        _serializationTimer += Time.deltaTime;
+        if (_requestedSerialization && _serializationTimer > 0.16)
+        {
+            _serializationTimer = 0;
+            _requestedSerialization = false;
+            base.RequestSerialization();
+        }
     }
 
     public override void OnPlayerLeft(VRCPlayerApi player)
@@ -209,8 +229,21 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
         // USPPNet OnDeserialization
     }
     
+    private long _tLastSerial = 0;
+    public long byteDisplay;
+    public long byteCounter;
     public override void OnPostSerialization(VRC.Udon.Common.SerializationResult result)
     {
+        if ((DateTime.Now.Ticks - _tLastSerial) / TimeSpan.TicksPerMillisecond > 1000)
+        {
+            _tLastSerial = DateTime.Now.Ticks;
+            byteDisplay = byteCounter;
+            byteCounter = result.byteCount;
+        }
+        else
+        {
+            byteCounter += result.byteCount;
+        }
         // USPPNet OnPostSerialization
     }
 
