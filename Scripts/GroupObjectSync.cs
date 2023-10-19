@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
@@ -15,12 +16,10 @@ public class GroupObjectSync : GroupCustomSync
 
     public float respawnHeight = -70;
     
-    private bool _startingSync;
     private Vector3 _startingPosition;
     private Quaternion _startingRotation;
     
     private int _localPlayer = -99;
-    private Transform _emptyTrans;
 
     private bool _isKinematic;
     private Rigidbody _rb;
@@ -36,7 +35,7 @@ public class GroupObjectSync : GroupCustomSync
     public bool allowTheft;
 
     private bool _syncAnyways;
-
+    
     public override void OnPickup()
     {
         SimulatePickup(pickup.currentHand == VRC_Pickup.PickupHand.Left);
@@ -156,15 +155,6 @@ public class GroupObjectSync : GroupCustomSync
         _behaviourEnabler = GetComponent<LocalBehaviourEnabler>();
         _hasBehaviourEnabler = _behaviourEnabler != null;
         
-        var etObject = GameObject.Find("GroupTransformProxy");
-        if (etObject == null)
-        {
-            Debug.LogError("Catastrophic Error! The GroupTransformProxy couldn't be found. Did you import the Group Sync Prefab?");
-            gameObject.SetActive(false);
-            return;
-        }
-        _emptyTrans = etObject.transform;
-        
         _startingPosition = transform.position;
         _startingRotation = transform.rotation;
         if (StartNet())
@@ -258,19 +248,19 @@ public class GroupObjectSync : GroupCustomSync
 
         var isLHand = pickup.currentHand == VRC_Pickup.PickupHand.Left;
 
-        _emptyTrans.position = Networking.LocalPlayer.GetBonePosition(isLHand
+        var pos = Networking.LocalPlayer.GetBonePosition(isLHand
             ? HumanBodyBones.LeftHand
             : HumanBodyBones.RightHand);
-        _emptyTrans.rotation = Networking.LocalPlayer.GetBoneRotation(isLHand
+        var rot = Quaternion.Inverse(Networking.LocalPlayer.GetBoneRotation(isLHand
             ? HumanBodyBones.LeftHand
-            : HumanBodyBones.RightHand);
+            : HumanBodyBones.RightHand));
         
-        var localPos = _emptyTrans.InverseTransformPoint(transform.position);
-        var localRot = Quaternion.Inverse(_emptyTrans.rotation) * transform.rotation;
+        var localPos = rot * (transform.position - pos);
+        var localRot = rot * transform.rotation;
         
         CallFunctionInLocalGroup(nameof(UB), false);
-        SetVariableInLocalGroup(nameof(tp), localPos, false);
-        SetVariableInLocalGroup(nameof(tr), localRot, false);
+        SetVariableInLocalGroup(nameof(tp), localPos, true);
+        SetVariableInLocalGroup(nameof(tr), localRot, true);
     }
 
     [PublicAPI]
@@ -310,7 +300,6 @@ public class GroupObjectSync : GroupCustomSync
     private void SetRbState()
     {
         var isOwner = (cu == _localPlayer || cu == -1);
-        _rb.detectCollisions = isOwner;
         _rb.isKinematic = !isOwner || _isKinematic;
         _rb.useGravity = isOwner;
     }
@@ -387,7 +376,7 @@ public class GroupObjectSync : GroupCustomSync
 
     private bool _isLocalOwner;
 
-    private void LateUpdate()
+    public override void PostLateUpdate()
     {
         if (cu == -1)
             return;
@@ -461,10 +450,10 @@ public class GroupObjectSync : GroupCustomSync
                 var holder = VRCPlayerApi.GetPlayerById(cu);
                 var isLHand = handSync == 1;
                 
-                _emptyTrans.position = holder.GetBonePosition(isLHand
+                var pos = holder.GetBonePosition(isLHand
                     ? HumanBodyBones.LeftHand
                     : HumanBodyBones.RightHand);
-                _emptyTrans.rotation = holder.GetBoneRotation(isLHand
+                var rot = holder.GetBoneRotation(isLHand
                     ? HumanBodyBones.LeftHand
                     : HumanBodyBones.RightHand);
                 
@@ -473,8 +462,8 @@ public class GroupObjectSync : GroupCustomSync
                 var targetPos = Vector3.Lerp(_last_tp, _target_tp, progress);
                 var targetRot = Quaternion.Lerp(_last_tr, _target_tr, progress);
 
-                transform.position = _emptyTrans.TransformPoint(targetPos);
-                transform.rotation = _emptyTrans.rotation * targetRot;
+                transform.position = rot * targetPos + pos;
+                transform.rotation = rot * targetRot;
             }
             else
             {
