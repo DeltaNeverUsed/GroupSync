@@ -22,10 +22,12 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
     public GroupManager groupManager;
     public GroupObjectSyncManager syncManager;
     public USPPNetEveryPlayerManager playerManager;
+
+    [Space(10)]
+    public bool neverCloseGroups;
     
     private USPPNetEveryPlayerManager _usppNetEveryPlayerManager;
-    [UdonSynced]
-    public bool owned = false;
+    [UdonSynced] [HideInInspector] public bool owned;
 
     private string _currZone = "";
 
@@ -39,6 +41,22 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
         _usppNetEveryPlayerManager.groupManager.AddPlayerToGroup(playerId, group);
         
         Debug.Log($"zone: {zone}, player: {playerId}");
+    }
+    
+    private void USPPNET_request_remove_from_group(int playerId)
+    {
+        if (!Networking.IsMaster)
+            return;
+        
+        _usppNetEveryPlayerManager.groupManager.RemovePlayerFromGroups(playerId);
+        
+        Debug.Log($"player: {playerId} removed from group");
+    }
+
+    private void USPPNET_request_leave_callback(int playerId)
+    {
+        if (Networking.LocalPlayer.playerId == playerId)
+            do_leave_callback();
     }
 
     private void GenericSet(int group, string varName, int netId, object var)
@@ -151,6 +169,9 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
     // Client
     public void close_group_joinings(int group)
     {
+        if (neverCloseGroups)
+            return;
+        
         if (!Networking.IsMaster)
         {
             USPPNET_close_group_joins(group);
@@ -160,20 +181,13 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
             groupManager.DisableJoinGroup(group);
     }
 
-    public void request_new_group(string zone, int playerId)
+    public void request_new_group(string zone)
     {
         if (_currZone == zone)
             return;
+        var playerId = Networking.LocalPlayer.playerId;
+        request_remove_from_group(playerId);
         _currZone = zone;
-        
-        // This needs to be called locally, and this doesn't actually get called on group leave,
-        // Just on requesting a new one, which might as well be the same thing.
-        for (var index = 0; index < _usppNetEveryPlayerManager.groupManager.leaveGroupCallbacks.Count; index++)
-        {
-            var caller = _usppNetEveryPlayerManager.groupManager.leaveGroupCallbacks[index];
-            if ((UdonSharpBehaviour)caller.Reference != null)
-                ((UdonSharpBehaviour)caller.Reference).SendCustomEvent("LeaveCallback");
-        }
         
         if (Networking.IsMaster)
         {
@@ -184,6 +198,52 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
         }
         
         USPPNET_request_new_group(zone, playerId);
+        RequestSerialization();
+    }
+
+    private void do_leave_callback()
+    {
+        groupManager.local_group = -1;
+        _currZone = "";
+        
+        // This needs to be called locally, and this doesn't actually get called on group leave,
+        // Just on requesting a new one, which might as well be the same thing.
+        for (var index = 0; index < _usppNetEveryPlayerManager.groupManager.leaveGroupCallbacks.Count; index++)
+        {
+            var caller = _usppNetEveryPlayerManager.groupManager.leaveGroupCallbacks[index];
+            if ((UdonSharpBehaviour)caller.Reference != null)
+                ((UdonSharpBehaviour)caller.Reference).SendCustomEvent("LeaveCallback");
+        }
+    }
+
+    /// <summary>
+    /// Probably shouldn't call this outside of here
+    /// </summary>
+    public void request_leave_callback(int playerId)
+    {
+        if (Networking.LocalPlayer.playerId == playerId)
+        {
+            do_leave_callback();
+        }
+        else
+        {
+            USPPNET_request_leave_callback(playerId);
+            RequestSerialization();
+        }
+    }
+
+    public void request_remove_from_group(int playerId)
+    {
+        request_leave_callback(playerId);
+        
+        if (Networking.IsMaster)
+        {
+            _usppNetEveryPlayerManager.groupManager.RemovePlayerFromGroups(playerId);
+            Debug.Log($"player: {playerId} removed from group");
+            return;
+        }
+        
+        USPPNET_request_remove_from_group(playerId);
         RequestSerialization();
     }
 

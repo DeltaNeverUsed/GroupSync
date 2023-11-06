@@ -28,6 +28,6 @@ public class GroupZoneTrigger : UdonSharpBehaviour
         
         Debug.Log($"Entered: {zoneName}!");
         
-        playerNetworkManager.local_object.request_new_group(zoneName, player.playerId);
+        playerNetworkManager.local_object.request_new_group(zoneName);
     }
 }

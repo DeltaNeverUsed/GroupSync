@@ -17,7 +17,8 @@ public class DebugGroups : UdonSharpBehaviour
 
     public void FixedUpdate()
     {
-        DebugDisplayGroup();
+        if (playerManager.local_object != null)
+            DebugDisplayGroup();
     }
 
     private void DebugDisplayGroup()

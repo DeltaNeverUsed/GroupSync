@@ -18,12 +18,12 @@ public class GroupManager : UdonSharpBehaviour
 
     private int _groupsArraySize;
     
-    public string[] joinable = Array.Empty<string>();
-    [UdonSynced] public short[] groups = Array.Empty<short>();
+    [HideInInspector] public string[] joinable = Array.Empty<string>();
+    [HideInInspector] [UdonSynced] public short[] groups = Array.Empty<short>();
 
-    public DataList leaveGroupCallbacks = new DataList();
+    [HideInInspector] public DataList leaveGroupCallbacks = new DataList();
 
-    public int local_group = -1;
+    [HideInInspector] public int local_group = -1;
 
     private void USPPNET_tell_client_group(int player, int group)
     {
@@ -164,7 +164,10 @@ public class GroupManager : UdonSharpBehaviour
                 secondChoice = i;
         }
 
-        if (firstChoice != -1 && groups[GroupAndPlayer2Index(firstChoice, maxPlayersPerGroup-1)] == -1) return firstChoice;
+        if (firstChoice != -1 && groups[GroupAndPlayer2Index(firstChoice, maxPlayersPerGroup-1)] == -1)
+            return firstChoice;
+        if (secondChoice == -1)
+            return -1;
         
         joinable[secondChoice] = zone;
         return secondChoice;
