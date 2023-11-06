@@ -1,10 +1,5 @@
-﻿
-using System;
-using UdonSharp;
+﻿using UdonSharp;
 using UnityEngine;
-using VRC.SDKBase;
-using VRC.Udon;
-using Component = UnityEngine.Component;
 
 [RequireComponent(typeof(GroupObjectSync))]
 [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
@@ -13,17 +8,33 @@ public class LocalBehaviourEnabler : UdonSharpBehaviour
     public UdonSharpBehaviour[] excluded = { };
 
     private UdonSharpBehaviour[] _compList = { };
+    
+    private static bool Contains<T>(T[] haystack, T needle)
+    {
+        foreach (var hay in haystack)
+            if (hay.Equals(needle))
+                return true;
+        return false;
+    }
+    private static T[] Add<T>(T[] array, T item)
+    {
+        var len = array.Length + 1;
+        var tempArray = new T[len];
+        array.CopyTo(tempArray, 0);
+        tempArray[len-1] = item;
+        return tempArray;
+    }
 
     private void Start()
     {
-        excluded = excluded.Add(GetComponent<GroupObjectSync>());
-        excluded = excluded.Add(this);
+        excluded = Add(excluded, GetComponent<GroupObjectSync>());
+        excluded = Add(excluded, this);
         var objectComps = GetComponents<UdonSharpBehaviour>();
         foreach (var comp in objectComps)
         {
-            if (excluded.Contains(comp))
+            if (Contains(excluded, comp))
                 return;
-            _compList = _compList.Add(comp);
+            _compList = Add(_compList, comp);
         }
     }
 
