@@ -13,6 +13,11 @@ public abstract class GroupCustomSync : UdonSharpBehaviour
 
     internal bool StartedNet;
 
+    public virtual void Start()
+    {
+        StartNet();
+    }
+
     public bool StartNet()
     {
         if (StartedNet)
@@ -52,7 +57,7 @@ public abstract class GroupCustomSync : UdonSharpBehaviour
         return true;
     }
 
-    public void OnDestroy()
+    public virtual void OnDestroy()
     {
         if (StartedNet)
             gosm.RemoveCustomObject(this);
@@ -103,7 +108,7 @@ public abstract class GroupCustomSync : UdonSharpBehaviour
 
     private void CallFunction(int group, string name, bool callLocally = true, bool autoSerialize = true)
     {
-        psm.local_object.RemoteFunctionCall(group, name, networkId, callLocally);
+        lpm.RemoteFunctionCall(group, name, networkId, callLocally);
         if (autoSerialize)
             lpm.RequestSerialization();
     }
@@ -112,7 +117,7 @@ public abstract class GroupCustomSync : UdonSharpBehaviour
     {
         lpm.SetRemoteVar(group, name, networkId, value, setLocally);
         if (autoSerialize)
-            psm.local_object.RequestSerialization();
+            lpm.RequestSerialization();
     }
 
     /// <summary>

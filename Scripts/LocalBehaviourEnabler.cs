@@ -1,4 +1,5 @@
-﻿using UdonSharp;
+﻿using System;
+using UdonSharp;
 using UnityEngine;
 
 [RequireComponent(typeof(GroupObjectSync))]
@@ -23,6 +24,31 @@ public class LocalBehaviourEnabler : UdonSharpBehaviour
         array.CopyTo(tempArray, 0);
         tempArray[len-1] = item;
         return tempArray;
+    }
+
+    public void AddExclusion(UdonSharpBehaviour behaviour)
+    {
+        excluded = Add(excluded, behaviour);
+    }
+    
+    public void RemoveExclusion(UdonSharpBehaviour behaviour)
+    {
+        var index = -1;
+        for (var i = 0; i < excluded.Length; i++)
+        {
+            if (excluded[i] != behaviour) continue;
+            index = i;
+            break;
+        }
+        
+        if (index == -1)
+            return;
+
+        var newArrayLen = excluded.Length - 1;
+        var tempArray = new UdonSharpBehaviour[newArrayLen];
+        Array.Copy(excluded, 0, tempArray, 0, index);
+        Array.Copy(excluded, index+1, tempArray, index, newArrayLen-index);
+        excluded = tempArray;
     }
 
     private void Start()

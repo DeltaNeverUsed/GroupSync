@@ -9,12 +9,9 @@
 
 using USPPNet;
 using System;
-
 using UdonSharp;
 using UnityEngine;
-using VRC.SDK3.Data;
 using VRC.SDKBase;
-using VRC.Udon;
 
 [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
 public class USPPNetEveryPlayer : UdonSharpBehaviour
@@ -102,6 +99,15 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
     {
         GenericSet(group, varName, netId, var);
     }
+    private void USPPNET_CustomSet_GroupCustomSync(int group, string varName, int netId, int networkId)
+    {
+        if (!syncManager.syncedCustomObjects.TryGetValue(networkId, out var data))
+        {
+            Debug.LogError($"couldn't get <color=red>{networkId}</color>?");
+            return;
+        }
+        GenericSet(group, varName, netId, (GroupCustomSync)data.Reference);
+    }
 
     private void USPPNET_CustomRPC(int group, string eventName, int netId)
     {
@@ -136,6 +142,8 @@ public class USPPNetEveryPlayer : UdonSharpBehaviour
             USPPNET_CustomSet_Vector4(group, varName, netId, (Vector4)var);
         else if (argType == typeof(Quaternion))
             USPPNET_CustomSet_Quaternion(group, varName, netId, (Quaternion)var);
+        else if (argType == typeof(UdonSharpBehaviour))
+            USPPNET_CustomSet_GroupCustomSync(group, varName, netId, ((GroupCustomSync)var).networkId);
         else
             Debug.LogError($"Variable type {argType} Not supported in SetRemoteVar");
         

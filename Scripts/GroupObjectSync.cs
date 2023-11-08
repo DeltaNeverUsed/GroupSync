@@ -144,7 +144,7 @@ public class GroupObjectSync : GroupCustomSync
         SetRbState();
     }
 
-    public void Start()
+    public override void Start()
     {
         if (StartedNet)
             return;
