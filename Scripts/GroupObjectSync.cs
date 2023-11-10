@@ -327,8 +327,8 @@ public class GroupObjectSync : GroupCustomSync
 
     public void FB() // F.B. forces the buffers to be rolled all the way down.
     {
-        _lastPos = transform.position;
-        _lastRot = transform.rotation;
+        _lastPos = tp;
+        _lastRot = tr;
         
         _last_tp = tp;
         _last_tr = tr;

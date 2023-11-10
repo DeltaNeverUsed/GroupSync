@@ -63,9 +63,7 @@ public class GroupObjectSyncManager : UdonSharpBehaviour
     }
     public void RemoveCustomObject(GroupCustomSync obj)
     {
-        if (syncedCustomObjects.ContainsKey(obj.networkId))
-            syncedCustomObjects.Remove(obj.networkId);
-        else
+        if (!syncedCustomObjects.Remove(obj.networkId))
             Debug.LogError($"Couldn't find custom object: {obj.name}, ID is: {obj.networkId}");
     }
 }
