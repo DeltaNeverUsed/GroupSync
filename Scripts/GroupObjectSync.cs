@@ -168,6 +168,14 @@ public class GroupObjectSync : GroupCustomSync
         
         _lastPos = transform.position;
         _lastRot = transform.rotation;
+
+        if (_hasBehaviourEnabler)
+        {
+            if (GetOwner() == Networking.LocalPlayer)
+                _behaviourEnabler.EnableComps();
+            else
+                _behaviourEnabler.DisableComps();
+        }
     }
 
     [PublicAPI]

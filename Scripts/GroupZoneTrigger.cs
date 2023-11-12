@@ -11,6 +11,9 @@ public class GroupZoneTrigger : UdonSharpBehaviour
     public USPPNetEveryPlayerManager playerNetworkManager;
     public string zoneName = "ChangeMe";
 
+    [Space]
+    public bool exitZoneOnTriggerExit;
+
     private void Start()
     {
         if (playerNetworkManager != null) return;
@@ -26,8 +29,14 @@ public class GroupZoneTrigger : UdonSharpBehaviour
         if (player != Networking.LocalPlayer)
             return;
         
-        Debug.Log($"Entered: {zoneName}!");
-        
         playerNetworkManager.local_object.request_new_group(zoneName);
+    }
+
+    public override void OnPlayerTriggerExit(VRCPlayerApi player)
+    {
+        if (!exitZoneOnTriggerExit || player != Networking.LocalPlayer)
+            return;
+        
+        playerNetworkManager.local_object.request_remove_from_group(Networking.LocalPlayer.playerId);
     }
 }
