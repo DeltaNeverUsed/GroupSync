@@ -21,7 +21,7 @@ MonoBehaviour:
   compiledVersion: 2
   behaviourSyncMode: 1
   hasInteractEvent: 0
-  scriptID: -4257436177495397293
+  scriptID: -2029852148045187399
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
@@ -62,7 +62,7 @@ MonoBehaviour:
       Data: 3|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: USPPNetEveryPlayerManager, Assembly-CSharp
+      Data: GroupSync.USPPNetEveryPlayerManager, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 

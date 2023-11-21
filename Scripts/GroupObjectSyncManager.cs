@@ -1,69 +1,70 @@
 ﻿using UdonSharp;
+using UnityEditor;
 using UnityEngine;
 using VRC.SDK3.Data;
 
-#if !COMPILER_UDONSHARP && UNITY_EDITOR
-using UnityEditor;
-
-[CustomEditor(typeof(GroupObjectSyncManager), true)]
-public class GroupObjectSyncManagerEditor : Editor
+namespace GroupSync
 {
-    public override void OnInspectorGUI()
+#if UNITY_EDITOR    
+    [CustomEditor(typeof(GroupObjectSyncManager), true)]
+    public class GroupObjectSyncManagerEditor : Editor
     {
-        if (GUILayout.Button("Assign new IDs"))
+        public override void OnInspectorGUI()
         {
-            var gcs = Resources.FindObjectsOfTypeAll<GroupCustomSync>();
-            foreach (var obj in gcs)
-                obj.networkId = Random.Range(int.MinValue, int.MaxValue);
-        }
+            if (GUILayout.Button("Assign new IDs"))
+            {
+                var gcs = Resources.FindObjectsOfTypeAll<GroupCustomSync>();
+                foreach (var obj in gcs)
+                    obj.networkId = Random.Range(int.MinValue, int.MaxValue);
+            }
         
-        DrawDefaultInspector();
+            DrawDefaultInspector();
+        }
     }
-}
-
 #endif
 
-[UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-public class GroupObjectSyncManager : UdonSharpBehaviour
-{
-    [HideInInspector] public DataDictionary syncedCustomObjects = new DataDictionary();
-
-    public int GetUnusedId()
+    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
+    public class GroupObjectSyncManager : UdonSharpBehaviour
     {
-        var newId = Random.Range(int.MinValue, int.MaxValue);
-        while (syncedCustomObjects.ContainsKey(newId) || newId == -1)
-            newId = Random.Range(int.MinValue, int.MaxValue);
-        return newId;
-    }
+        [HideInInspector] public DataDictionary syncedCustomObjects = new DataDictionary();
 
-    public int GetUnusedIdRange(int range)
-    {
-        var newId = 0;
-        var contains = true;
-        while (contains)
+        public int GetUnusedId()
         {
-            newId = Random.Range(int.MinValue, int.MaxValue);
-            contains = false;
-            for (var i = 0; i < range; i++)
-            {
-                if (!syncedCustomObjects.ContainsKey(newId + i) && newId + i != -1) continue;
-                contains = true;
-                break;
-            }
+            var newId = Random.Range(int.MinValue, int.MaxValue);
+            while (syncedCustomObjects.ContainsKey(newId) || newId == -1)
+                newId = Random.Range(int.MinValue, int.MaxValue);
+            return newId;
         }
-        return newId;
-    }
+
+        public int GetUnusedIdRange(int range)
+        {
+            var newId = 0;
+            var contains = true;
+            while (contains)
+            {
+                newId = Random.Range(int.MinValue, int.MaxValue);
+                contains = false;
+                for (var i = 0; i < range; i++)
+                {
+                    if (!syncedCustomObjects.ContainsKey(newId + i) && newId + i != -1) continue;
+                    contains = true;
+                    break;
+                }
+            }
+            return newId;
+        }
     
-    public void AddCustomObject(GroupCustomSync obj)
-    {
-        if (!syncedCustomObjects.ContainsKey(obj.networkId))
-            syncedCustomObjects.Add(obj.networkId, obj);
-        else
-            Debug.LogError($"Duplicate ID on custom object: {obj.name}, ID is: {obj.networkId}");
-    }
-    public void RemoveCustomObject(GroupCustomSync obj)
-    {
-        if (!syncedCustomObjects.Remove(obj.networkId))
-            Debug.LogError($"Couldn't find custom object: {obj.name}, ID is: {obj.networkId}");
+        public void AddCustomObject(GroupCustomSync obj)
+        {
+            if (!syncedCustomObjects.ContainsKey(obj.networkId))
+                syncedCustomObjects.Add(obj.networkId, obj);
+            else
+                Debug.LogError($"Duplicate ID on custom object: {obj.name}, ID is: {obj.networkId}");
+        }
+        public void RemoveCustomObject(GroupCustomSync obj)
+        {
+            if (!syncedCustomObjects.Remove(obj.networkId))
+                Debug.LogError($"Couldn't find custom object: {obj.name}, ID is: {obj.networkId}");
+        }
     }
 }

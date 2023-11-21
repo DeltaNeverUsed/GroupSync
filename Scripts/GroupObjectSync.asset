@@ -21,7 +21,7 @@ MonoBehaviour:
   compiledVersion: 2
   behaviourSyncMode: 1
   hasInteractEvent: 0
-  scriptID: 8825152556986324605
+  scriptID: 3459473220092064371
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
@@ -170,7 +170,7 @@ MonoBehaviour:
       Data: 9|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: GroupObjectSyncManager, Assembly-CSharp
+      Data: GroupSync.GroupObjectSyncManager, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -236,7 +236,7 @@ MonoBehaviour:
       Data: 14|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: USPPNetEveryPlayerManager, Assembly-CSharp
+      Data: GroupSync.USPPNetEveryPlayerManager, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -296,7 +296,7 @@ MonoBehaviour:
       Data: 18|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: USPPNetEveryPlayer, Assembly-CSharp
+      Data: GroupSync.USPPNetEveryPlayer, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -941,7 +941,7 @@ MonoBehaviour:
       Data: 53|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: LocalBehaviourEnabler, Assembly-CSharp
+      Data: GroupSync.LocalBehaviourEnabler, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
