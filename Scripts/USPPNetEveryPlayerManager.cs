@@ -2,6 +2,9 @@
 #define USPPNet_string
 #define USPPNet_int
 
+using USPPNet;
+using System;
+
 using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
@@ -16,7 +19,7 @@ namespace GroupSync
         [HideInInspector] public USPPNetEveryPlayer local_object;
         [HideInInspector] public USPPNetEveryPlayer[] Objects;
 
-        private void Start()
+        public void Bootstrap()
         {
             Objects = new USPPNetEveryPlayer[transform.childCount];
             var i = 0;
@@ -32,6 +35,7 @@ namespace GroupSync
         {
             if (Networking.LocalPlayer.playerId != target_player)
                 return;
+            
             local_object = Objects[id];
             local_object.owned = true;
             local_object.RequestSerialization();

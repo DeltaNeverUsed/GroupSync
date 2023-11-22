@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -54,7 +54,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271687909516051}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -132,7 +132,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -141,7 +141,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271687941471880}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -219,7 +219,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -228,7 +228,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271687972180888}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -306,7 +306,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -315,7 +315,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271687984963872}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -393,7 +393,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -402,7 +402,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271687990386071}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -480,7 +480,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -489,7 +489,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688000394571}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -567,7 +567,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -576,7 +576,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688001319377}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -654,7 +654,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -663,7 +663,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688004556067}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -741,7 +741,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -750,7 +750,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688009208825}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -828,7 +828,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -837,7 +837,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688042453558}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -915,7 +915,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -924,7 +924,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688071958469}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -1002,7 +1002,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -1011,7 +1011,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688094144045}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -1089,7 +1089,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -1098,7 +1098,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688097935681}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -1176,7 +1176,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -1185,7 +1185,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688099210556}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -1263,7 +1263,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -1272,7 +1272,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688145457603}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -1350,7 +1350,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -1359,7 +1359,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688177429534}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -1437,7 +1437,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -1446,7 +1446,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688191309501}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -1524,7 +1524,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -1533,7 +1533,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688314368556}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -1611,7 +1611,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -1620,7 +1620,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688326823003}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -1698,7 +1698,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -1707,7 +1707,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688359778723}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -1785,7 +1785,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -1794,7 +1794,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688458938006}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -1872,7 +1872,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -1881,7 +1881,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688483477363}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -1959,7 +1959,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -1968,7 +1968,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688551282260}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -2046,7 +2046,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -2055,7 +2055,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688605856619}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -2133,7 +2133,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -2142,7 +2142,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688608933140}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -2220,7 +2220,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -2229,7 +2229,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688622678784}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -2307,7 +2307,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -2316,7 +2316,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688661196164}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -2394,7 +2394,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -2403,7 +2403,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688701444073}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -2481,7 +2481,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -2490,7 +2490,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688727692082}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -2568,7 +2568,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -2577,7 +2577,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688741589197}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -2655,7 +2655,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -2664,7 +2664,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688784499139}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -2742,7 +2742,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -2751,7 +2751,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688830857905}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -2829,7 +2829,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -2838,7 +2838,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688872685483}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -2916,7 +2916,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -2925,7 +2925,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688873195601}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -3003,7 +3003,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -3012,7 +3012,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688918685050}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -3090,7 +3090,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -3099,7 +3099,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688945944804}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -3242,7 +3242,7 @@ Transform:
   - {fileID: 2400271688960554812}
   - {fileID: 2400271689780590240}
   m_Father: {fileID: 5799629394215130458}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2400271688949641372
 MonoBehaviour:
@@ -3257,7 +3257,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -3266,7 +3266,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688949641373}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   local_object: {fileID: 0}
   Objects: []
 --- !u!114 &2400271688949641373
@@ -3340,7 +3340,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -3349,7 +3349,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688960554813}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -3427,7 +3427,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -3436,7 +3436,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688975835691}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -3514,7 +3514,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -3523,7 +3523,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688977190790}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -3601,7 +3601,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -3610,7 +3610,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688990904791}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -3688,7 +3688,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -3697,7 +3697,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689001221406}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -3775,7 +3775,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -3784,7 +3784,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689003363220}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -3862,7 +3862,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -3871,7 +3871,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689003618955}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -3949,7 +3949,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -3958,7 +3958,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689071649936}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -4036,7 +4036,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -4045,7 +4045,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689096361066}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -4123,7 +4123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -4132,7 +4132,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689099103555}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -4210,7 +4210,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -4219,7 +4219,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689106743365}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -4297,7 +4297,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -4306,7 +4306,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689144681458}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -4384,7 +4384,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -4393,7 +4393,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689172066679}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -4471,7 +4471,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -4480,7 +4480,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689185772964}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -4558,7 +4558,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -4567,7 +4567,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689207971377}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -4645,7 +4645,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -4654,7 +4654,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689238784165}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -4732,7 +4732,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -4741,7 +4741,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689239306335}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -4819,7 +4819,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -4828,7 +4828,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689254131525}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -4906,7 +4906,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -4915,7 +4915,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689266410255}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -4993,7 +4993,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -5002,7 +5002,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689283802271}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -5080,7 +5080,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -5089,7 +5089,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689312791097}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -5167,7 +5167,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -5176,7 +5176,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689352956216}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -5254,7 +5254,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -5263,7 +5263,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689448039492}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -5341,7 +5341,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -5350,7 +5350,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689451229737}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -5428,7 +5428,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -5437,7 +5437,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689475854194}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -5515,7 +5515,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -5524,7 +5524,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689513415542}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -5602,7 +5602,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -5611,7 +5611,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689518614944}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -5689,7 +5689,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -5698,7 +5698,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689524200824}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -5776,7 +5776,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -5785,7 +5785,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689534059337}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -5863,7 +5863,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -5872,7 +5872,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689578528952}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -5950,7 +5950,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -5959,7 +5959,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689586358065}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -6037,7 +6037,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -6046,7 +6046,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689603542171}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -6124,7 +6124,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -6133,7 +6133,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689608124609}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -6211,7 +6211,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -6220,7 +6220,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689634835383}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -6298,7 +6298,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -6307,7 +6307,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689704915448}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -6385,7 +6385,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -6394,7 +6394,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689719412333}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -6472,7 +6472,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -6481,7 +6481,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689740482337}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -6559,7 +6559,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -6568,7 +6568,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689743373914}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -6646,7 +6646,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -6655,7 +6655,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689756664142}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -6733,7 +6733,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -6742,7 +6742,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689780590241}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -6820,7 +6820,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -6829,7 +6829,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689837372750}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -6907,7 +6907,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -6916,7 +6916,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689842260254}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -6994,7 +6994,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -7003,7 +7003,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689859291904}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -7081,7 +7081,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -7090,7 +7090,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271689863435624}
-  groupManager: {fileID: 5799629394215130436}
+  groupManager: {fileID: 7180904898227699492}
   syncManager: {fileID: 5799629394448098912}
   playerManager: {fileID: 2400271688949641372}
   neverCloseGroups: 0
@@ -7123,6 +7123,93 @@ MonoBehaviour:
   serializedPublicVariablesBytesString: Ai8AAAAAATIAAABWAFIAQwAuAFUAZABvAG4ALgBDAG8AbQBtAG8AbgAuAFUAZABvAG4AVgBhAHIAaQBhAGIAbABlAFQAYQBiAGwAZQAsACAAVgBSAEMALgBVAGQAbwBuAC4AQwBvAG0AbQBvAG4AAAAAAAYBAAAAAAAAACcBBAAAAHQAeQBwAGUAAWgAAABTAHkAcwB0AGUAbQAuAEMAbwBsAGwAZQBjAHQAaQBvAG4AcwAuAEcAZQBuAGUAcgBpAGMALgBMAGkAcwB0AGAAMQBbAFsAVgBSAEMALgBVAGQAbwBuAC4AQwBvAG0AbQBvAG4ALgBJAG4AdABlAHIAZgBhAGMAZQBzAC4ASQBVAGQAbwBuAFYAYQByAGkAYQBiAGwAZQAsACAAVgBSAEMALgBVAGQAbwBuAC4AQwBvAG0AbQBvAG4AXQBdACwAIABtAHMAYwBvAHIAbABpAGIAAQEJAAAAVgBhAHIAaQBhAGIAbABlAHMALwEAAAABaAAAAFMAeQBzAHQAZQBtAC4AQwBvAGwAbABlAGMAdABpAG8AbgBzAC4ARwBlAG4AZQByAGkAYwAuAEwAaQBzAHQAYAAxAFsAWwBWAFIAQwAuAFUAZABvAG4ALgBDAG8AbQBtAG8AbgAuAEkAbgB0AGUAcgBmAGEAYwBlAHMALgBJAFUAZABvAG4AVgBhAHIAaQBhAGIAbABlACwAIABWAFIAQwAuAFUAZABvAG4ALgBDAG8AbQBtAG8AbgBdAF0ALAAgAG0AcwBjAG8AcgBsAGkAYgABAAAABgEAAAAAAAAAAi8CAAAAAUkAAABWAFIAQwAuAFUAZABvAG4ALgBDAG8AbQBtAG8AbgAuAFUAZABvAG4AVgBhAHIAaQBhAGIAbABlAGAAMQBbAFsAUwB5AHMAdABlAG0ALgBJAG4AdAAzADIALAAgAG0AcwBjAG8AcgBsAGkAYgBdAF0ALAAgAFYAUgBDAC4AVQBkAG8AbgAuAEMAbwBtAG0AbwBuAAIAAAAGAgAAAAAAAAAnAQQAAAB0AHkAcABlAAEXAAAAUwB5AHMAdABlAG0ALgBTAHQAcgBpAG4AZwAsACAAbQBzAGMAbwByAGwAaQBiACcBCgAAAFMAeQBtAGIAbwBsAE4AYQBtAGUAAR8AAABfAF8AXwBVAGQAbwBuAFMAaABhAHIAcABCAGUAaABhAHYAaQBvAHUAcgBWAGUAcgBzAGkAbwBuAF8AXwBfACcBBAAAAHQAeQBwAGUAARYAAABTAHkAcwB0AGUAbQAuAEkAbgB0ADMAMgAsACAAbQBzAGMAbwByAGwAaQBiABcBBQAAAFYAYQBsAHUAZQACAAAABwUHBQcF
   publicVariablesUnityEngineObjects: []
   publicVariablesSerializationDataFormat: 0
+--- !u!1 &5560253895707803056
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8129843549019029753}
+  - component: {fileID: 7180904898227699492}
+  - component: {fileID: 5715907006051226027}
+  m_Layer: 0
+  m_Name: GroupManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8129843549019029753
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5560253895707803056}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5799629394215130458}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7180904898227699492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5560253895707803056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61e22a106bc3f884499b430bb88b6fde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  _udonSharpBackingUdonBehaviour: {fileID: 5715907006051226027}
+  maxGroups: 32
+  maxPlayersPerGroup: 10
+  joinable: []
+  groups: 
+  leaveGroupCallbacks:
+    _values: []
+  local_group: -1
+--- !u!114 &5715907006051226027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5560253895707803056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45115577ef41a5b4ca741ed302693907, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactTextPlacement: {fileID: 0}
+  interactText: Use
+  interactTextGO: {fileID: 0}
+  proximity: 2
+  SynchronizePosition: 0
+  AllowCollisionOwnershipTransfer: 0
+  Reliable: 0
+  _syncMethod: 3
+  serializedProgramAsset: {fileID: 11400000, guid: eb2fc650b942f0d4390057ee745de523,
+    type: 2}
+  programSource: {fileID: 11400000, guid: c532f638004400b459caa15d3280024a, type: 2}
+  serializedPublicVariablesBytesString: Ai8AAAAAATIAAABWAFIAQwAuAFUAZABvAG4ALgBDAG8AbQBtAG8AbgAuAFUAZABvAG4AVgBhAHIAaQBhAGIAbABlAFQAYQBiAGwAZQAsACAAVgBSAEMALgBVAGQAbwBuAC4AQwBvAG0AbQBvAG4AAAAAAAYBAAAAAAAAACcBBAAAAHQAeQBwAGUAAWgAAABTAHkAcwB0AGUAbQAuAEMAbwBsAGwAZQBjAHQAaQBvAG4AcwAuAEcAZQBuAGUAcgBpAGMALgBMAGkAcwB0AGAAMQBbAFsAVgBSAEMALgBVAGQAbwBuAC4AQwBvAG0AbQBvAG4ALgBJAG4AdABlAHIAZgBhAGMAZQBzAC4ASQBVAGQAbwBuAFYAYQByAGkAYQBiAGwAZQAsACAAVgBSAEMALgBVAGQAbwBuAC4AQwBvAG0AbQBvAG4AXQBdACwAIABtAHMAYwBvAHIAbABpAGIAAQEJAAAAVgBhAHIAaQBhAGIAbABlAHMALwEAAAABaAAAAFMAeQBzAHQAZQBtAC4AQwBvAGwAbABlAGMAdABpAG8AbgBzAC4ARwBlAG4AZQByAGkAYwAuAEwAaQBzAHQAYAAxAFsAWwBWAFIAQwAuAFUAZABvAG4ALgBDAG8AbQBtAG8AbgAuAEkAbgB0AGUAcgBmAGEAYwBlAHMALgBJAFUAZABvAG4AVgBhAHIAaQBhAGIAbABlACwAIABWAFIAQwAuAFUAZABvAG4ALgBDAG8AbQBtAG8AbgBdAF0ALAAgAG0AcwBjAG8AcgBsAGkAYgABAAAABgEAAAAAAAAAAi8CAAAAAUkAAABWAFIAQwAuAFUAZABvAG4ALgBDAG8AbQBtAG8AbgAuAFUAZABvAG4AVgBhAHIAaQBhAGIAbABlAGAAMQBbAFsAUwB5AHMAdABlAG0ALgBJAG4AdAAzADIALAAgAG0AcwBjAG8AcgBsAGkAYgBdAF0ALAAgAFYAUgBDAC4AVQBkAG8AbgAuAEMAbwBtAG0AbwBuAAIAAAAGAgAAAAAAAAAnAQQAAAB0AHkAcABlAAEXAAAAUwB5AHMAdABlAG0ALgBTAHQAcgBpAG4AZwAsACAAbQBzAGMAbwByAGwAaQBiACcBCgAAAFMAeQBtAGIAbwBsAE4AYQBtAGUAAR8AAABfAF8AXwBVAGQAbwBuAFMAaABhAHIAcABCAGUAaABhAHYAaQBvAHUAcgBWAGUAcgBzAGkAbwBuAF8AXwBfACcBBAAAAHQAeQBwAGUAARYAAABTAHkAcwB0AGUAbQAuAEkAbgB0ADMAMgAsACAAbQBzAGMAbwByAGwAaQBiABcBBQAAAFYAYQBsAHUAZQACAAAABwUHBQcF
+  publicVariablesUnityEngineObjects: []
+  publicVariablesSerializationDataFormat: 0
 --- !u!1 &5799629394215130459
 GameObject:
   m_ObjectHideFlags: 0
@@ -7132,8 +7219,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5799629394215130458}
-  - component: {fileID: 5799629394215130436}
-  - component: {fileID: 5799629394215130437}
+  - component: {fileID: 2011561502368585134}
+  - component: {fileID: 6412355066851962516}
   m_Layer: 0
   m_Name: GroupNetworkingStuff
   m_TagString: Untagged
@@ -7152,12 +7239,13 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 8129843549019029753}
   - {fileID: 5799629394448098918}
   - {fileID: 2400271688949641375}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5799629394215130436
+--- !u!114 &2011561502368585134
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7166,11 +7254,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 5799629394215130459}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61e22a106bc3f884499b430bb88b6fde, type: 3}
+  m_Script: {fileID: 11500000, guid: d4c29de5abd2a8a4bb9fc7b32907a27b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -7178,15 +7266,8 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  _udonSharpBackingUdonBehaviour: {fileID: 5799629394215130437}
-  maxGroups: 32
-  maxPlayersPerGroup: 10
-  joinable: []
-  groups: 
-  leaveGroupCallbacks:
-    _values: []
-  local_group: -1
---- !u!114 &5799629394215130437
+  _udonSharpBackingUdonBehaviour: {fileID: 6412355066851962516}
+--- !u!114 &6412355066851962516
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7205,10 +7286,10 @@ MonoBehaviour:
   SynchronizePosition: 0
   AllowCollisionOwnershipTransfer: 0
   Reliable: 0
-  _syncMethod: 3
-  serializedProgramAsset: {fileID: 11400000, guid: e2b1c80b647d23540878e69239db2b7f,
+  _syncMethod: 0
+  serializedProgramAsset: {fileID: 11400000, guid: 8b0c1f930e367584e8da9c9d38d03b44,
     type: 2}
-  programSource: {fileID: 11400000, guid: c532f638004400b459caa15d3280024a, type: 2}
+  programSource: {fileID: 11400000, guid: 3ddcae90ace6cdf488ac601f4af8a138, type: 2}
   serializedPublicVariablesBytesString: Ai8AAAAAATIAAABWAFIAQwAuAFUAZABvAG4ALgBDAG8AbQBtAG8AbgAuAFUAZABvAG4AVgBhAHIAaQBhAGIAbABlAFQAYQBiAGwAZQAsACAAVgBSAEMALgBVAGQAbwBuAC4AQwBvAG0AbQBvAG4AAAAAAAYBAAAAAAAAACcBBAAAAHQAeQBwAGUAAWgAAABTAHkAcwB0AGUAbQAuAEMAbwBsAGwAZQBjAHQAaQBvAG4AcwAuAEcAZQBuAGUAcgBpAGMALgBMAGkAcwB0AGAAMQBbAFsAVgBSAEMALgBVAGQAbwBuAC4AQwBvAG0AbQBvAG4ALgBJAG4AdABlAHIAZgBhAGMAZQBzAC4ASQBVAGQAbwBuAFYAYQByAGkAYQBiAGwAZQAsACAAVgBSAEMALgBVAGQAbwBuAC4AQwBvAG0AbQBvAG4AXQBdACwAIABtAHMAYwBvAHIAbABpAGIAAQEJAAAAVgBhAHIAaQBhAGIAbABlAHMALwEAAAABaAAAAFMAeQBzAHQAZQBtAC4AQwBvAGwAbABlAGMAdABpAG8AbgBzAC4ARwBlAG4AZQByAGkAYwAuAEwAaQBzAHQAYAAxAFsAWwBWAFIAQwAuAFUAZABvAG4ALgBDAG8AbQBtAG8AbgAuAEkAbgB0AGUAcgBmAGEAYwBlAHMALgBJAFUAZABvAG4AVgBhAHIAaQBhAGIAbABlACwAIABWAFIAQwAuAFUAZABvAG4ALgBDAG8AbQBtAG8AbgBdAF0ALAAgAG0AcwBjAG8AcgBsAGkAYgABAAAABgEAAAAAAAAAAi8CAAAAAUkAAABWAFIAQwAuAFUAZABvAG4ALgBDAG8AbQBtAG8AbgAuAFUAZABvAG4AVgBhAHIAaQBhAGIAbABlAGAAMQBbAFsAUwB5AHMAdABlAG0ALgBJAG4AdAAzADIALAAgAG0AcwBjAG8AcgBsAGkAYgBdAF0ALAAgAFYAUgBDAC4AVQBkAG8AbgAuAEMAbwBtAG0AbwBuAAIAAAAGAgAAAAAAAAAnAQQAAAB0AHkAcABlAAEXAAAAUwB5AHMAdABlAG0ALgBTAHQAcgBpAG4AZwAsACAAbQBzAGMAbwByAGwAaQBiACcBCgAAAFMAeQBtAGIAbwBsAE4AYQBtAGUAAR8AAABfAF8AXwBVAGQAbwBuAFMAaABhAHIAcABCAGUAaABhAHYAaQBvAHUAcgBWAGUAcgBzAGkAbwBuAF8AXwBfACcBBAAAAHQAeQBwAGUAARYAAABTAHkAcwB0AGUAbQAuAEkAbgB0ADMAMgAsACAAbQBzAGMAbwByAGwAaQBiABcBBQAAAFYAYQBsAHUAZQACAAAABwUHBQcF
   publicVariablesUnityEngineObjects: []
   publicVariablesSerializationDataFormat: 0
@@ -7242,7 +7323,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5799629394215130458}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5799629394448098912
 MonoBehaviour:
@@ -7257,7 +7338,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
+    SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 

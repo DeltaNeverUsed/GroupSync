@@ -1,5 +1,6 @@
-﻿
-#define USPPNet_int
+﻿#define USPPNet_int
+
+using USPPNet;
 
 using System;
 using UdonSharp;
@@ -32,15 +33,15 @@ namespace GroupSync
             Debug.Log($"local_group updated: {local_group}");
         }
 
-        private void Start()
+        public void Bootstrap()
         {
             _groupsArraySize = maxGroups * maxPlayersPerGroup;
         
             groups = new short[_groupsArraySize];
             joinable = new string[maxGroups];
-            for (int i = 0; i < groups.Length; i++)
+            for (var i = 0; i < groups.Length; i++)
                 groups[i] = -1;
-            for (int i = 0; i < maxGroups; i++)
+            for (var i = 0; i < maxGroups; i++)
                 joinable[i] = "";
         }
 
@@ -64,10 +65,10 @@ namespace GroupSync
         {
             if (groups.Length != _groupsArraySize)
                 return false;
-            if (group >= maxGroups)
+            if (group >= maxGroups || group < 0)
                 return false;
 
-            for (int i = 0; i < maxPlayersPerGroup; i++)
+            for (var i = 0; i < maxPlayersPerGroup; i++)
                 if (groups[GroupAndPlayer2Index(group, i)] == playerId)
                     return true;
 
@@ -76,8 +77,8 @@ namespace GroupSync
     
         public int GetPlayerGroup(int playerId)
         {
-            for (int x = 0; x < maxGroups; x++)
-            for (int y = 0; y < maxPlayersPerGroup; y++)
+            for (var x = 0; x < maxGroups; x++)
+            for (var y = 0; y < maxPlayersPerGroup; y++)
                 if (groups[GroupAndPlayer2Index(x, y)] == playerId)
                     return x;
             return -1;
@@ -89,13 +90,41 @@ namespace GroupSync
                 return IsPlayerInGroup(playerId, local_group);
             return false;
         }
+        
+        private static T[] Add<T>(T[] array, T item)
+        {
+            var len = array.Length + 1;
+            var tempArray = new T[len];
+            array.CopyTo(tempArray, 0);
+            tempArray[len-1] = item;
+            return tempArray;
+        }
+
+        public int[] GetPlayersInGroup(int group)
+        {
+            var players = new int[0];
+            
+            if (groups.Length != _groupsArraySize)
+                return players;
+            if (group >= maxGroups || group < 0)
+                return players;
+            
+            for (var i = 0; i < maxPlayersPerGroup; i++)
+            {
+                var player = groups[GroupAndPlayer2Index(group, i)];
+                if (player != -1)
+                    players = Add(players, player);
+            }
+
+            return players;
+        }
 
         private void CheckGroupsEmpty()
         {
-            for (int x = 0; x < maxGroups; x++)
+            for (var x = 0; x < maxGroups; x++)
             {
                 var clear = true;
-                for (int y = 0; y < maxPlayersPerGroup; y++)
+                for (var y = 0; y < maxPlayersPerGroup; y++)
                 {
                     if (groups[GroupAndPlayer2Index(x, y)] == -1) continue;
                     clear = false;
@@ -108,7 +137,7 @@ namespace GroupSync
         }
         public void RemovePlayerFromGroups(int playerId)
         {
-            for (int i = 0; i < groups.Length; i++)
+            for (var i = 0; i < groups.Length; i++)
             {
                 if (groups[i] == playerId)
                     groups[i] = -1;
@@ -125,7 +154,7 @@ namespace GroupSync
                 return;
 
             var added = false;
-            for (int i = 0; i < maxPlayersPerGroup; i++)
+            for (var i = 0; i < maxPlayersPerGroup; i++)
             {
                 if(groups[GroupAndPlayer2Index(group, i)] != -1)
                     continue;
@@ -202,7 +231,7 @@ namespace GroupSync
                 return;
 
             var updated = false;
-            for (int i = 0; i < groups.Length; i++)
+            for (var i = 0; i < groups.Length; i++)
             {
                 if (groups[i] == -1) continue;
                 var plr = VRCPlayerApi.GetPlayerById(groups[i]);

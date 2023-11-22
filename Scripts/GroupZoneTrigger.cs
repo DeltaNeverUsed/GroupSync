@@ -19,7 +19,7 @@ namespace GroupSync
             playerNetworkManager = GameObject.Find("EachPlayerUSPPNet").GetComponent<USPPNetEveryPlayerManager>();
 
             if (playerNetworkManager != null) return;
-            UnityEngine.Debug.LogError($"playerNetworkManager is not set on: {gameObject.name}");
+            Debug.LogError($"playerNetworkManager is not set on: {gameObject.name}");
             gameObject.SetActive(false);
         }
 

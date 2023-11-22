@@ -7,6 +7,8 @@
 #define USPPNet_Vector4
 #define USPPNet_Quaternion
 
+using USPPNet;
+
 using System;
 using UdonSharp;
 using UnityEngine;
@@ -263,7 +265,7 @@ namespace GroupSync
             _requestedSerialization = true;
         }
     
-        private void Start()
+        public void Bootstrap()
         {
             _usppNetEveryPlayerManager = transform.parent.GetComponent<USPPNetEveryPlayerManager>();
         }
