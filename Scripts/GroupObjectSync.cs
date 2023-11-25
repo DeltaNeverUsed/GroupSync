@@ -1,4 +1,6 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using GroupSync.Extensions;
+using JetBrains.Annotations;
 using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
@@ -26,7 +28,7 @@ namespace GroupSync
         private Rigidbody _rb;
 
         private bool _hasBehaviourEnabler;
-        private LocalBehaviourEnabler _behaviourEnabler;
+        private LocalBehaviourEnabler[] _behaviourEnablers = Array.Empty<LocalBehaviourEnabler>();
     
         [Range(0.1f, 2f)] public float updateSeconds = 0.16f;
         [Range(0.1f, 2f)] public float handUpdateSeconds = 0.33f;
@@ -145,6 +147,17 @@ namespace GroupSync
             SetRbState();
         }
 
+        private void TriggerEnablers(bool state)
+        {
+            foreach (var behaviourEnabler in _behaviourEnablers)
+            {
+                if (state)
+                    behaviourEnabler.EnableComps();
+                else
+                    behaviourEnabler.DisableComps();
+            }
+        }
+
         public override void Start()
         {
             if (StartedNet)
@@ -152,9 +165,13 @@ namespace GroupSync
         
             _rb = GetComponent<Rigidbody>();
             _isKinematic = _rb.isKinematic;
-
-            _behaviourEnabler = GetComponent<LocalBehaviourEnabler>();
-            _hasBehaviourEnabler = _behaviourEnabler != null;
+            
+            _behaviourEnablers = GetComponents<LocalBehaviourEnabler>();
+            var get2 = GetComponentsInChildren<LocalBehaviourEnabler>();
+            if (get2.Length > 0)
+                _behaviourEnablers = _behaviourEnablers.Concat(get2);
+            
+            _hasBehaviourEnabler = _behaviourEnablers.Length > 0;
         
             _startingPosition = transform.position;
             _startingRotation = transform.rotation;
@@ -162,8 +179,7 @@ namespace GroupSync
                 SubLeaveGroupCallback();
         
             pickup = GetComponent<VRC_Pickup>();
-
-            hasPickup = pickup != null;
+            hasPickup = Utilities.IsValid(pickup);
 
             _localPlayer = Networking.LocalPlayer.playerId;
         
@@ -171,12 +187,7 @@ namespace GroupSync
             _lastRot = transform.rotation;
 
             if (_hasBehaviourEnabler)
-            {
-                if (GetOwner() == Networking.LocalPlayer)
-                    _behaviourEnabler.EnableComps();
-                else
-                    _behaviourEnabler.DisableComps();
-            }
+                TriggerEnablers(GetOwner() == Networking.LocalPlayer);
         }
 
         [PublicAPI]
@@ -408,7 +419,7 @@ namespace GroupSync
                 {
                     _isLocalOwner = true;
                     if (_hasBehaviourEnabler)
-                        _behaviourEnabler.EnableComps();
+                        TriggerEnablers(true);
                 }
                 if (_delayedHandSync)
                 {
@@ -446,7 +457,7 @@ namespace GroupSync
                 {
                     _isLocalOwner = false;
                     if (_hasBehaviourEnabler)
-                        _behaviourEnabler.DisableComps();
+                        TriggerEnablers(false);
                 }
 
                 if (_secSinceLastSt > 2)

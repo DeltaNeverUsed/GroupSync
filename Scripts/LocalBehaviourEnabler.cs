@@ -1,36 +1,24 @@
 ﻿using System;
+using GroupSync.Extensions;
 using UdonSharp;
 using UnityEngine;
+using VRC.SDKBase;
 
 namespace GroupSync
 {
-    [RequireComponent(typeof(GroupObjectSync))]
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class LocalBehaviourEnabler : UdonSharpBehaviour
     {
+        public GroupObjectSync objectSync;
+        
         public UdonSharpBehaviour[] excluded = { };
-
         private UdonSharpBehaviour[] _compList = { };
     
-        private static bool Contains<T>(T[] haystack, T needle)
-        {
-            foreach (var hay in haystack)
-                if (hay.Equals(needle))
-                    return true;
-            return false;
-        }
-        private static T[] Add<T>(T[] array, T item)
-        {
-            var len = array.Length + 1;
-            var tempArray = new T[len];
-            array.CopyTo(tempArray, 0);
-            tempArray[len-1] = item;
-            return tempArray;
-        }
+        
 
         public void AddExclusion(UdonSharpBehaviour behaviour)
         {
-            excluded = Add(excluded, behaviour);
+            excluded = excluded.Add(behaviour);
         }
     
         public void RemoveExclusion(UdonSharpBehaviour behaviour)
@@ -55,14 +43,25 @@ namespace GroupSync
 
         private void Start()
         {
-            excluded = Add(excluded, GetComponent<GroupObjectSync>());
-            excluded = Add(excluded, this);
+            if (!Utilities.IsValid(objectSync))
+            {
+                objectSync = GetComponent<GroupObjectSync>();
+            }
+            if (!Utilities.IsValid(objectSync))
+            {
+                Debug.LogError("Couldn't get GroupObjectSync!");
+                enabled = false;
+                return;
+            }
+            
+            excluded = excluded.Add(objectSync);
+            excluded = excluded.Add(this);
             var objectComps = GetComponents<UdonSharpBehaviour>();
             foreach (var comp in objectComps)
             {
-                if (Contains(excluded, comp))
+                if (excluded.Contains(comp))
                     return;
-                _compList = Add(_compList, comp);
+                _compList = _compList.Add(comp);
             }
         }
 
