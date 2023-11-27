@@ -24,6 +24,7 @@ namespace GroupSync
     
         private int _localPlayer = -99;
 
+        private bool _hasGravity;
         private bool _isKinematic;
         private Rigidbody _rb;
 
@@ -165,6 +166,7 @@ namespace GroupSync
         
             _rb = GetComponent<Rigidbody>();
             _isKinematic = _rb.isKinematic;
+            _hasGravity = _rb.useGravity;
             
             _behaviourEnablers = GetComponents<LocalBehaviourEnabler>();
             var get2 = GetComponentsInChildren<LocalBehaviourEnabler>();
@@ -321,7 +323,7 @@ namespace GroupSync
         {
             var isOwner = (cu == _localPlayer || cu == -1);
             _rb.isKinematic = !isOwner || _isKinematic;
-            _rb.useGravity = isOwner;
+            _rb.useGravity = isOwner && _hasGravity;
         }
 
         private int _timesChanged;
