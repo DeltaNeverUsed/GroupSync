@@ -55,7 +55,6 @@ namespace GroupSync
             gosm.AddCustomObject(this);
         
             StartedNet = true;
-
             return true;
         }
 

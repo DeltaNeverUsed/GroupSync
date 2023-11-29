@@ -38,7 +38,7 @@ namespace GroupSync
 
         public int GetUnusedIdRange(int range)
         {
-            var newId = 0;
+            var newId = 1000;
             var contains = true;
             while (contains)
             {

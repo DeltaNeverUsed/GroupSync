@@ -14,9 +14,12 @@ namespace GroupSync
     {
         [Space(20)]
 
-        [HideInInspector] public bool hasPickup; 
-        [HideInInspector] public VRC_Pickup pickup;
+        [NonSerialized] public bool HasPickup; 
+        [NonSerialized] public VRC_Pickup Pickup;
+        [NonSerialized] public int RequestedOwner = -1;
 
+        public bool sleepUntilSettled = true;
+        
         public float respawnHeight = -70;
     
         private Vector3 _startingPosition;
@@ -42,7 +45,7 @@ namespace GroupSync
     
         public override void OnPickup()
         {
-            SimulatePickup(pickup.currentHand == VRC_Pickup.PickupHand.Left);
+            SimulatePickup(Pickup.currentHand == VRC_Pickup.PickupHand.Left);
         }
 
         public override void OnDrop()
@@ -138,8 +141,8 @@ namespace GroupSync
         {
             if (!IsOwner() || !StartedNet)
                 return;
-            if (hasPickup)
-                pickup.Drop();
+            if (HasPickup)
+                Pickup.Drop();
             SetVariableInLocalGroup(nameof(cu), -1, autoSerialize: false);
             SetVariableInLocalGroup(nameof(handSync), 0, false);
             UpdateGrabbed(false);
@@ -170,7 +173,9 @@ namespace GroupSync
             
             _behaviourEnablers = GetComponents<LocalBehaviourEnabler>();
             var get2 = GetComponentsInChildren<LocalBehaviourEnabler>();
-            if (get2.Length > 0)
+            if (_behaviourEnablers.Length == 0)
+                _behaviourEnablers = get2;
+            else if (get2.Length > 0)
                 _behaviourEnablers = _behaviourEnablers.Concat(get2);
             
             _hasBehaviourEnabler = _behaviourEnablers.Length > 0;
@@ -180,16 +185,24 @@ namespace GroupSync
             if (StartNet())
                 SubLeaveGroupCallback();
         
-            pickup = GetComponent<VRC_Pickup>();
-            hasPickup = Utilities.IsValid(pickup);
+            Pickup = GetComponent<VRC_Pickup>();
+            HasPickup = Utilities.IsValid(Pickup);
 
             _localPlayer = Networking.LocalPlayer.playerId;
         
             _lastPos = transform.position;
             _lastRot = transform.rotation;
+            
+            if (RequestedOwner != -1)
+                SetVariableInLocalGroup(nameof(cu), RequestedOwner);
 
             if (_hasBehaviourEnabler)
-                TriggerEnablers(GetOwner() == Networking.LocalPlayer);
+            {
+                foreach (var behaviourEnabler in _behaviourEnablers)
+                    behaviourEnabler.StartWithGroupSync();
+                
+                TriggerEnablers(IsOwner());
+            }
         }
 
         [PublicAPI]
@@ -268,7 +281,7 @@ namespace GroupSync
             if (handSync == 0) // If we aren't hand syncing, we don't want to update this crap
                 return;
 
-            var isLHand = pickup.currentHand == VRC_Pickup.PickupHand.Left;
+            var isLHand = Pickup.currentHand == VRC_Pickup.PickupHand.Left;
 
             var pos = Networking.LocalPlayer.GetBonePosition(isLHand
                 ? HumanBodyBones.LeftHand
@@ -400,6 +413,11 @@ namespace GroupSync
 
         public override void PostLateUpdate()
         {
+            if (sleepUntilSettled)
+            {
+                sleepUntilSettled = !_rb.IsSleeping();
+                return;
+            }
             if (cu == -1)
                 return;
 
@@ -410,12 +428,12 @@ namespace GroupSync
         
             if (transform.position.y < respawnHeight)
                 ObjectReset();
-            if (hasPickup)
-                pickup.pickupable = !ih;
+            if (HasPickup)
+                Pickup.pickupable = !ih;
         
             var transform1 = transform;
 
-            if (cu == _localPlayer)
+            if (IsOwner())
             {
                 if (!_isLocalOwner)
                 {

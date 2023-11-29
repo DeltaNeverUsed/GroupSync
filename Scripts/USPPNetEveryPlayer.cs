@@ -127,6 +127,9 @@ namespace GroupSync
         // ReSharper disable Unity.PerformanceAnalysis
         public void SetRemoteVar(int group, string varName, int netId, object var, bool setLocally = true)
         {
+            if (!Utilities.IsValid(var))
+                return;
+            
             var argType = var.GetType();
         
             if (argType == typeof(int))

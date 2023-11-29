@@ -1,7 +1,6 @@
 ﻿using System;
 using GroupSync.Extensions;
 using UdonSharp;
-using UnityEngine;
 using VRC.SDKBase;
 
 namespace GroupSync
@@ -11,9 +10,8 @@ namespace GroupSync
     {
         public GroupObjectSync objectSync;
         
-        public UdonSharpBehaviour[] excluded = { };
-        private UdonSharpBehaviour[] _compList = { };
-    
+        public UdonSharpBehaviour[] excluded = Array.Empty<UdonSharpBehaviour>();
+        private UdonSharpBehaviour[] _compList = Array.Empty<UdonSharpBehaviour>();
         
 
         public void AddExclusion(UdonSharpBehaviour behaviour)
@@ -41,39 +39,42 @@ namespace GroupSync
             excluded = tempArray;
         }
 
-        private void Start()
+        private bool _started;
+        public void StartWithGroupSync()
         {
-            if (!Utilities.IsValid(objectSync))
-            {
-                objectSync = GetComponent<GroupObjectSync>();
-            }
-            if (!Utilities.IsValid(objectSync))
-            {
-                Debug.LogError("Couldn't get GroupObjectSync!");
-                enabled = false;
+            if (_started)
                 return;
-            }
+            _started = true;
             
-            excluded = excluded.Add(objectSync);
-            excluded = excluded.Add(this);
+            if (!Utilities.IsValid(objectSync))
+                objectSync = GetComponent<GroupObjectSync>();
+            if (Utilities.IsValid(objectSync))
+                AddExclusion(objectSync);
+
+            AddExclusion(this);
             var objectComps = GetComponents<UdonSharpBehaviour>();
             foreach (var comp in objectComps)
             {
-                if (excluded.Contains(comp))
-                    return;
-                _compList = _compList.Add(comp);
+                if (!excluded.Contains(comp))
+                    _compList = _compList.Add(comp);
             }
         }
 
         public void EnableComps()
         {
             foreach (var comp in _compList)
+            {
+                //this.Log("<color=green>Enabling</color>: " + comp.GetUdonTypeName() + " on: " + gameObject.name);
                 comp.enabled = true;
+            }
         }
         public void DisableComps()
         {
             foreach (var comp in _compList)
+            {
+                //this.Log("<color=red>Disabling</color>: " + comp.GetUdonTypeName() + " on: " + gameObject.name);
                 comp.enabled = false;
+            }
         }
     }
 }
