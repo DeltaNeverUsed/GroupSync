@@ -28,7 +28,16 @@ namespace GroupSync
                 Objects[i] = child.GetComponent<USPPNetEveryPlayer>();
                 i++;
             }
-        
+            
+            SendCustomEventDelayedSeconds(nameof(ErrorLocalObject), 10);
+        }
+
+        public void ErrorLocalObject()
+        {
+            if (Utilities.IsValid(local_object))
+                return;
+            
+            Debug.LogError("This is really bad! report this to me, please! send me your log! discord: deltaneverused");
         }
 
         private void USPPNET_SetPlayerObject(int target_player, int id)

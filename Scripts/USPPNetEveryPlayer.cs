@@ -67,6 +67,12 @@ namespace GroupSync
                 return;
             var obj = (GroupCustomSync)data.Reference;
 
+            if (!Utilities.IsValid(obj))
+            {
+                syncManager.syncedCustomObjects.Remove(data);
+                return;
+            }
+
             obj.SetProgramVariable(varName, var);
         }
     
@@ -119,6 +125,12 @@ namespace GroupSync
             if (!syncManager.syncedCustomObjects.TryGetValue(netId, out var data))
                 return;
             var obj = (GroupCustomSync)data.Reference;
+            
+            if (!Utilities.IsValid(obj))
+            {
+                syncManager.syncedCustomObjects.Remove(data);
+                return;
+            }
 
             obj.SendCustomEvent(eventName);
         }
@@ -166,6 +178,12 @@ namespace GroupSync
                 return;
         
             var obj = (GroupCustomSync)data.Reference;
+            
+            if (!Utilities.IsValid(obj))
+            {
+                syncManager.syncedCustomObjects.Remove(data);
+                return;
+            }
 
             obj.SendCustomEvent(eventName);
         }
