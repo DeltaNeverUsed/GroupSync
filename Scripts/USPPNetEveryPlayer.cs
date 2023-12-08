@@ -279,29 +279,27 @@ namespace GroupSync
             RequestSerialization();
         }
 
-        private float _serializationTimer;
         private bool _requestedSerialization;
         public new void RequestSerialization()
         {
+            if (_requestedSerialization)
+                return;
+            if (!Networking.IsOwner(gameObject))
+                return;
+            
+            SendCustomEventDelayedSeconds(nameof(ResetSerialization), 0.01666f);
             _requestedSerialization = true;
+            base.RequestSerialization();
+        }
+        
+        public void ResetSerialization()
+        {
+            _requestedSerialization = false;
         }
     
         public void Bootstrap()
         {
             _usppNetEveryPlayerManager = transform.parent.GetComponent<USPPNetEveryPlayerManager>();
-        }
-
-        public void FixedUpdate()
-        {
-            if (!Networking.IsOwner(gameObject))
-                return;
-            _serializationTimer += Time.deltaTime;
-            if (_requestedSerialization && _serializationTimer > 0.16)
-            {
-                _serializationTimer = 0;
-                _requestedSerialization = false;
-                base.RequestSerialization();
-            }
         }
 
         public override void OnPlayerLeft(VRCPlayerApi player)

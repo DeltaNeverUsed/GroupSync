@@ -1,6 +1,7 @@
 ﻿using System;
 using UdonSharp;
 using UnityEngine;
+using VRC.SDKBase;
 
 namespace GroupSync
 {
@@ -61,7 +62,10 @@ namespace GroupSync
         public virtual void OnDestroy()
         {
             if (StartedNet)
+            {
                 gosm.RemoveCustomObject(this);
+                gosm.UnSubPostLateUpdate(this);
+            }
         }
 
         private bool _dontExists = true;
@@ -71,7 +75,7 @@ namespace GroupSync
                 return true;
             if (_dontExists)
             {
-                if (psm.local_object == null)
+                if (!Utilities.IsValid(psm.local_object))
                     return true;
             }
             else
@@ -119,6 +123,28 @@ namespace GroupSync
             lpm.SetRemoteVar(group, name, networkId, value, setLocally);
             if (autoSerialize)
                 lpm.RequestSerialization();
+        }
+
+        internal bool isLateSubbed;
+        
+        public void SubPostLateUpdateCallback()
+        {
+            if (isLateSubbed)
+                return;
+            isLateSubbed = true;
+            gosm.SubPostLateUpdate(this);
+        }
+        public void UnSubPostLateUpdateCallback()
+        {
+            if (!isLateSubbed)
+                return;
+            isLateSubbed = false;
+            gosm.UnSubPostLateUpdate(this);
+        }
+        
+        public virtual void SubPostLateUpdate()
+        {
+            
         }
 
         /// <summary>

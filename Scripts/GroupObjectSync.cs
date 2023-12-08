@@ -1,9 +1,10 @@
 ﻿using System;
-using GroupSync.Extensions;
+//using bSenpai.UdonProfiler;
 using JetBrains.Annotations;
 using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
+using ArrayExtensions = GroupSync.Extensions.ArrayExtensions;
 
 namespace GroupSync
 {
@@ -162,10 +163,14 @@ namespace GroupSync
             }
         }
 
+        //private Profiler _profiler;
         public override void Start()
         {
             if (StartedNet)
                 return;
+
+            //_profiler = this.GetComponentInHighestParent<RootInfo>().profiler;
+            //_profiler.BeginSample("GOS: Start()");
         
             _rb = GetComponent<Rigidbody>();
             _isKinematic = _rb.isKinematic;
@@ -176,14 +181,17 @@ namespace GroupSync
             if (_behaviourEnablers.Length == 0)
                 _behaviourEnablers = get2;
             else if (get2.Length > 0)
-                _behaviourEnablers = _behaviourEnablers.Concat(get2);
+                _behaviourEnablers = ArrayExtensions.Concat(_behaviourEnablers, get2);
             
             _hasBehaviourEnabler = _behaviourEnablers.Length > 0;
         
             _startingPosition = transform.position;
             _startingRotation = transform.rotation;
             if (StartNet())
+            {
                 SubLeaveGroupCallback();
+                SubPostLateUpdateCallback();
+            }
         
             Pickup = GetComponent<VRC_Pickup>();
             HasPickup = Utilities.IsValid(Pickup);
@@ -203,15 +211,21 @@ namespace GroupSync
                 
                 TriggerEnablers(IsOwner());
             }
+            
+            //_profiler.EndSample();
         }
 
         [PublicAPI]
         public void ObjectReset()
         {
+            //_profiler.BeginSample("GOS: ObjectReset()");
+            
             transform.position = _startingPosition;
             transform.rotation = _startingRotation;
             _rb.velocity = Vector3.zero;
             _rb.angularVelocity = Vector3.zero;
+            
+            //_profiler.EndSample();
         }
     
         // Controls Syncing
@@ -246,10 +260,15 @@ namespace GroupSync
         /// </summary>
         /// <param name="force">Skips checks and forces an update.</param>
         [PublicAPI]
-        public void SyncObjectChanges(bool force)
+        public bool SyncObjectChanges(bool force)
         {
+            //_profiler.BeginSample("GOS: SyncObjectChanges()");
+            
             if (handSync != 0) // If we're hand syncing, we don't want to update this crap
-                return;
+            {
+                //_profiler.EndSample();
+                return true;
+            }
 
             if (_syncAnyways)
             {
@@ -257,8 +276,10 @@ namespace GroupSync
             
                 force = true;
             }
+
+            var anythingChanged = force || _positionChanged || _rotationChanged;
         
-            if (force || _positionChanged || _rotationChanged)
+            if (anythingChanged)
                 CallFunctionInLocalGroup(nameof(UB), false);
         
             if (force || _positionChanged) // Update Position
@@ -270,7 +291,10 @@ namespace GroupSync
             {
                 CallFunctionInLocalGroup(nameof(TP), false);
                 _syncAnyways = false;
-            }    
+            }
+
+            //_profiler.EndSample();
+            return anythingChanged;
         }
         /// <summary>
         /// Updates Object for remote players
@@ -278,8 +302,13 @@ namespace GroupSync
         [PublicAPI]
         public void SyncObjectChangesHand()
         {
+            //_profiler.BeginSample("GOS: SyncObjectChangesHand()");
+            
             if (handSync == 0) // If we aren't hand syncing, we don't want to update this crap
+            {
+                //_profiler.EndSample();
                 return;
+            }
 
             var isLHand = Pickup.currentHand == VRC_Pickup.PickupHand.Left;
 
@@ -296,6 +325,8 @@ namespace GroupSync
             CallFunctionInLocalGroup(nameof(UB), false);
             SetVariableInLocalGroup(nameof(tp), localPos, true);
             SetVariableInLocalGroup(nameof(tr), localRot, true);
+            
+            //_profiler.EndSample();
         }
 
         [PublicAPI]
@@ -328,15 +359,18 @@ namespace GroupSync
             if (!allowTheft && ih)
                 return;
         
+            CallFunctionInLocalGroup(nameof(SubPostLateUpdateCallback));
             SetVariableInLocalGroup(nameof(cu), _localPlayer);
             SetRbState();
         }
 
         private void SetRbState()
         {
+            //_profiler.BeginSample("GOS: SetRbState()");
             var isOwner = (cu == _localPlayer || cu == -1);
             _rb.isKinematic = !isOwner || _isKinematic;
             _rb.useGravity = isOwner && _hasGravity;
+            //_profiler.EndSample();
         }
 
         private int _timesChanged;
@@ -344,6 +378,7 @@ namespace GroupSync
         private float _secSinceLastSt;
         public void UB() // U.B. Update Buffers
         {
+            //_profiler.BeginSample("GOS: Update Buffers");
             _secSinceLastSt = 0;
         
             if (_timesChanged == 0) // I should probably make the buffering stuff configurable instead of this hard coded crap.
@@ -358,6 +393,9 @@ namespace GroupSync
             _timesChanged = 0;
 
             SetRbState();
+            SubPostLateUpdateCallback();
+            
+            //_profiler.EndSample();
         }
 
         public void FB() // F.B. forces the buffers to be rolled all the way down.
@@ -409,29 +447,43 @@ namespace GroupSync
             _timesChanged++;
         }
 
+        public void OnCollisionEnter(Collision other)
+        {
+            if (IsOwner())
+                SubPostLateUpdate();
+        }
+
         private bool _isLocalOwner;
 
-        public override void PostLateUpdate()
+        public override void SubPostLateUpdate()
         {
+            //_profiler.BeginSample("GOS: SubPostLateUpdate()");
+            
             if (sleepUntilSettled)
             {
                 sleepUntilSettled = !_rb.IsSleeping();
+                //_profiler.EndSample();
                 return;
             }
+            
             if (cu == -1)
+            {
+                UnSubPostLateUpdateCallback();
+                //_profiler.EndSample();
                 return;
+            }
 
             var delta = Time.deltaTime;
             _timer += delta;
             _timerHand += delta;
             _secSinceLastSt += delta;
+            
+            var transform1 = transform;
         
-            if (transform.position.y < respawnHeight)
+            if (transform1.position.y < respawnHeight)
                 ObjectReset();
             if (HasPickup)
                 Pickup.pickupable = !ih;
-        
-            var transform1 = transform;
 
             if (IsOwner())
             {
@@ -459,10 +511,13 @@ namespace GroupSync
                     _positionChanged = _lastPos != position;
                     var rotation = transform1.rotation;
                     _rotationChanged = _lastRot != rotation;
-                    SyncObjectChanges(false);
+                    var updated = SyncObjectChanges(false);
                     _timer = 0;
                     _lastPos = position;
                     _lastRot = rotation;
+                    
+                    if (!updated)
+                        UnSubPostLateUpdateCallback();
                 }
                 if (_timerHand >= handUpdateSeconds)
                 {
@@ -481,7 +536,11 @@ namespace GroupSync
                 }
 
                 if (_secSinceLastSt > 2)
+                {
+                    UnSubPostLateUpdateCallback();
+                    //_profiler.EndSample();
                     return;
+                }
 
                 if (handSync != 0)
                 {
@@ -502,20 +561,23 @@ namespace GroupSync
                     var targetPos = Vector3.Lerp(_last_tp, _target_tp, progress);
                     var targetRot = Quaternion.Lerp(_last_tr, _target_tr, progress);
 
-                    transform.position = rot * targetPos + pos;
-                    transform.rotation = rot * targetRot;
+                    transform1.position = rot * targetPos + pos;
+                    transform1.rotation = rot * targetRot;
                 }
                 else
                 {
                     if (_timer > updateSeconds)
                         TimerReset();
+                    if (_timesChanged > 5)
+                        UnSubPostLateUpdateCallback();
                 
                     var progress = Mathf.Clamp01(_timer / updateSeconds);
                 
-                    transform.position = Vector3.Lerp(_last_tp, _target_tp, progress);
-                    transform.rotation = Quaternion.Lerp(_last_tr, _target_tr, progress);
+                    transform1.position = Vector3.Lerp(_last_tp, _target_tp, progress);
+                    transform1.rotation = Quaternion.Lerp(_last_tr, _target_tr, progress);
                 }
             }
+            //_profiler.EndSample();
         }
     }
 }

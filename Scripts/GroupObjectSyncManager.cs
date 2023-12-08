@@ -27,6 +27,7 @@ namespace GroupSync
     public class GroupObjectSyncManager : UdonSharpBehaviour
     {
         [HideInInspector] public DataDictionary syncedCustomObjects = new DataDictionary();
+        [HideInInspector] public DataList lateUpdateSubs;
 
         public int GetUnusedId()
         {
@@ -65,6 +66,27 @@ namespace GroupSync
         {
             if (!syncedCustomObjects.Remove(obj.networkId))
                 Debug.LogError($"Couldn't find custom object: {obj.name}, ID is: {obj.networkId}");
+        }
+        
+        public void SubPostLateUpdate(GroupCustomSync sync)
+        {
+            if (lateUpdateSubs.Contains(sync))
+                return;
+            lateUpdateSubs.Add(sync);
+        }
+        public void UnSubPostLateUpdate(GroupCustomSync sync)
+        {
+            lateUpdateSubs.RemoveAll(sync);
+        }
+
+        public override void PostLateUpdate()
+        {
+            var subs = lateUpdateSubs.ToArray();
+            foreach (var subRef in subs)
+            {
+                var sub = (GroupCustomSync)subRef.Reference;
+                sub.SubPostLateUpdate();
+            }
         }
     }
 }
