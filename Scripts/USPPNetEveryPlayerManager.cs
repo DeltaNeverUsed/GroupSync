@@ -7,6 +7,7 @@ using System;
 
 using UdonSharp;
 using UnityEngine;
+using VRC.SDK3.Data;
 using VRC.SDKBase;
 
 namespace GroupSync
@@ -46,15 +47,16 @@ namespace GroupSync
                 return;
             
             local_object = Objects[id];
+            Networking.SetOwner(Networking.LocalPlayer, local_object.gameObject);
+            
             local_object.owned = true;
             local_object.RequestSerialization();
         }
 
-        public override void OnPlayerJoined(VRCPlayerApi player)
-        {
-            if (!Networking.IsMaster)
-                return;
+        public DataList playersToAssign = new DataList();
 
+        public void AssignPlayerObject(VRCPlayerApi player)
+        {
             for (int i = 0; i < Objects.Length; i++)
             {
                 if (Objects[i].owned)
@@ -72,6 +74,44 @@ namespace GroupSync
 
                 break;
             }
+        }
+
+        public void CheckAssignWorked()
+        {
+            var index = playersToAssign.Count - 1;
+            var hasToken = playersToAssign.TryGetValue(index, TokenType.Int, out var valueToken);
+            playersToAssign.RemoveAt(index);
+            
+            if (!hasToken)
+                return;
+
+            var playerId = valueToken.Int;
+            var player = VRCPlayerApi.GetPlayerById(playerId);
+            
+            foreach (var lObject in Objects)
+            {
+                if (!lObject.owned)
+                    continue;
+                if (Networking.IsOwner(player, lObject.gameObject))
+                {
+                    Debug.Log( $"local_object got assigned correctly for player: ({player}, {playerId})!");
+                    return;
+                }
+            }
+            
+            Debug.LogWarning($"Couldn't assign player local_object once, trying again! for: ({player}, {playerId})");
+            AssignPlayerObject(player);
+        }
+
+        public override void OnPlayerJoined(VRCPlayerApi player)
+        {
+            if (!Networking.IsMaster || !Utilities.IsValid(player))
+                return;
+            
+            playersToAssign.Add(player.playerId);
+            AssignPlayerObject(player);
+            
+            SendCustomEventDelayedSeconds(nameof(CheckAssignWorked), 5);
         }
 
         public override void OnDeserialization()
