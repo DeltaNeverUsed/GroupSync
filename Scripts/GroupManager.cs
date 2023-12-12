@@ -1,4 +1,4 @@
-﻿#define USPPNet_int
+﻿#define USPPNet_short
 
 using USPPNet;
 
@@ -13,8 +13,8 @@ namespace GroupSync
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class GroupManager : UdonSharpBehaviour
     {
-        public int maxGroups = 12;
-        public int maxPlayersPerGroup = 10;
+        public short maxGroups = 12;
+        public short maxPlayersPerGroup = 10;
 
         private int _groupsArraySize;
     
@@ -23,9 +23,9 @@ namespace GroupSync
 
         [HideInInspector] public DataList leaveGroupCallbacks = new DataList();
 
-        [HideInInspector] public int local_group = -1;
+        [HideInInspector] public short local_group = -1;
 
-        private void USPPNET_tell_client_group(int player, int group)
+        private void USPPNET_tell_client_group(short player, short group)
         {
             if (Networking.LocalPlayer.playerId != player)
                 return;
@@ -56,35 +56,35 @@ namespace GroupSync
                 CheckGroupsEmpty();
         }
 
-        public int GroupAndPlayer2Index(int group, int player)
+        public int GroupAndPlayer2Index(short group, short player)
         {
             return group * maxPlayersPerGroup + player;
         }
 
-        public bool IsPlayerInGroup(int playerId, int group)
+        public bool IsPlayerInGroup(short playerId, short group)
         {
             if (groups.Length != _groupsArraySize)
                 return false;
             if (group >= maxGroups || group < 0)
                 return false;
 
-            for (var i = 0; i < maxPlayersPerGroup; i++)
+            for (short i = 0; i < maxPlayersPerGroup; i++)
                 if (groups[GroupAndPlayer2Index(group, i)] == playerId)
                     return true;
 
             return false;
         }
     
-        public int GetPlayerGroup(int playerId)
+        public int GetPlayerGroup(short playerId)
         {
-            for (var x = 0; x < maxGroups; x++)
-            for (var y = 0; y < maxPlayersPerGroup; y++)
+            for (short x = 0; x < maxGroups; x++)
+            for (short y = 0; y < maxPlayersPerGroup; y++)
                 if (groups[GroupAndPlayer2Index(x, y)] == playerId)
                     return x;
             return -1;
         }
 
-        public bool IsPlayerInLocalGroup(int playerId)
+        public bool IsPlayerInLocalGroup(short playerId)
         {
             if (local_group != -1)
                 return IsPlayerInGroup(playerId, local_group);
@@ -100,16 +100,16 @@ namespace GroupSync
             return tempArray;
         }
 
-        public int[] GetPlayersInGroup(int group)
+        public short[] GetPlayersInGroup(short group)
         {
-            var players = new int[0];
+            var players = new short[0];
             
             if (groups.Length != _groupsArraySize)
                 return players;
             if (group >= maxGroups || group < 0)
                 return players;
             
-            for (var i = 0; i < maxPlayersPerGroup; i++)
+            for (short i = 0; i < maxPlayersPerGroup; i++)
             {
                 var player = groups[GroupAndPlayer2Index(group, i)];
                 if (player != -1)
@@ -121,10 +121,10 @@ namespace GroupSync
 
         private void CheckGroupsEmpty()
         {
-            for (var x = 0; x < maxGroups; x++)
+            for (short x = 0; x < maxGroups; x++)
             {
                 var clear = true;
-                for (var y = 0; y < maxPlayersPerGroup; y++)
+                for (short y = 0; y < maxPlayersPerGroup; y++)
                 {
                     if (groups[GroupAndPlayer2Index(x, y)] == -1) continue;
                     clear = false;
@@ -135,7 +135,7 @@ namespace GroupSync
                     joinable[x] = "";
             }
         }
-        public void RemovePlayerFromGroups(int playerId)
+        public void RemovePlayerFromGroups(short playerId)
         {
             for (var i = 0; i < groups.Length; i++)
             {
@@ -146,7 +146,7 @@ namespace GroupSync
             RequestSerialization();
         }
 
-        public void AddPlayerToGroup(int playerId, int group)
+        public void AddPlayerToGroup(short playerId, short group)
         {
             if (group < 0 || group >= maxGroups)
                 return;
@@ -154,12 +154,12 @@ namespace GroupSync
                 return;
 
             var added = false;
-            for (var i = 0; i < maxPlayersPerGroup; i++)
+            for (short i = 0; i < maxPlayersPerGroup; i++)
             {
                 if(groups[GroupAndPlayer2Index(group, i)] != -1)
                     continue;
 
-                groups[GroupAndPlayer2Index(group, i)] = (short)playerId;
+                groups[GroupAndPlayer2Index(group, i)] = playerId;
                 added = true;
             
                 break;
@@ -176,15 +176,15 @@ namespace GroupSync
             RequestSerialization();
         }
 
-        public int GetJoinableGroup(string zone)
+        public short GetJoinableGroup(string zone)
         {
             if (joinable.Length < maxGroups)
                 return -1;
         
-            var firstChoice = -1; // First choice is a group with the same zone name as the one requested.
-            var secondChoice = -1; // Second choice is an empty zone.
+            short firstChoice = -1; // First choice is a group with the same zone name as the one requested.
+            short secondChoice = -1; // Second choice is an empty zone.
         
-            for (var i = 0; i < maxGroups; i++)
+            for (short i = 0; i < maxGroups; i++)
             {
                 if (joinable[i] == zone)
                     firstChoice = i;
@@ -192,7 +192,7 @@ namespace GroupSync
                     secondChoice = i;
             }
 
-            if (firstChoice != -1 && groups[GroupAndPlayer2Index(firstChoice, maxPlayersPerGroup-1)] == -1)
+            if (firstChoice != -1 && groups[GroupAndPlayer2Index(firstChoice, (short)(maxPlayersPerGroup - 1))] == -1)
                 return firstChoice;
             if (secondChoice == -1)
                 return -1;
@@ -218,7 +218,7 @@ namespace GroupSync
         /// DON'T CALL UNLESS YOU ARE HOST
         /// </summary>
         /// <param name="group"></param>
-        public void DisableJoinGroup(int group)
+        public void DisableJoinGroup(short group)
         {
             if (group < 0 || group >= joinable.Length)
                 return;

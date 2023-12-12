@@ -3269,6 +3269,8 @@ MonoBehaviour:
   groupManager: {fileID: 7180904898227699492}
   local_object: {fileID: 0}
   Objects: []
+  playersToAssign:
+    _values: []
 --- !u!114 &2400271688949641373
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7347,6 +7349,8 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 5799629394448098913}
+  lateUpdateSubs:
+    _values: []
 --- !u!114 &5799629394448098913
 MonoBehaviour:
   m_ObjectHideFlags: 0

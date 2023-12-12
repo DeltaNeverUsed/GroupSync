@@ -1,4 +1,5 @@
 ﻿#define USPPNet_string
+#define USPPNet_short
 #define USPPNet_int
 #define USPPNet_bool
 #define USPPNet_float
@@ -31,7 +32,7 @@ namespace GroupSync
 
         private string _currZone = "";
 
-        private void USPPNET_request_new_group(string zone, int playerId)
+        private void USPPNET_request_new_group(string zone, short playerId)
         {
             if (!Networking.IsMaster)
                 return;
@@ -43,7 +44,7 @@ namespace GroupSync
             Debug.Log($"zone: {zone}, player: {playerId}");
         }
     
-        private void USPPNET_request_remove_from_group(int playerId)
+        private void USPPNET_request_remove_from_group(short playerId)
         {
             if (!Networking.IsMaster)
                 return;
@@ -53,13 +54,13 @@ namespace GroupSync
             Debug.Log($"player: {playerId} removed from group");
         }
 
-        private void USPPNET_request_leave_callback(int playerId)
+        private void USPPNET_request_leave_callback(short playerId)
         {
             if (Networking.LocalPlayer.playerId == playerId)
                 do_leave_callback();
         }
 
-        private void GenericSet(int group, string varName, int netId, object var)
+        private void GenericSet(short group, string varName, int netId, object var)
         {
             if ((group == -1 || group != groupManager.local_group) && group != -2)
                 return;
@@ -76,39 +77,39 @@ namespace GroupSync
             obj.SetProgramVariable(varName, var);
         }
     
-        private void USPPNET_CustomSet_int(int group, string varName, int netId, int var)
+        private void USPPNET_CustomSet_int(short group, string varName, int netId, int var)
         {
             GenericSet(group, varName, netId, var);
         }
-        private void USPPNET_CustomSet_string(int group, string varName, int netId, string var)
+        private void USPPNET_CustomSet_string(short group, string varName, int netId, string var)
         {
             GenericSet(group, varName, netId, var);
         }
-        private void USPPNET_CustomSet_bool(int group, string varName, int netId, bool var)
+        private void USPPNET_CustomSet_bool(short group, string varName, int netId, bool var)
         {
             GenericSet(group, varName, netId, var);
         }
-        private void USPPNET_CustomSet_float(int group, string varName, int netId, float var)
+        private void USPPNET_CustomSet_float(short group, string varName, int netId, float var)
         {
             GenericSet(group, varName, netId, var);
         }
-        private void USPPNET_CustomSet_Vector2(int group, string varName, int netId, Vector2 var)
+        private void USPPNET_CustomSet_Vector2(short group, string varName, int netId, Vector2 var)
         {
             GenericSet(group, varName, netId, var);
         }
-        private void USPPNET_CustomSet_Vector3(int group, string varName, int netId, Vector3 var)
+        private void USPPNET_CustomSet_Vector3(short group, string varName, int netId, Vector3 var)
         {
             GenericSet(group, varName, netId, var);
         }
-        private void USPPNET_CustomSet_Vector4(int group, string varName, int netId, Vector4 var)
+        private void USPPNET_CustomSet_Vector4(short group, string varName, int netId, Vector4 var)
         {
             GenericSet(group, varName, netId, var);
         }
-        private void USPPNET_CustomSet_Quaternion(int group, string varName, int netId, Quaternion var)
+        private void USPPNET_CustomSet_Quaternion(short group, string varName, int netId, Quaternion var)
         {
             GenericSet(group, varName, netId, var);
         }
-        private void USPPNET_CustomSet_GroupCustomSync(int group, string varName, int netId, int networkId)
+        private void USPPNET_CustomSet_GroupCustomSync(short group, string varName, int netId, int networkId)
         {
             if (!syncManager.syncedCustomObjects.TryGetValue(networkId, out var data))
             {
@@ -118,7 +119,7 @@ namespace GroupSync
             GenericSet(group, varName, netId, (GroupCustomSync)data.Reference);
         }
 
-        private void USPPNET_CustomRPC(int group, string eventName, int netId)
+        private void USPPNET_CustomRPC(short group, string eventName, int netId)
         {
             if ((group == -1 || group != groupManager.local_group) && group != -2 )
                 return;
@@ -137,7 +138,7 @@ namespace GroupSync
 
 
         // ReSharper disable Unity.PerformanceAnalysis
-        public void SetRemoteVar(int group, string varName, int netId, object var, bool setLocally = true)
+        public void SetRemoteVar(short group, string varName, int netId, object var, bool setLocally = true)
         {
             if (!Utilities.IsValid(var))
                 return;
@@ -169,7 +170,7 @@ namespace GroupSync
                 GenericSet(group, varName, netId, var);
         }
 
-        public void RemoteFunctionCall(int group, string eventName, int netId, bool callLocally = true)
+        public void RemoteFunctionCall(short group, string eventName, int netId, bool callLocally = true)
         {
             USPPNET_CustomRPC(group, eventName, netId);
         
@@ -189,7 +190,7 @@ namespace GroupSync
         }
 
         // Master 
-        private void USPPNET_close_group_joins(int group)
+        private void USPPNET_close_group_joins(short group)
         {
             if (!Networking.IsMaster)
                 return;
@@ -199,7 +200,7 @@ namespace GroupSync
         }
 
         // Client
-        public void close_group_joinings(int group)
+        public void close_group_joinings(short group)
         {
             if (neverCloseGroups)
                 return;
@@ -217,7 +218,7 @@ namespace GroupSync
         {
             if (_currZone == zone)
                 return;
-            var playerId = Networking.LocalPlayer.playerId;
+            var playerId = (short)Networking.LocalPlayer.playerId;
             request_remove_from_group(playerId);
             _currZone = zone;
         
@@ -251,7 +252,7 @@ namespace GroupSync
         /// <summary>
         /// Probably shouldn't call this outside of here
         /// </summary>
-        public void request_leave_callback(int playerId)
+        public void request_leave_callback(short playerId)
         {
             if (Networking.LocalPlayer.playerId == playerId)
             {
@@ -264,7 +265,7 @@ namespace GroupSync
             }
         }
 
-        public void request_remove_from_group(int playerId)
+        public void request_remove_from_group(short playerId)
         {
             request_leave_callback(playerId);
         

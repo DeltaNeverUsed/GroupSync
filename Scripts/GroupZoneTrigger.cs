@@ -36,7 +36,7 @@ namespace GroupSync
             if (!exitZoneOnTriggerExit || player != Networking.LocalPlayer)
                 return;
         
-            playerNetworkManager.local_object.request_remove_from_group(Networking.LocalPlayer.playerId);
+            playerNetworkManager.local_object.request_remove_from_group((short)Networking.LocalPlayer.playerId);
         }
     }
 }

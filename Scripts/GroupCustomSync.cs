@@ -102,23 +102,23 @@ namespace GroupSync
         {
             if (CheckLocalObject())
                 return;
-            SetVariable(forceGlobalSync ? -2 : psm.groupManager.local_group, name, value, setLocally, autoSerialize);
+            SetVariable((short)(forceGlobalSync ? -2 : psm.groupManager.local_group), name, value, setLocally, autoSerialize);
         }
         public void CallFunctionInLocalGroup(string name, bool callLocally = true, bool autoSerialize = true)
         {
             if (CheckLocalObject())
                 return;
-            CallFunction(forceGlobalSync ? -2 : psm.groupManager.local_group, name, callLocally, autoSerialize);
+            CallFunction((short)(forceGlobalSync ? -2 : psm.groupManager.local_group), name, callLocally, autoSerialize);
         }
 
-        private void CallFunction(int group, string name, bool callLocally = true, bool autoSerialize = true)
+        private void CallFunction(short group, string name, bool callLocally = true, bool autoSerialize = true)
         {
             lpm.RemoteFunctionCall(group, name, networkId, callLocally);
             if (autoSerialize)
                 lpm.RequestSerialization();
         }
 
-        private void SetVariable(int group, string name, object value, bool setLocally = true, bool autoSerialize = true)
+        private void SetVariable(short group, string name, object value, bool setLocally = true, bool autoSerialize = true)
         {
             lpm.SetRemoteVar(group, name, networkId, value, setLocally);
             if (autoSerialize)

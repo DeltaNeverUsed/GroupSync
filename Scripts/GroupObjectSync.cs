@@ -18,8 +18,6 @@ namespace GroupSync
         [NonSerialized] public bool HasPickup; 
         [NonSerialized] public VRC_Pickup Pickup;
         [NonSerialized] public int RequestedOwner = -1;
-
-        public bool sleepUntilSettled = true;
         
         public float respawnHeight = -70;
     
@@ -90,6 +88,7 @@ namespace GroupSync
         public void UpdateGrabbed(bool state)
         {
             SetVariableInLocalGroup(nameof(ih), state);
+            CallFunctionInLocalGroup(nameof(PreSubPostLateUpdateCallback));
         }
 
         [PublicAPI]
@@ -190,7 +189,7 @@ namespace GroupSync
             if (StartNet())
             {
                 SubLeaveGroupCallback();
-                SubPostLateUpdateCallback();
+                PreSubPostLateUpdateCallback();
             }
         
             Pickup = GetComponent<VRC_Pickup>();
@@ -359,7 +358,7 @@ namespace GroupSync
             if (!allowTheft && ih)
                 return;
         
-            CallFunctionInLocalGroup(nameof(SubPostLateUpdateCallback));
+            CallFunctionInLocalGroup(nameof(PreSubPostLateUpdateCallback));
             SetVariableInLocalGroup(nameof(cu), _localPlayer);
             SetRbState();
         }
@@ -393,7 +392,7 @@ namespace GroupSync
             _timesChanged = 0;
 
             SetRbState();
-            SubPostLateUpdateCallback();
+            PreSubPostLateUpdateCallback();
             
             //_profiler.EndSample();
         }
@@ -432,8 +431,8 @@ namespace GroupSync
 
         private void TimerReset()
         {
-            _timer = 0;
-            _timerHand = 0;
+            _timer =  Mathf.Max(0, _timer - updateSeconds);
+            _timerHand -= Mathf.Max(0, _timerHand - handUpdateSeconds);
 
             _last_tp = _target_tp;
             _last_tr = _target_tr;
@@ -450,25 +449,48 @@ namespace GroupSync
         public void OnCollisionEnter(Collision other)
         {
             if (IsOwner())
-                SubPostLateUpdate();
+                PreSubPostLateUpdateCallback();
+        }
+
+        public bool canSleep;
+
+        public void AllowSleep()
+        {
+            canSleep = true;
+        }
+        
+        public void PreSubPostLateUpdateCallback()
+        {
+            if (isLateSubbed)
+                return;
+
+            canSleep = false;
+            SendCustomEventDelayedSeconds(nameof(AllowSleep), 1f);
+            
+            _secSinceLastSt = 0;
+            _timesChanged = 0;
+            
+            _timer = 0;
+            _timerHand = 0;
+            SubPostLateUpdateCallback();
+        }
+
+        public void PreUnSubPostLateUpdateCallback()
+        {
+            if (canSleep)
+                UnSubPostLateUpdateCallback();
         }
 
         private bool _isLocalOwner;
+        private bool _lastUpdate;
 
         public override void SubPostLateUpdate()
         {
             //_profiler.BeginSample("GOS: SubPostLateUpdate()");
             
-            if (sleepUntilSettled)
-            {
-                sleepUntilSettled = !_rb.IsSleeping();
-                //_profiler.EndSample();
-                return;
-            }
-            
             if (cu == -1)
             {
-                UnSubPostLateUpdateCallback();
+                PreUnSubPostLateUpdateCallback();
                 //_profiler.EndSample();
                 return;
             }
@@ -516,8 +538,9 @@ namespace GroupSync
                     _lastPos = position;
                     _lastRot = rotation;
                     
-                    if (!updated)
-                        UnSubPostLateUpdateCallback();
+                    if (!(updated || _lastUpdate))
+                        PreUnSubPostLateUpdateCallback();
+                    _lastUpdate = updated;
                 }
                 if (_timerHand >= handUpdateSeconds)
                 {
@@ -537,7 +560,7 @@ namespace GroupSync
 
                 if (_secSinceLastSt > 2)
                 {
-                    UnSubPostLateUpdateCallback();
+                    PreUnSubPostLateUpdateCallback();
                     //_profiler.EndSample();
                     return;
                 }
@@ -569,7 +592,7 @@ namespace GroupSync
                     if (_timer > updateSeconds)
                         TimerReset();
                     if (_timesChanged > 5)
-                        UnSubPostLateUpdateCallback();
+                        PreUnSubPostLateUpdateCallback();
                 
                     var progress = Mathf.Clamp01(_timer / updateSeconds);
                 

@@ -28,11 +28,11 @@ namespace GroupSync
                 return;
 
             var t = ""; // Groups
-            for (int x = 0; x < groupManager.maxGroups; x++)
+            for (short x = 0; x < groupManager.maxGroups; x++)
             {
                 var groupName = groupManager.joinable.Length == groupManager.maxGroups ? groupManager.joinable[x] : "Not Host";
                 var players = "";
-                for (int y = 0; y < groupManager.maxPlayersPerGroup; y++)
+                for (short y = 0; y < groupManager.maxPlayersPerGroup; y++)
                 {
                     if (groupManager.groups[groupManager.GroupAndPlayer2Index(x, y)] == -1) continue;
                     var guy = VRCPlayerApi.GetPlayerById(groupManager.groups[groupManager.GroupAndPlayer2Index(x, y)]);
