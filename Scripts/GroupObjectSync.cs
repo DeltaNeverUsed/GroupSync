@@ -452,11 +452,11 @@ namespace GroupSync
                 PreSubPostLateUpdateCallback();
         }
 
-        public bool canSleep;
+        private bool _canSleep;
 
         public void AllowSleep()
         {
-            canSleep = true;
+            _canSleep = true;
         }
         
         public void PreSubPostLateUpdateCallback()
@@ -464,11 +464,12 @@ namespace GroupSync
             if (isLateSubbed)
                 return;
 
-            canSleep = false;
+            _canSleep = false;
             SendCustomEventDelayedSeconds(nameof(AllowSleep), 1f);
             
             _secSinceLastSt = 0;
             _timesChanged = 0;
+            _lastUpdate = 0;
             
             _timer = 0;
             _timerHand = 0;
@@ -477,12 +478,12 @@ namespace GroupSync
 
         public void PreUnSubPostLateUpdateCallback()
         {
-            if (canSleep)
+            if (_canSleep && !ih)
                 UnSubPostLateUpdateCallback();
         }
 
         private bool _isLocalOwner;
-        private bool _lastUpdate;
+        private int _lastUpdate;
 
         public override void SubPostLateUpdate()
         {
@@ -538,9 +539,12 @@ namespace GroupSync
                     _lastPos = position;
                     _lastRot = rotation;
                     
-                    if (!(updated || _lastUpdate))
+                    if (_lastUpdate > 30)
                         PreUnSubPostLateUpdateCallback();
-                    _lastUpdate = updated;
+                    if (updated)
+                        _lastUpdate = 0;
+                    else
+                        _lastUpdate++;
                 }
                 if (_timerHand >= handUpdateSeconds)
                 {
