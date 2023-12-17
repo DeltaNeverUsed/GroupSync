@@ -17,6 +17,7 @@ using VRC.SDKBase;
 
 namespace GroupSync
 {
+    [DefaultExecutionOrder(1000)]
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class USPPNetEveryPlayer : UdonSharpBehaviour
     {
@@ -297,22 +298,58 @@ namespace GroupSync
         {
             _requestedSerialization = false;
         }
-    
+
+        private void INTSetOwner(int targetOwner)
+        {
+            if (targetOwner != Networking.LocalPlayer.playerId)
+                return;
+            
+            Networking.SetOwner(Networking.LocalPlayer, gameObject);
+            owned = true;
+
+            _usppNetEveryPlayerManager.local_object = this;
+            
+            base.RequestSerialization();
+        }
+        
+        public void USPPNET_SetOwner(int targetOwner)
+        {
+            INTSetOwner(targetOwner);
+        }
+
+        public void SetOwner(VRCPlayerApi player)
+        {
+            if (!Networking.IsOwner(gameObject))
+            {
+                Debug.LogError("Setter wasn't owner!");
+                return;
+            }
+            
+            owned = true;
+            var playerId = player.playerId;
+            
+            USPPNET_SetOwner(playerId);
+            INTSetOwner(playerId);
+            RequestSerialization();
+        }
+
         public void Bootstrap()
         {
-            _usppNetEveryPlayerManager = transform.parent.GetComponent<USPPNetEveryPlayerManager>();
+            _usppNetEveryPlayerManager = GetComponentInParent<USPPNetEveryPlayerManager>();
+
         }
 
         public override void OnPlayerLeft(VRCPlayerApi player)
         {
             if (!Networking.IsMaster)
                 return;
-        
             if (playerManager.local_object == this)
                 return;
         
             if (Networking.IsOwner(gameObject))
                 owned = false;
+            
+            base.RequestSerialization();
         }
 
         public override void OnDeserialization()

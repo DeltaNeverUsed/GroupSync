@@ -3304,10 +3304,6 @@ MonoBehaviour:
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2400271688949641373}
   groupManager: {fileID: 7180904898227699492}
-  local_object: {fileID: 0}
-  Objects: []
-  playersToAssign:
-    _values: []
 --- !u!114 &2400271688949641373
 MonoBehaviour:
   m_ObjectHideFlags: 0
