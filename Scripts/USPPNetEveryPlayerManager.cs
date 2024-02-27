@@ -1,63 +1,33 @@
-﻿using System;
+﻿#define USPPNet_string
+#define USPPNet_int
 
+using Cyan.PlayerObjectPool;
 using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
+using VRC.Udon;
 
 namespace GroupSync
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
-    public class USPPNetEveryPlayerManager : UdonSharpBehaviour
+    public class USPPNetEveryPlayerManager : CyanPlayerObjectPoolEventListener
     {
         public GroupManager groupManager;
-    
-        [NonSerialized] public USPPNetEveryPlayer local_object;
-        [NonSerialized] public USPPNetEveryPlayer[] Objects;
+        [HideInInspector] public USPPNetEveryPlayer local_object;
+        public bool neverCloseGroups;
 
-        public void Bootstrap()
-        {
-            Objects = new USPPNetEveryPlayer[transform.childCount];
-            var i = 0;
-            foreach (Transform child in transform)
-            {
-                Objects[i] = child.GetComponent<USPPNetEveryPlayer>();
-                i++;
-            }
+        public override void _OnLocalPlayerAssigned() {
             
-            SendCustomEventDelayedSeconds(nameof(ErrorLocalObject), 10);
         }
 
-        private USPPNetEveryPlayer GetPlayerObject()
-        {
-            foreach (var playerObject in Objects)
-            {
-                if (playerObject.owned)
-                    continue;
-                
-                if (Networking.IsOwner(playerObject.gameObject))
-                    return playerObject;
-                
-                Debug.LogError("Object isn't owned, but has wrong owner?");
-            }
-
-            return null;
-        }
-
-        public void ErrorLocalObject()
-        {
-            if (Utilities.IsValid(local_object))
+        public override void _OnPlayerAssigned(VRCPlayerApi player, int poolIndex, UdonBehaviour poolObject) {
+            if (!player.isLocal)
                 return;
-            
-            Debug.LogError("This is really bad! report this to me, please! send me your log! discord: deltaneverused");
+            local_object = poolObject.GetComponent<USPPNetEveryPlayer>();
         }
 
-        public override void OnPlayerJoined(VRCPlayerApi player)
-        {
-            var objectToAssign = GetPlayerObject();
-            if (Utilities.IsValid(objectToAssign))
-                objectToAssign.SetOwner(player);
-            else
-                Debug.LogError("Got Invalid object somehow? ran out?");
+        public override void _OnPlayerUnassigned(VRCPlayerApi player, int poolIndex, UdonBehaviour poolObject) {
+            
         }
     }
 }

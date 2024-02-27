@@ -1,5 +1,4 @@
 ﻿#define USPPNet_string
-#define USPPNet_short
 #define USPPNet_int
 #define USPPNet_bool
 #define USPPNet_float
@@ -11,29 +10,25 @@
 using USPPNet;
 
 using System;
+using Cyan.PlayerObjectPool;
 using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
 
 namespace GroupSync
 {
-    [DefaultExecutionOrder(1000)]
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
-    public class USPPNetEveryPlayer : UdonSharpBehaviour
+    public class USPPNetEveryPlayer : CyanPlayerObjectPoolObject
     {
         public GroupManager groupManager;
         public GroupObjectSyncManager syncManager;
-        public USPPNetEveryPlayerManager playerManager;
 
         [Space(10)]
-        public bool neverCloseGroups;
     
         private USPPNetEveryPlayerManager _usppNetEveryPlayerManager;
-        [UdonSynced] [HideInInspector] public bool owned;
-
         private string _currZone = "";
 
-        private void USPPNET_request_new_group(string zone, short playerId)
+        private void USPPNET_request_new_group(string zone, int playerId)
         {
             if (!Networking.IsMaster)
                 return;
@@ -45,7 +40,7 @@ namespace GroupSync
             Debug.Log($"zone: {zone}, player: {playerId}");
         }
     
-        private void USPPNET_request_remove_from_group(short playerId)
+        private void USPPNET_request_remove_from_group(int playerId)
         {
             if (!Networking.IsMaster)
                 return;
@@ -55,13 +50,13 @@ namespace GroupSync
             Debug.Log($"player: {playerId} removed from group");
         }
 
-        private void USPPNET_request_leave_callback(short playerId)
+        private void USPPNET_request_leave_callback(int playerId)
         {
             if (Networking.LocalPlayer.playerId == playerId)
                 do_leave_callback();
         }
 
-        private void GenericSet(short group, string varName, int netId, object var)
+        private void GenericSet(int group, string varName, int netId, object var)
         {
             if ((group == -1 || group != groupManager.local_group) && group != -2)
                 return;
@@ -78,39 +73,39 @@ namespace GroupSync
             obj.SetProgramVariable(varName, var);
         }
     
-        private void USPPNET_CustomSet_int(short group, string varName, int netId, int var)
+        private void USPPNET_CustomSet_int(int group, string varName, int netId, int var)
         {
             GenericSet(group, varName, netId, var);
         }
-        private void USPPNET_CustomSet_string(short group, string varName, int netId, string var)
+        private void USPPNET_CustomSet_string(int group, string varName, int netId, string var)
         {
             GenericSet(group, varName, netId, var);
         }
-        private void USPPNET_CustomSet_bool(short group, string varName, int netId, bool var)
+        private void USPPNET_CustomSet_bool(int group, string varName, int netId, bool var)
         {
             GenericSet(group, varName, netId, var);
         }
-        private void USPPNET_CustomSet_float(short group, string varName, int netId, float var)
+        private void USPPNET_CustomSet_float(int group, string varName, int netId, float var)
         {
             GenericSet(group, varName, netId, var);
         }
-        private void USPPNET_CustomSet_Vector2(short group, string varName, int netId, Vector2 var)
+        private void USPPNET_CustomSet_Vector2(int group, string varName, int netId, Vector2 var)
         {
             GenericSet(group, varName, netId, var);
         }
-        private void USPPNET_CustomSet_Vector3(short group, string varName, int netId, Vector3 var)
+        private void USPPNET_CustomSet_Vector3(int group, string varName, int netId, Vector3 var)
         {
             GenericSet(group, varName, netId, var);
         }
-        private void USPPNET_CustomSet_Vector4(short group, string varName, int netId, Vector4 var)
+        private void USPPNET_CustomSet_Vector4(int group, string varName, int netId, Vector4 var)
         {
             GenericSet(group, varName, netId, var);
         }
-        private void USPPNET_CustomSet_Quaternion(short group, string varName, int netId, Quaternion var)
+        private void USPPNET_CustomSet_Quaternion(int group, string varName, int netId, Quaternion var)
         {
             GenericSet(group, varName, netId, var);
         }
-        private void USPPNET_CustomSet_GroupCustomSync(short group, string varName, int netId, int networkId)
+        private void USPPNET_CustomSet_GroupCustomSync(int group, string varName, int netId, int networkId)
         {
             if (!syncManager.syncedCustomObjects.TryGetValue(networkId, out var data))
             {
@@ -120,7 +115,7 @@ namespace GroupSync
             GenericSet(group, varName, netId, (GroupCustomSync)data.Reference);
         }
 
-        private void USPPNET_CustomRPC(short group, string eventName, int netId)
+        private void USPPNET_CustomRPC(int group, string eventName, int netId)
         {
             if ((group == -1 || group != groupManager.local_group) && group != -2 )
                 return;
@@ -139,7 +134,7 @@ namespace GroupSync
 
 
         // ReSharper disable Unity.PerformanceAnalysis
-        public void SetRemoteVar(short group, string varName, int netId, object var, bool setLocally = true)
+        public void SetRemoteVar(int group, string varName, int netId, object var, bool setLocally = true)
         {
             if (!Utilities.IsValid(var))
                 return;
@@ -171,7 +166,7 @@ namespace GroupSync
                 GenericSet(group, varName, netId, var);
         }
 
-        public void RemoteFunctionCall(short group, string eventName, int netId, bool callLocally = true)
+        public void RemoteFunctionCall(int group, string eventName, int netId, bool callLocally = true)
         {
             USPPNET_CustomRPC(group, eventName, netId);
         
@@ -191,7 +186,7 @@ namespace GroupSync
         }
 
         // Master 
-        private void USPPNET_close_group_joins(short group)
+        private void USPPNET_close_group_joins(int group)
         {
             if (!Networking.IsMaster)
                 return;
@@ -201,9 +196,9 @@ namespace GroupSync
         }
 
         // Client
-        public void close_group_joinings(short group)
+        public void close_group_joinings(int group)
         {
-            if (neverCloseGroups)
+            if (_usppNetEveryPlayerManager.neverCloseGroups)
                 return;
         
             if (!Networking.IsMaster)
@@ -219,7 +214,7 @@ namespace GroupSync
         {
             if (_currZone == zone)
                 return;
-            var playerId = (short)Networking.LocalPlayer.playerId;
+            var playerId = Networking.LocalPlayer.playerId;
             request_remove_from_group(playerId);
             _currZone = zone;
         
@@ -253,7 +248,7 @@ namespace GroupSync
         /// <summary>
         /// Probably shouldn't call this outside of here
         /// </summary>
-        public void request_leave_callback(short playerId)
+        public void request_leave_callback(int playerId)
         {
             if (Networking.LocalPlayer.playerId == playerId)
             {
@@ -266,7 +261,7 @@ namespace GroupSync
             }
         }
 
-        public void request_remove_from_group(short playerId)
+        public void request_remove_from_group(int playerId)
         {
             request_leave_callback(playerId);
         
@@ -298,58 +293,21 @@ namespace GroupSync
         {
             _requestedSerialization = false;
         }
-
-        private void INTSetOwner(int targetOwner)
-        {
-            if (targetOwner != Networking.LocalPlayer.playerId)
-                return;
-            
-            Networking.SetOwner(Networking.LocalPlayer, gameObject);
-            owned = true;
-
-            _usppNetEveryPlayerManager.local_object = this;
-            
-            base.RequestSerialization();
-        }
-        
-        public void USPPNET_SetOwner(int targetOwner)
-        {
-            INTSetOwner(targetOwner);
-        }
-
-        public void SetOwner(VRCPlayerApi player)
-        {
-            if (!Networking.IsOwner(gameObject))
-            {
-                Debug.LogError("Setter wasn't owner!");
-                return;
-            }
-            
-            owned = true;
-            var playerId = player.playerId;
-            
-            USPPNET_SetOwner(playerId);
-            INTSetOwner(playerId);
-            RequestSerialization();
-        }
-
+    
         public void Bootstrap()
         {
-            _usppNetEveryPlayerManager = GetComponentInParent<USPPNetEveryPlayerManager>();
-
+            _usppNetEveryPlayerManager = transform.parent.GetComponent<USPPNetEveryPlayerManager>();
+            var netRoot = _usppNetEveryPlayerManager.transform.parent;
+            syncManager = netRoot.GetComponentInChildren<GroupObjectSyncManager>();
+            groupManager = netRoot.GetComponentInChildren<GroupManager>();
+        }
+        
+        public override void _OnOwnerSet() {
+            
         }
 
-        public override void OnPlayerLeft(VRCPlayerApi player)
-        {
-            if (!Networking.IsMaster)
-                return;
-            if (playerManager.local_object == this)
-                return;
-        
-            if (Networking.IsOwner(gameObject))
-                owned = false;
-            
-            base.RequestSerialization();
+        public override void _OnCleanup() {
+            _currZone = "";
         }
 
         public override void OnDeserialization()
