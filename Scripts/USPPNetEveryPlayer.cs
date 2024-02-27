@@ -1,4 +1,5 @@
 ﻿#define USPPNet_string
+#define USPPNet_short
 #define USPPNet_int
 #define USPPNet_bool
 #define USPPNet_float
@@ -28,7 +29,7 @@ namespace GroupSync
         private USPPNetEveryPlayerManager _usppNetEveryPlayerManager;
         private string _currZone = "";
 
-        private void USPPNET_request_new_group(string zone, int playerId)
+        private void USPPNET_request_new_group(string zone, short playerId)
         {
             if (!Networking.IsMaster)
                 return;
@@ -40,7 +41,7 @@ namespace GroupSync
             Debug.Log($"zone: {zone}, player: {playerId}");
         }
     
-        private void USPPNET_request_remove_from_group(int playerId)
+        private void USPPNET_request_remove_from_group(short playerId)
         {
             if (!Networking.IsMaster)
                 return;
@@ -73,6 +74,10 @@ namespace GroupSync
             obj.SetProgramVariable(varName, var);
         }
     
+        private void USPPNET_CustomSet_short(int group, string varName, int netId, short var)
+        {
+            GenericSet(group, varName, netId, var);
+        }
         private void USPPNET_CustomSet_int(int group, string varName, int netId, int var)
         {
             GenericSet(group, varName, netId, var);
@@ -141,7 +146,9 @@ namespace GroupSync
             
             var argType = var.GetType();
         
-            if (argType == typeof(int))
+            if (argType == typeof(short))
+                USPPNET_CustomSet_int(group, varName, netId, (short)var);
+            else if (argType == typeof(int))
                 USPPNET_CustomSet_int(group, varName, netId, (int)var);
             else if (argType == typeof(string))
                 USPPNET_CustomSet_string(group, varName, netId, (string)var);
@@ -186,7 +193,7 @@ namespace GroupSync
         }
 
         // Master 
-        private void USPPNET_close_group_joins(int group)
+        private void USPPNET_close_group_joins(short group)
         {
             if (!Networking.IsMaster)
                 return;
@@ -196,7 +203,7 @@ namespace GroupSync
         }
 
         // Client
-        public void close_group_joinings(int group)
+        public void close_group_joinings(short group)
         {
             if (_usppNetEveryPlayerManager.neverCloseGroups)
                 return;
@@ -214,7 +221,7 @@ namespace GroupSync
         {
             if (_currZone == zone)
                 return;
-            var playerId = Networking.LocalPlayer.playerId;
+            var playerId = (short)Networking.LocalPlayer.playerId;
             request_remove_from_group(playerId);
             _currZone = zone;
         
@@ -261,7 +268,7 @@ namespace GroupSync
             }
         }
 
-        public void request_remove_from_group(int playerId)
+        public void request_remove_from_group(short playerId)
         {
             request_leave_callback(playerId);
         
