@@ -2,6 +2,8 @@
 using UnityEditor;
 using UnityEngine;
 using VRC.SDK3.Data;
+using VRC.SDKBase;
+using VRC.Udon.Common.Interfaces;
 
 namespace GroupSync
 {
@@ -68,15 +70,15 @@ namespace GroupSync
                 Debug.LogError($"Couldn't find custom object: {obj.name}, ID is: {obj.networkId}");
         }
         
-        public void SubPostLateUpdate(GroupCustomSync sync)
-        {
-            if (lateUpdateSubs.Contains(sync))
+        public void SubPostLateUpdate(IUdonEventReceiver sync) {
+            var tok = new DataToken(sync);
+            if (lateUpdateSubs.Contains(tok))
                 return;
-            lateUpdateSubs.Add(sync);
+            lateUpdateSubs.Add(tok);
         }
-        public void UnSubPostLateUpdate(GroupCustomSync sync)
+        public void UnSubPostLateUpdate(IUdonEventReceiver sync)
         {
-            lateUpdateSubs.RemoveAll(sync);
+            lateUpdateSubs.RemoveAll(new DataToken(sync));
         }
 
         public override void PostLateUpdate()
@@ -84,8 +86,11 @@ namespace GroupSync
             var subs = lateUpdateSubs.ToArray();
             foreach (var subRef in subs)
             {
-                var sub = (GroupCustomSync)subRef.Reference;
-                sub.SubPostLateUpdate();
+                var sub = (IUdonEventReceiver)subRef.Reference;
+                if (Utilities.IsValid(sub))
+                    sub.SendCustomEvent("SubPostLateUpdate");
+                else
+                    lateUpdateSubs.RemoveAll(subRef);
             }
         }
     }

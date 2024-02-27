@@ -1,6 +1,7 @@
 ﻿using System;
 //using bSenpai.UdonProfiler;
 using JetBrains.Annotations;
+using Plundernauts.Debug.VUdon;
 using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
@@ -41,6 +42,8 @@ namespace GroupSync
         public bool allowTheft;
 
         private bool _syncAnyways;
+
+        [NonSerialized] public bool forceNetSleep;
     
         public override void OnPickup()
         {
@@ -478,8 +481,10 @@ namespace GroupSync
 
         public void PreUnSubPostLateUpdateCallback()
         {
-            if (_canSleep && !ih)
+            if (_canSleep && !ih) {
+                this.Log($"Sync Object Going to Sleep: {name}");
                 UnSubPostLateUpdateCallback();
+            }
         }
 
         private bool _isLocalOwner;
@@ -487,6 +492,8 @@ namespace GroupSync
 
         public override void SubPostLateUpdate()
         {
+            if (forceNetSleep)
+                return;
             //_profiler.BeginSample("GOS: SubPostLateUpdate()");
             
             if (cu == -1)

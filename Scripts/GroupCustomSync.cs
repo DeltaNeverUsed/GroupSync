@@ -2,6 +2,7 @@
 using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
+using VRC.Udon.Common.Interfaces;
 
 namespace GroupSync
 {
@@ -64,7 +65,7 @@ namespace GroupSync
             if (StartedNet)
             {
                 gosm.RemoveCustomObject(this);
-                gosm.UnSubPostLateUpdate(this);
+                gosm.UnSubPostLateUpdate((IUdonEventReceiver)this);
             }
         }
 
@@ -132,14 +133,14 @@ namespace GroupSync
             if (isLateSubbed)
                 return;
             isLateSubbed = true;
-            gosm.SubPostLateUpdate(this);
+            gosm.SubPostLateUpdate((IUdonEventReceiver)this);
         }
         public void UnSubPostLateUpdateCallback()
         {
             if (!isLateSubbed)
                 return;
             isLateSubbed = false;
-            gosm.UnSubPostLateUpdate(this);
+            gosm.UnSubPostLateUpdate((IUdonEventReceiver)this);
         }
         
         public virtual void SubPostLateUpdate()
